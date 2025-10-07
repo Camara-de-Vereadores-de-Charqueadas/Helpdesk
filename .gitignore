@@ -1,0 +1,10 @@
+# general
+.env
+node_modules
+*/package*.json
+
+# API
+*.sql
+config.js
+
+# WEB
