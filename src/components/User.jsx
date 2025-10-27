@@ -3,10 +3,12 @@ import { chamadosMock } from "../data/chamados";
 import { PlusCircle, CaretCircleDown } from "@phosphor-icons/react";
 import "../styles/User.css";
 import Ticket from "../components/Ticket";
+import ModalChamadoUser from "../components/modais/ModalChamadoUser"; // 👈 importa o modal
 
 export default function VisualizacaoUsuario() {
     const [expandidoAbertos, setExpandidoAbertos] = useState(true);
     const [expandidoResolvidos, setExpandidoResolvidos] = useState(false);
+    const [abrirModal, setAbrirModal] = useState(false);
 
     // Filtros separados para cada card
     const [filtrosAbertos, setFiltrosAbertos] = useState({
@@ -64,9 +66,19 @@ export default function VisualizacaoUsuario() {
     return (
         <div className="visualizacao-usuario fade-in">
             <div className="abrir-chamado">
-                <button className="btn-abrir">
+                <button className="btn-abrir" onClick={() => setAbrirModal(true)}>
                     ABRIR CHAMADO <PlusCircle size={20} />
                 </button>
+                {abrirModal && (
+
+                    <ModalChamadoUser
+                        onClose={() => {
+                            const modal = document.querySelector(".modal-chamado-user");
+                            modal.classList.add("fade-out-modal");
+                            setTimeout(() => setAbrirModal(false), 250); // espera a animação acabar
+                        }}
+                    />
+                )}
             </div>
 
             {/* ======== CHAMADOS ABERTOS ======== */}
@@ -90,6 +102,7 @@ export default function VisualizacaoUsuario() {
                 setFiltros={setFiltrosResolvidos}
                 handleFiltroChange={handleFiltroChange}
             />
+
         </div>
     );
 }
