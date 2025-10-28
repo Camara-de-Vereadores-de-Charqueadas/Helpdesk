@@ -13,13 +13,11 @@ export default function VisualizacaoUsuario() {
     // Filtros separados para cada card
     const [filtrosAbertos, setFiltrosAbertos] = useState({
         periodo: "Últimos 30 dias",
-        urgencia: "Qualquer",
         perfil: "Qualquer",
     });
 
     const [filtrosResolvidos, setFiltrosResolvidos] = useState({
         periodo: "Últimos 30 dias",
-        urgencia: "Qualquer",
         perfil: "Qualquer",
     });
 

@@ -6,7 +6,7 @@ export default function Ticket({ chamado }) {
         <div className="chamado-card">
             <div className="chamado-topo">
                 <strong>
-                    {chamado.titulo.toUpperCase()} | {chamado.dataHora} | {chamado.urgencia.toUpperCase()} URGÊNCIA
+                    {chamado.titulo.toUpperCase()} | {chamado.dataHora}
                 </strong>
             </div>
 

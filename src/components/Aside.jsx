@@ -2,11 +2,9 @@ import "../styles/Layouts/Aside.css";
 import { useState, useEffect } from "react";
 import logoCamara from "../assets/logoCharqueadas.png";
 import logoCharqueadas from "../assets/logoCharq.png";
+import { ListDashes, ListMagnifyingGlass, ListChecks } from "@phosphor-icons/react";
 
-// Ícones Phosphor
-import { ListDashes, ListMagnifyingGlass, ListChecks, PlusCircle } from "@phosphor-icons/react";
-
-export default function Aside() {
+export default function Aside({ onFiltroChange }) {
     const [activeItem, setActiveItem] = useState("Todos");
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -20,11 +18,14 @@ export default function Aside() {
         { name: "Todos", Icon: ListDashes },
         { name: "Abertos", Icon: ListMagnifyingGlass },
         { name: "Fechados", Icon: ListChecks },
-        { name: "Criar", Icon: PlusCircle },
     ];
 
-    // Define a logo com base na largura
     const logo = windowWidth <= 768 ? logoCharqueadas : logoCamara;
+
+    const handleClick = (itemName) => {
+        setActiveItem(itemName);
+        onFiltroChange(itemName); // ← envia o filtro para o pai (Chamados)
+    };
 
     return (
         <aside className="aside-dev">
@@ -33,7 +34,7 @@ export default function Aside() {
                     <li
                         key={item.name}
                         className={activeItem === item.name ? "active" : "inactive"}
-                        onClick={() => setActiveItem(item.name)}
+                        onClick={() => handleClick(item.name)}
                     >
                         <span className="icone">
                             <item.Icon size={32} color="#96bed8" weight="bold" />
@@ -42,7 +43,6 @@ export default function Aside() {
                     </li>
                 ))}
             </ul>
-
         </aside>
     );
 }

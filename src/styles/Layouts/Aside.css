@@ -5,8 +5,9 @@
     flex-direction: column;
     justify-content: space-between;
     padding: 60px 0px;
-    height: 100vh;
-    position: fixed;
+    min-height: 88vh;
+    height: auto;
+    position: relative;
 }
 
 .menu-list {

@@ -54,20 +54,20 @@ export default function App() {
           />
 
           {/* Páginas principais */}
-          <Route path="/Home" element={<Home userType={userType} />} />
+          <Route path="/Home" className="check" element={<Home userType={userType} />} />
           <Route path="/Setores" element={<Setores />} />
           <Route path="/Chamados" element={<Chamados />} />
           <Route path="/Historico" element={<Historico />} />
 
           {/* Páginas dos modais */}
-          <Route path="/modais/ModalPerfil" element={<ModalPerfil />} />
-          <Route path="/modais/ModalChamadoUser" element={<ModalChamadoUser />} />
+          <Route path="/modais/ModalPerfil" className="check" element={<ModalPerfil />} />
+          <Route path="/modais/ModalChamadoUser" className="check" element={<ModalChamadoUser />} />
           <Route path="/modais/ModalChamadoAdmin" element={<ModalChamadoAdmin />} />
 
           {/* Componentes */}
-          <Route path="/componentes/Aside" element={<Aside />} />
+          <Route path="/componentes/Aside" className="check" element={<Aside />} />
           <Route path="/componentes/Footer" element={<Footer />} />
-          <Route path="/componentes/Header" element={<Header />} />
+          <Route path="/componentes/Header" className="check" element={<Header />} />
           <Route path="/componentes/Form" element={<Form />} />
           <Route path="/componentes/Notification" element={<Notification />} />
         </Routes>
@@ -80,8 +80,8 @@ export default function App() {
           <details className="menu2">
             <summary>Modais</summary>
             <div className="menu2-content">
-              <NavLink to="/modais/ModalPerfil">Modal Perfil</NavLink>
-              <NavLink to="/modais/ModalChamadoUser">Modal Chamado User</NavLink>
+              <NavLink to="/modais/ModalPerfil" className="check">Modal Perfil</NavLink>
+              <NavLink to="/modais/ModalChamadoUser" className="check">Modal Chamado User</NavLink>
               <NavLink to="/modais/ModalChamadoAdmin">Modal Chamado Admin</NavLink>
             </div>
           </details>
@@ -93,9 +93,9 @@ export default function App() {
           <details className="menu2">
             <summary>Componentes</summary>
             <div className="menu2-content">
-              <NavLink to="/componentes/Aside">Aside</NavLink>
-              <NavLink to="/componentes/Footer">Footer</NavLink>
-              <NavLink to="/componentes/Header">Header</NavLink>
+              <NavLink to="/componentes/Aside" className="check">Aside</NavLink>
+              <NavLink to="/componentes/Footer" className="check">Footer</NavLink>
+              <NavLink to="/componentes/Header" className="check">Header</NavLink>
               <NavLink to="/componentes/Form">Form</NavLink>
               <NavLink to="/componentes/Notification">Notification</NavLink>
             </div>

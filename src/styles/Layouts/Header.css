@@ -70,7 +70,14 @@
 
 .nav-item.active {
     background-color: #1e4762;
+}
+
+.nav-item.active .icon {
     color: #3498db;
+    background-color: var(--branco);
+    border-radius: 40px;
+    padding: 0px;
+    margin: 0px;
 }
 
 .perfil {
@@ -116,8 +123,6 @@
 /* Forçar o submenu a sair visualmente do header */
 .perfil-menu {
     position: fixed;
-    /* antes era absolute */
-    top: 70px;
     /* ajusta conforme a altura do seu header */
     right: 40px;
     /* alinha à direita do botão de perfil */

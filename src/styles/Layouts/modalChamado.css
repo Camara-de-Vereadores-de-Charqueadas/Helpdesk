@@ -235,6 +235,104 @@ textarea::placeholder {
     font-family: 'Inter';
 }
 
+/* Mini modal de imagens */
+.mini-modal-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+    animation: fadeInOverlay 0.3s ease forwards;
+}
+
+.mini-modal {
+    width: 90%;
+    max-width: 420px;
+    background: var(--azul-raf);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    border: 1px solid var(--azul-claro);
+    color: white;
+    position: relative;
+    bottom: 150px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+.mini-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.mini-modal-header h3 {
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    color: var(--branco);
+    margin: 0;
+    padding: 0;
+}
+
+.imagens-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    justify-items: center;
+}
+
+.imagem-item {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 0.8rem;
+    border: 1px solid var(--azul-claro);
+}
+
+.imagem-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.delete-img-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 0.2rem 0.4rem;
+}
+
+.add-img-btn {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px dashed var(--azul-claro);
+    color: var(--azul-claro);
+    font-size: 2.5rem;
+    border-radius: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.add-img-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.anexos-group {
+    text-align: left;
+}
+
 .btn-anexar {
     background: linear-gradient(120deg, #6f278d, #b84eb4);
     border: none;

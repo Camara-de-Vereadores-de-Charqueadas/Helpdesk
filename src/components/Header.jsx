@@ -1,27 +1,28 @@
 import React, { useState, useEffect, useRef } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import "../styles/Layouts/Header.css";
-import {
-    Bell,
-    Folder,
-    CheckCircle,
-    UserCircle,
-    XCircle,
-    DotsThree,
-} from "@phosphor-icons/react";
+import { Bell, Folder, CheckCircle, UserCircle, XCircle, DotsThree } from "@phosphor-icons/react";
 import logo from "../assets/Logo.png";
 import { chamadosMock } from "../data/chamados";
 
 export default function Header({ isAdmin = true, userName = "Informática" }) {
     const navigate = useNavigate();
+    const location = useLocation(); // ✅ pega a rota atual
 
-    const [active, setActive] = useState("Chamados");
+    const [active, setActive] = useState("");
     const [menuOpen, setMenuOpen] = useState(false);
     const [showProfileMenu, setShowProfileMenu] = useState(false);
     const [showNotifications, setShowNotifications] = useState(false);
     const [notifications, setNotifications] = useState([]);
     const profileRef = useRef(null);
     const notificationRef = useRef(null);
+
+    // Atualiza o item ativo com base na rota
+    useEffect(() => {
+        if (location.pathname.includes("Chamados")) setActive("CHAMADOS");
+        else if (location.pathname.includes("Setores")) setActive("SETORES");
+        else setActive(""); // padrão
+    }, [location]);
 
     // Criar notificações mock
     useEffect(() => {
@@ -31,29 +32,17 @@ export default function Header({ isAdmin = true, userName = "Informática" }) {
                 title: `Chamado no setor ${c.setor} - ${c.titulo}`,
                 read: false,
             }))
-            : [
-                // {
-                //     id: 1,
-                //     title: "Recuperar código de entrada no setor TI",
-                //     read: false,
-                // },
-            ];
+            : [];
         setNotifications(mock);
     }, [isAdmin]);
 
     // Fechar menus ao clicar fora
     useEffect(() => {
         const handleClickOutside = (e) => {
-            if (
-                profileRef.current &&
-                !profileRef.current.contains(e.target)
-            ) {
+            if (profileRef.current && !profileRef.current.contains(e.target)) {
                 setShowProfileMenu(false);
             }
-            if (
-                notificationRef.current &&
-                !notificationRef.current.contains(e.target)
-            ) {
+            if (notificationRef.current && !notificationRef.current.contains(e.target)) {
                 setShowNotifications(false);
             }
         };
@@ -75,11 +64,7 @@ export default function Header({ isAdmin = true, userName = "Informática" }) {
     const handleNotificationClick = () => {
         setShowNotifications(!showNotifications);
         setShowProfileMenu(false);
-
-        // Marcar todas como lidas ao abrir
-        setNotifications((prev) =>
-            prev.map((n) => ({ ...n, read: true }))
-        );
+        setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
     };
 
     return (
@@ -124,35 +109,8 @@ export default function Header({ isAdmin = true, userName = "Informática" }) {
                         <div className="submenu perfil-menu">
                             <span className="submenu-item config">Configurações</span>
                             <span className="submenu-item logout">
-                                <b>Logout</b>
+                                <b>Sair</b>
                             </span>
-                        </div>
-                    )}
-                </div>
-
-                {/* NOTIFICAÇÕES */}
-                <div className="notification-wrapper" ref={notificationRef}>
-                    <div
-                        className={`nav-item notification ${active === "Notificações" ? "active" : ""
-                            }`}
-                        onClick={handleNotificationClick}
-                    >
-                        <span className="responsive">NOTIFICAÇÕES</span>
-                        <Bell size={30} weight="fill" className="icon" />
-                        {notifications.some((n) => !n.read) && (
-                            <span className="notification-badge" />
-                        )}
-                    </div>
-
-                    {showNotifications && (
-                        <div className="notification-box">
-                            {notifications.length === 0 ? (
-                                <p>sem notificações</p>
-                            ) : (
-                                notifications.map((n) => (
-                                    <p key={n.id}>{n.title}</p>
-                                ))
-                            )}
                         </div>
                     )}
                 </div>
@@ -163,11 +121,7 @@ export default function Header({ isAdmin = true, userName = "Informática" }) {
                 className={`menu-btn ${menuOpen ? "open" : ""}`}
                 onClick={() => setMenuOpen(!menuOpen)}
             >
-                {menuOpen ? (
-                    <XCircle size={40} color="#fff" weight="fill" />
-                ) : (
-                    <DotsThree size={40} color="#fff" weight="fill" />
-                )}
+                {menuOpen ? <XCircle size={40} color="#fff" weight="fill" /> : <DotsThree size={40} color="#fff" weight="fill" />}
             </button>
         </header>
     );
