@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, NavLink, useNavigate } from "re
 import { useState } from "react";
 
 import Home from "./pages/Index";
+import Login from "./pages/Login";
 import Setores from "./pages/admin/Setores";
 import Chamados from "./pages/admin/Chamados/Index";
 import Historico from "./pages/admin/Chamados/Historico";
@@ -15,7 +16,6 @@ import ModalChamadoAdmin from "./components/modais/ModalChamadoAdmin";
 import Aside from "./components/Aside";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
-import Form from "./components/Form";
 import Notification from "./components/Notification";
 
 import "./App.css";
@@ -55,6 +55,7 @@ export default function App() {
 
           {/* Páginas principais */}
           <Route path="/Home" className="check" element={<Home userType={userType} />} />
+          <Route path="/Login" className="" element={<Login userType={userType} />} />
           <Route path="/Setores" element={<Setores />} />
           <Route path="/Chamados" element={<Chamados />} />
           <Route path="/Historico" element={<Historico />} />
@@ -68,7 +69,6 @@ export default function App() {
           <Route path="/componentes/Aside" className="check" element={<Aside />} />
           <Route path="/componentes/Footer" element={<Footer />} />
           <Route path="/componentes/Header" className="check" element={<Header />} />
-          <Route path="/componentes/Form" element={<Form />} />
           <Route path="/componentes/Notification" element={<Notification />} />
         </Routes>
 
@@ -85,7 +85,7 @@ export default function App() {
               <NavLink to="/modais/ModalChamadoAdmin">Modal Chamado Admin</NavLink>
             </div>
           </details>
-
+          <NavLink to="/Login">Login</NavLink>
           <NavLink to="/Setores">Setores</NavLink>
           <NavLink to="/Chamados">Chamados</NavLink>
           <NavLink to="/Historico">Histórico</NavLink>
@@ -96,7 +96,6 @@ export default function App() {
               <NavLink to="/componentes/Aside" className="check">Aside</NavLink>
               <NavLink to="/componentes/Footer" className="check">Footer</NavLink>
               <NavLink to="/componentes/Header" className="check">Header</NavLink>
-              <NavLink to="/componentes/Form">Form</NavLink>
               <NavLink to="/componentes/Notification">Notification</NavLink>
             </div>
           </details>

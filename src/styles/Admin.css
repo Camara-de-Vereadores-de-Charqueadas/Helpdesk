@@ -97,7 +97,7 @@
     margin-top: 1rem;
 }
 
-.chamado-card {
+.chamado-card-admin {
     background: #fff;
     border-radius: 1rem;
     padding: 1rem 1.5rem;
@@ -108,7 +108,7 @@
     border: 2px solid transparent;
 }
 
-.chamado-card.nao-visualizado {
+.chamado-card-admin.nao-visualizado {
     border: 2px solid var(--vermelho);
 }
 

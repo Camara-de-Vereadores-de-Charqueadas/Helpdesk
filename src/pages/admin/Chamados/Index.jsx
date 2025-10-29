@@ -78,7 +78,7 @@ export default function Chamados() {
                                         {chamadosPorData[data].map((chamado) => (
                                             <div
                                                 key={chamado.id}
-                                                className={`chamado-card ${!chamado.visualizadoTI ? "nao-visualizado" : ""}`}
+                                                className={`chamado-card-admin ${!chamado.visualizadoTI ? "nao-visualizado" : ""}`}
                                             >
                                                 <div className="chamado-esquerda">
                                                     <img

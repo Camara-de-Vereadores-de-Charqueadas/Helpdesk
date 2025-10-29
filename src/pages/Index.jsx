@@ -5,12 +5,15 @@ import VisualizacaoAdmin from "../components/Admin";
 import "../styles/Index.css";
 import bannerImg from "../assets/banner.png";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { DotsThreeCircle, CheckCircle } from "@phosphor-icons/react";
-import { chamadosMock } from "../data/chamados"; // importa o mock
+import { chamadosMock } from "../data/chamados";
 
-export default function Home({ userType }) {
+export default function Home() {
+    const location = useLocation();
+    const setor = location.state?.setor || { nome: "Usuário", imagem: null };
+    const userType = location.state?.userType || "user";
     const isAdmin = userType === "admin";
-    const userName = isAdmin ? "Informática" : "Usuário Comum";
 
     const [dataAtual, setDataAtual] = useState("");
     const [menuItems, setMenuItems] = useState([]);
@@ -18,10 +21,8 @@ export default function Home({ userType }) {
     useEffect(() => {
         const hoje = new Date();
         const opcoes = { day: "2-digit", month: "2-digit", year: "numeric" };
-        const dataFormatada = hoje.toLocaleDateString("pt-BR", opcoes);
-        setDataAtual(dataFormatada);
+        setDataAtual(hoje.toLocaleDateString("pt-BR", opcoes));
 
-        // Função para verificar se o chamado é do dia atual
         const isMesmoDia = (dataHora) => {
             const dataChamado = new Date(dataHora.split(" ")[0].split("/").reverse().join("-"));
             return (
@@ -31,9 +32,7 @@ export default function Home({ userType }) {
             );
         };
 
-        // Filtra chamados do dia
         const chamadosHoje = chamadosMock.filter((c) => isMesmoDia(c.dataHora));
-
         const abertosHoje = chamadosHoje.filter((c) => !c.resolvido);
         const resolvidosHoje = chamadosHoje.filter((c) => c.resolvido);
 
@@ -41,14 +40,7 @@ export default function Home({ userType }) {
             {
                 name: "Chamados Abertos",
                 color: "var(--azul)",
-                icon: (
-                    <DotsThreeCircle
-                        size={80}
-                        weight="fill"
-                        className="icone"
-                        color="var(--azul)"
-                    />
-                ),
+                icon: <DotsThreeCircle size={80} weight="fill" color="var(--azul)" />,
                 info:
                     abertosHoje.length > 0
                         ? `${abertosHoje.length} chamado(s) aberto(s)`
@@ -57,14 +49,7 @@ export default function Home({ userType }) {
             {
                 name: "Chamados Concluídos",
                 color: "var(--verde)",
-                icon: (
-                    <CheckCircle
-                        size={80}
-                        weight="fill"
-                        className="icone"
-                        color="var(--verde)"
-                    />
-                ),
+                icon: <CheckCircle size={80} weight="fill" color="var(--verde)" />,
                 info:
                     resolvidosHoje.length > 0
                         ? `${resolvidosHoje.length} chamado(s) concluído(s)`
@@ -76,14 +61,12 @@ export default function Home({ userType }) {
     return (
         <>
             <User userType={userType} />
-            <Header isAdmin={isAdmin} userName={userName} />
+            {/* Passa o nome e imagem do setor pro Header */}
+            <Header isAdmin={isAdmin} userName={setor.nome} userImage={setor.imagem} />
 
-            {/* === BANNER SUPERIOR === */}
             <section
                 className="banner"
-                style={{
-                    backgroundImage: `url(${bannerImg})`,
-                }}
+                style={{ backgroundImage: `url(${bannerImg})` }}
             >
                 <div className="banner-overlay">
                     <h1>HELPDESK</h1>

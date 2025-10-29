@@ -5,10 +5,9 @@ import { Bell, Folder, CheckCircle, UserCircle, XCircle, DotsThree } from "@phos
 import logo from "../assets/Logo.png";
 import { chamadosMock } from "../data/chamados";
 
-export default function Header({ isAdmin = true, userName = "Informática" }) {
+export default function Header({ isAdmin = true, userName = "Informática", userImage = null }) {
     const navigate = useNavigate();
-    const location = useLocation(); // ✅ pega a rota atual
-
+    const location = useLocation();
     const [active, setActive] = useState("");
     const [menuOpen, setMenuOpen] = useState(false);
     const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -17,14 +16,12 @@ export default function Header({ isAdmin = true, userName = "Informática" }) {
     const profileRef = useRef(null);
     const notificationRef = useRef(null);
 
-    // Atualiza o item ativo com base na rota
     useEffect(() => {
         if (location.pathname.includes("Chamados")) setActive("CHAMADOS");
         else if (location.pathname.includes("Setores")) setActive("SETORES");
-        else setActive(""); // padrão
+        else setActive("");
     }, [location]);
 
-    // Criar notificações mock
     useEffect(() => {
         const mock = isAdmin
             ? chamadosMock.map((c) => ({
@@ -36,7 +33,6 @@ export default function Header({ isAdmin = true, userName = "Informática" }) {
         setNotifications(mock);
     }, [isAdmin]);
 
-    // Fechar menus ao clicar fora
     useEffect(() => {
         const handleClickOutside = (e) => {
             if (profileRef.current && !profileRef.current.contains(e.target)) {
@@ -94,14 +90,24 @@ export default function Header({ isAdmin = true, userName = "Informática" }) {
                     </>
                 )}
 
-                {/* PERFIL */}
                 <div className="perfil-wrapper" ref={profileRef}>
-                    <div
-                        className={`nav-item perfil ${active === "Perfil" ? "active" : ""}`}
-                        onClick={handleProfileClick}
-                    >
-                        <UserCircle size={35} weight="fill" color="#fff" className="icon" />
-                        <span className="responsive">PERFIL</span>
+                    <div className="nav-item perfil" onClick={handleProfileClick}>
+                        {userImage ? (
+                            <img
+                                src={userImage}
+                                alt="Perfil"
+                                className="perfil-img"
+                                style={{
+                                    width: 35,
+                                    height: 35,
+                                    borderRadius: "50%",
+                                    objectFit: "cover",
+                                    border: "2px solid #fff",
+                                }}
+                            />
+                        ) : (
+                            <UserCircle size={35} weight="fill" color="#fff" className="icon" />
+                        )}
                         <small>{userName}</small>
                     </div>
 
@@ -110,18 +116,22 @@ export default function Header({ isAdmin = true, userName = "Informática" }) {
                             <span className="submenu-item config">Configurações</span>
                             <span className="submenu-item logout">
                                 <b>Sair</b>
+
                             </span>
                         </div>
                     )}
                 </div>
             </nav>
 
-            {/* MENU HAMBÚRGUER */}
             <button
                 className={`menu-btn ${menuOpen ? "open" : ""}`}
                 onClick={() => setMenuOpen(!menuOpen)}
             >
-                {menuOpen ? <XCircle size={40} color="#fff" weight="fill" /> : <DotsThree size={40} color="#fff" weight="fill" />}
+                {menuOpen ? (
+                    <XCircle size={40} color="#fff" weight="fill" />
+                ) : (
+                    <DotsThree size={40} color="#fff" weight="fill" />
+                )}
             </button>
         </header>
     );
