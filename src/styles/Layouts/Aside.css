@@ -65,29 +65,66 @@
 }
 
 @media (max-width: 768px) {
-    .aside-dev {
-        width: 160px;
+    .chamados-page{
+        margin-bottom: 80px;
     }
+  /* O aside vira um "footer fixo" na parte inferior */
+  .aside-dev {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: var(--azul-raf); /* ou a cor padrão do seu menu */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0.6rem 0;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 999; /* garante que fique acima do conteúdo */
+    max-height: 100px !important;
+    height: 70px;
+    min-height: 50px;
+    justify-content: center;
+  }
 
-    .menu-list li .text {
-        font-size: 12px;
-    }
+  /* Oculta ou reorganiza elementos desnecessários */
+  .aside-dev .logo-top {
+    display: none;
+  }
 
-    .logo-bottom {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+  .aside-dev .menu-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+  }
 
-    .logo-bottom img {
-        width: 60px;
-    }
+  .aside-dev .menu-list li {
+    margin: 0;
+    padding: 0;
+  }
 
+  .menu-list li .text {
+    font-size: 12px;
+  }
+
+  .logo-bottom {
+    display: none; /* evita duplicar o logo no rodapé */
+  }
+
+  /* Ícones menores e centralizados */
+  .menu-list li a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+  }
+
+  
 }
 
 @media (max-width: 480px) {
     .aside-dev {
-        width: 70px;
         padding: 20px 0;
     }
 
@@ -96,16 +133,10 @@
         padding: 16px 0;
     }
 
-    .menu-list li .text {
-        display: none;
-    }
 
     .menu-list li .icone {
         font-size: 24px;
     }
 
-    .logo-bottom img {
-        margin-bottom: 10px;
-        width: 45px;
-    }
+    
 }

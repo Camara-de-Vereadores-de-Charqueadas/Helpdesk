@@ -290,6 +290,10 @@
 }
 
 @media (max-width: 480px) {
+    .nav-item .perfil{
+        color: #FFF;
+        width: 100px;
+    }
     .header {
         flex-direction: row;
         align-items: center;

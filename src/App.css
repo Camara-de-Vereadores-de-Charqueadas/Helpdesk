@@ -2,7 +2,6 @@
 .App {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
 }
 
 .select-user-type {
@@ -146,7 +145,7 @@ a.check.active {
 
 /* ===== Ajuste visual para evitar sobreposição ===== */
 .app {
-  padding-bottom: 70px;
+  /* padding-bottom: 70px; */
   /* espaço pro menu fixo */
 }
 

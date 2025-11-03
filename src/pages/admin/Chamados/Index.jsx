@@ -155,7 +155,7 @@ export default function Chamados() {
                                                                 }`}
                                                             onClick={() => abrirModal(chamado)}
                                                         >
-                                                            <Eye size={22} />
+                                                            <Eye size={22} className="icone-olho"/>
                                                         </button>
 
                                                         {/* {!chamado.resolvido && (

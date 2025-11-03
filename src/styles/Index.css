@@ -1,5 +1,4 @@
 .page {
-    padding: 2rem;
     text-align: center;
 }
 
@@ -53,11 +52,11 @@
     background-size: cover;
     background-position: center;
     position: relative;
-    height: 250px;
+    height: 200px;
     display: flex;
     align-items: center;
+    margin-bottom: 10px;
     justify-content: center;
-    margin-bottom: 30px;
 }
 
 .banner::after {
