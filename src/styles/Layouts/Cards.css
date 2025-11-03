@@ -1,9 +1,0 @@
-.ticket-dev {
-    background: var(--branco);
-    border: 1px solid var(--azul-claro);
-    border-radius: 8px;
-    padding: 1rem;
-    margin: 1rem auto;
-    width: 90%;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-}

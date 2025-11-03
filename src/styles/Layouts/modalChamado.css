@@ -1,13 +1,18 @@
 .modal-overlay {
     position: fixed;
     inset: 0;
-    /* fundo escuro cobrindo tudo */
+    background: rgba(0, 0, 0, 0.6);
+    /* fundo escuro */
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
-    top: -50%;
+    z-index: 5000;
+    /* acima de tudo */
     animation: fadeInOverlay 0.3s ease forwards;
+}
+
+option {
+    color: var(--azul-raf);
 }
 
 .modal-chamado-user {

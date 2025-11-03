@@ -39,8 +39,10 @@
     transition: transform 0.2s ease;
 }
 
-.card-admin:hover {
-    transform: scale(1.03);
+.chamado-card-admin:hover {
+    transform: scale(1.01);
+    transition: transform 0.3s ease;
+
 }
 
 .card-admin .title-h3 {
@@ -189,12 +191,24 @@
     background: var(--azul-vivo);
 }
 
+.btn-visualizar.azul:hover {
+    background: #4a90e2;
+}
+
 .btn-visualizar.vermelho {
     background: var(--vermelho);
 }
 
+.btn-visualizar.vermelho:hover {
+    background: #e98d8d;
+}
+
 .btn-finalizar {
     background: var(--verde);
+}
+
+.btn-finalizar:hover {
+    background: #6fc36f;
 }
 
 .status {
@@ -230,6 +244,92 @@
 .conteudo-principal {
     flex: 1;
     margin: 0 40px;
+}
+
+.modal-overlay-admin {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 10, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 1rem;
+    width: 450px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.modal-imagens {
+    width: 650px;
+}
+
+.modal-close {
+    background: transparent;
+    border: none;
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    cursor: pointer;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+}
+
+.btn-imagens {
+    background: var(--grad-roxo);
+    color: white;
+    border: none;
+    padding: 0.5rem 0.8rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+.btn-resolvido,
+.btn-nao-resolvido {
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    color: white;
+}
+
+.btn-resolvido {
+    background-color: #4caf50;
+}
+
+.btn-nao-resolvido {
+    background-color: #d32f2f;
+}
+
+.imagens-container {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.imagens-container img {
+    width: 48%;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.imagens-container img:hover {
+    transform: scale(1.05);
 }
 
 /* Responsividade - ajusta o recuo conforme o aside encolhe */

@@ -80,13 +80,13 @@ export default function Header({ isAdmin = true, userName = "Informática", user
                             <CheckCircle size={24} weight="fill" className="icon" />
                             <span>CHAMADOS</span>
                         </div>
-                        <div
+                        {/* <div
                             className={`nav-item ${active === "SETORES" ? "active" : ""}`}
                             onClick={() => handleNavClick("SETORES")}
                         >
                             <Folder size={24} weight="fill" className="icon" />
                             <span>SETORES</span>
-                        </div>
+                        </div> */}
                     </>
                 )}
 

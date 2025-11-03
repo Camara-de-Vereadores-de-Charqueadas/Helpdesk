@@ -2,19 +2,26 @@ import React, { useState } from "react";
 import setores from "../../data/setores";
 import "../../styles/Layouts/modalChamado.css";
 import SelectUrgencia from "../SelectUrgencia";
+import { createPortal } from "react-dom";
+
 import {
+    CaretDown,
     PlusCircle,
     TrashSimple
 } from "@phosphor-icons/react";
 
-export default function ModalChamadoUser({ onClose }) {
-    const setor = setores[0];
+export default function ModalChamadoUser({ onClose, setorSelecionado }) {
     const [nome, setNome] = useState("");
     // const [urgencia, setUrgencia] = useState("médio");
     const [titulo, setTitulo] = useState("");
     const [descricao, setDescricao] = useState("");
     const [showImageModal, setShowImageModal] = useState(false);
     const [imagens, setImagens] = useState([]);
+    const [perfilSelecionado, setPerfilSelecionado] = useState("");
+
+    setorSelecionado = 5;
+    // busca o setor com base no id
+    const setor = setores.find((s) => s.id === setorSelecionado);
 
     // Fecha o modal ao clicar fora
     const handleOverlayClick = (e) => {
@@ -47,101 +54,117 @@ export default function ModalChamadoUser({ onClose }) {
         setImagens((prev) => prev.filter((_, i) => i !== index));
     };
 
-    return (
-        <>
-            <div className="modal-overlay" onClick={handleOverlayClick}>
-                <div className="modal-chamado-user fade-in-modal">
-                    <div className="modal-header">
-                        <h2>NOVO CHAMADO</h2>
-                        <button className="close-btn" onClick={onClose}>×</button>
-                    </div>
+    const modalContent = (<>
+        <div className="modal-overlay" onClick={handleOverlayClick}>
+            <div className="modal-chamado-user fade-in-modal">
+                <div className="modal-header">
+                    <h2>NOVO CHAMADO</h2>
+                    <button className="close-btn" onClick={onClose}>×</button>
+                </div>
 
-                    <div className="setor-info">
-                        <img src={setor.imagemPerfil} alt={setor.nome} className="setor-foto" />
-                        <h3>{setor.nome}</h3>
-                    </div>
+                <div className="setor-info">
+                    <img src={setor.imagemPerfil} alt={setor.nome} className="setor-foto" />
+                    <h3>{setor.nome}</h3>
+                </div>
 
-                    <div className="form-grid">
+                <div className="form-grid">
+                    <div className="form-grid full">
                         <div className="form-group">
-                            <label className="grad-bundi">USUÁRIO SOLICITANTE *</label>
-                            <input
-                                type="text"
-                                placeholder="Informe seu NOME"
-                                value={nome}
-                                onChange={(e) => setNome(e.target.value)}
-                            />
+                            <label className="grad-bundi">Selecione o perfil</label>
+                            <div className="select-wrapper">
+                                <select
+                                    value={perfilSelecionado}
+                                    onChange={(e) => setPerfilSelecionado(e.target.value)}
+                                >
+                                    <option value="">Selecione...</option>
+                                    {setor.perfis.length > 0 ? (
+                                        setor.perfis.map((perfil) => (
+                                            <option key={perfil.id} value={perfil.nome}>
+                                                {perfil.nome}
+                                            </option>
+                                        ))
+                                    ) : (
+                                        <option disabled>(Nenhum perfil cadastrado)</option>
+                                    )}
+                                </select>
+                                <CaretDown size={18} className="icon" />
+                            </div>
                         </div>
+                    </div>
 
-                        {/* <div className="form-group urgencia-group">
+                    {/* <div className="form-group urgencia-group">
                             <label className="grad-bundi">URGÊNCIA</label>
                             <SelectUrgencia value={urgencia} onChange={setUrgencia} />
                         </div> */}
 
-                        <div className="form-group anexos-group">
-                            <label className="grad-roxo">ANEXOS</label>
-                            <button className="btn-anexar" onClick={openImageModal}>
-                                Anexar IMAGENS
-                            </button>
-                        </div>
+                    <div className="form-group anexos-group">
+                        <label className="grad-roxo">ANEXOS</label>
+                        <button className="btn-anexar" onClick={openImageModal}>
+                            Anexar IMAGENS
+                        </button>
+                    </div>
+                </div>
+
+                <div className="form-group full">
+                    <label className="grad-bundi">TÍTULO DO PROBLEMA *</label>
+                    <input
+                        type="text"
+                        placeholder="Informe o problema em uma frase"
+                        value={titulo}
+                        onChange={(e) => setTitulo(e.target.value)}
+                    />
+                </div>
+
+                <div className="form-group full">
+                    <label className="grad-bundi">BREVE DESCRIÇÃO DO PROBLEMA</label>
+                    <textarea
+                        placeholder="Exemplo: Wi-Fi do notebook caiu há 10 minutos e ainda não voltou..."
+                        value={descricao}
+                        onChange={(e) => setDescricao(e.target.value)}
+                    ></textarea>
+                </div>
+
+                <button className="btn-criar">CRIAR NOVO CHAMADO</button>
+            </div>
+        </div>
+
+        {/* MODAL DE IMAGENS */}
+        {showImageModal && (
+            <div className="mini-modal-overlay" onClick={(e) => {
+                if (e.target.classList.contains("mini-modal-overlay")) closeImageModal();
+            }}>
+                <div className="mini-modal fade-in-modal">
+                    <div className="mini-modal-header">
+                        <h3>Imagens do chamado</h3>
+                        <button className="close-btn" onClick={closeImageModal}>×</button>
                     </div>
 
-                    <div className="form-group full">
-                        <label className="grad-bundi">TÍTULO DO PROBLEMA *</label>
-                        <input
-                            type="text"
-                            placeholder="Informe o problema em uma frase"
-                            value={titulo}
-                            onChange={(e) => setTitulo(e.target.value)}
-                        />
-                    </div>
+                    <div className="imagens-grid">
+                        {imagens.map((img, index) => (
+                            <div key={index} className="imagem-item">
+                                <img src={img} alt={`Imagem ${index + 1}`} />
+                                <button
+                                    className="delete-img-btn"
+                                    onClick={() => handleRemoveImage(index)}
+                                >
+                                    <TrashSimple size={12} color="#ffffff" weight="fill" />
+                                </button>
+                            </div>
+                        ))}
 
-                    <div className="form-group full">
-                        <label className="grad-bundi">BREVE DESCRIÇÃO DO PROBLEMA</label>
-                        <textarea
-                            placeholder="Exemplo: Wi-Fi do notebook caiu há 10 minutos e ainda não voltou..."
-                            value={descricao}
-                            onChange={(e) => setDescricao(e.target.value)}
-                        ></textarea>
+                        {imagens.length < 2 && (
+                            <label className="add-img-btn">
+                                <PlusCircle size={32} color="var(--azul-claro)" weight="fill" />
+                                <input type="file" accept="image/*" onChange={handleAddImage} hidden />
+                            </label>
+                        )}
                     </div>
-
-                    <button className="btn-criar">CRIAR NOVO CHAMADO</button>
                 </div>
             </div>
+        )}
+    </>
 
-            {/* MODAL DE IMAGENS */}
-            {showImageModal && (
-                <div className="mini-modal-overlay" onClick={(e) => {
-                    if (e.target.classList.contains("mini-modal-overlay")) closeImageModal();
-                }}>
-                    <div className="mini-modal fade-in-modal">
-                        <div className="mini-modal-header">
-                            <h3>Imagens do chamado</h3>
-                            <button className="close-btn" onClick={closeImageModal}>×</button>
-                        </div>
-
-                        <div className="imagens-grid">
-                            {imagens.map((img, index) => (
-                                <div key={index} className="imagem-item">
-                                    <img src={img} alt={`Imagem ${index + 1}`} />
-                                    <button
-                                        className="delete-img-btn"
-                                        onClick={() => handleRemoveImage(index)}
-                                    >
-                                        <TrashSimple size={12} color="#ffffff" weight="fill" />
-                                    </button>
-                                </div>
-                            ))}
-
-                            {imagens.length < 2 && (
-                                <label className="add-img-btn">
-                                    <PlusCircle size={32} color="var(--azul-claro)" weight="fill" />
-                                    <input type="file" accept="image/*" onChange={handleAddImage} hidden />
-                                </label>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            )}
-        </>
     );
+    return createPortal(modalContent, document.body);
+
 }

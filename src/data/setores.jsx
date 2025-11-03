@@ -23,7 +23,7 @@ const setores = [
         criadoEm: "2024-10-28",
         criadoPor: "Henrique Guimarães",
         codigoEntrada: "FNC244M7",
-        imagemPerfil: "/imgs/perfil_financeiro.png",
+        imagemPerfil: "/img/perfil_financeiro.png",
         perfis: [{ id: 1, nome: "Marshella" }]
     },
     {
@@ -43,7 +43,7 @@ const setores = [
         criadoEm: "2024-10-28",
         criadoPor: "Sistema",
         codigoEntrada: "GBC245B2",
-        imagemPerfil: "/imgs/perfil_gab_pc.png",
+        imagemPerfil: "/img/perfil_gab_pc.png",
         perfis: [
 
         ]
@@ -54,7 +54,7 @@ const setores = [
         criadoEm: "2024-10-28",
         criadoPor: "Sistema",
         codigoEntrada: "GBC367C3",
-        imagemPerfil: "/imgs/perfil_gab_claudio.png",
+        imagemPerfil: "/img/claudio.jpg",
         perfis: [
             { id: 1, nome: "Cladio" },
             { id: 2, nome: "Liane" },
@@ -70,7 +70,7 @@ const setores = [
         criadoEm: "2024-10-28",
         criadoPor: "Sistema",
         codigoEntrada: "GBT489D4",
-        imagemPerfil: "/imgs/perfil_gab_tati.png",
+        imagemPerfil: "/img/perfil_gab_tati.png",
         perfis: []
     },
     {
@@ -79,7 +79,7 @@ const setores = [
         criadoEm: "2024-10-28",
         criadoPor: "Sistema",
         codigoEntrada: "GBR501E5",
-        imagemPerfil: "/imgs/perfil_gab_rose.png",
+        imagemPerfil: "/img/perfil_gab_rose.png",
         perfis: [
             { id: 1, nome: "Rose" },
 
@@ -91,7 +91,7 @@ const setores = [
         criadoEm: "2024-10-28",
         criadoPor: "Sistema",
         codigoEntrada: "GBP623F6",
-        imagemPerfil: "/imgs/perfil_gab_patrick.png",
+        imagemPerfil: "/img/perfil_gab_patrick.png",
         perfis: [
             { id: 1, nome: "Patrick" },
         ]
@@ -102,7 +102,7 @@ const setores = [
         criadoEm: "2024-10-28",
         criadoPor: "Sistema",
         codigoEntrada: "GBA745G7",
-        imagemPerfil: "/imgs/perfil_gab_adriano.png",
+        imagemPerfil: "/img/perfil_gab_adriano.png",
         perfis: [
             { id: 1, nome: "Adriano" },
         ]
@@ -113,7 +113,7 @@ const setores = [
         criadoEm: "2024-10-28",
         criadoPor: "Sistema",
         codigoEntrada: "GBC867H8",
-        imagemPerfil: "/imgs/perfil_gab_chines.png",
+        imagemPerfil: "/img/perfil_gab_chines.png",
         perfis: [
             { id: 1, nome: "Chines" },
         ]
@@ -135,7 +135,7 @@ const setores = [
         criadoEm: "2024-10-28",
         criadoPor: "Sistema",
         codigoEntrada: "GBG111J1",
-        imagemPerfil: "/imgs/perfil_gab_giovane.png",
+        imagemPerfil: "/img/perfil_gab_giovane.png",
         perfis: [
             { id: 1, nome: "Giovane" },
         ]
@@ -146,7 +146,7 @@ const setores = [
         criadoEm: "2024-10-28",
         criadoPor: "Sistema",
         codigoEntrada: "GBP222K2",
-        imagemPerfil: "/imgs/perfil_gab_paula.png",
+        imagemPerfil: "/img/perfil_gab_paula.png",
         perfis: [
             { id: 1, nome: "Paula" },
         ]
@@ -157,7 +157,7 @@ const setores = [
         criadoEm: "2024-10-28",
         criadoPor: "Sistema",
         codigoEntrada: "GBW333L3",
-        imagemPerfil: "/imgs/perfil_gab_wilson.png",
+        imagemPerfil: "/img/perfil_gab_wilson.png",
         perfis: [
             { id: 1, nome: "Wilson" },
         ]
@@ -168,7 +168,7 @@ const setores = [
         criadoEm: "2024-10-28",
         criadoPor: "Sistema",
         codigoEntrada: "COM444M4",
-        imagemPerfil: "/imgs/perfil_comissoes.png",
+        imagemPerfil: "/img/perfil_comissoes.png",
         perfis: []
     },
     {
@@ -177,7 +177,7 @@ const setores = [
         criadoEm: "2024-10-28",
         criadoPor: "Sistema",
         codigoEntrada: "DIR555N5",
-        imagemPerfil: "/imgs/perfil_diretoria.png",
+        imagemPerfil: "/img/perfil_diretoria.png",
         perfis: [
             { id: 1, nome: "Talles" },
         ]
@@ -188,7 +188,7 @@ const setores = [
         criadoEm: "2024-10-28",
         criadoPor: "Sistema",
         codigoEntrada: "SEC666O6",
-        imagemPerfil: "/imgs/perfil_secretaria.png",
+        imagemPerfil: "/img/perfil_secretaria.png",
         perfis: [
             { id: 1, nome: "Adriana" },
 
@@ -200,7 +200,7 @@ const setores = [
         criadoEm: "2024-10-28",
         criadoPor: "Sistema",
         codigoEntrada: "REC777P7",
-        imagemPerfil: "/imgs/perfil_recepcao.png",
+        imagemPerfil: "/img/perfil_recepcao.png",
         perfis: []
     }
 ];

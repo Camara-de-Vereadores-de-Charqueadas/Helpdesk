@@ -85,9 +85,9 @@ export default function App() {
               <NavLink to="/modais/ModalChamadoAdmin">Modal Chamado Admin</NavLink>
             </div>
           </details>
-          <NavLink to="/Login">Login</NavLink>
+          <NavLink to="/Login" className="check">Login</NavLink>
           <NavLink to="/Setores">Setores</NavLink>
-          <NavLink to="/Chamados">Chamados</NavLink>
+          <NavLink to="/Chamados" className="check">Chamados</NavLink>
           <NavLink to="/Historico">Histórico</NavLink>
 
           <details className="menu2">

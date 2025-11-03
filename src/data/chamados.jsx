@@ -6,11 +6,16 @@ export const chamadosMock = [
         setor: "Gabinete Gilvan",
         perfil: "Patrick",
         dataHora: "2025-10-28T09:32:00",
-        descricaoProblema: "O computador da recepção não liga mesmo após reiniciar o estabilizador.",
+        descricaoProblema:
+            "O computador da recepção não liga mesmo após reiniciar o estabilizador.",
         descricaoTI: "(em andamento).",
         status: "NAO VISUALIZADO",
         visualizadoTI: false,
         resolvido: false,
+        imagens: [
+            "/img/chamados/1.png",
+            "/img/chamados/2.png",
+        ],
     },
     {
         id: 2,
@@ -19,11 +24,16 @@ export const chamadosMock = [
         setor: "Gabinete Paula",
         perfil: "Talles",
         dataHora: "2025-10-14T15:47:00",
-        descricaoProblema: "Sistema de ponto apresenta erro ao exportar planilha.",
+        descricaoProblema:
+            "Sistema de ponto apresenta erro ao exportar planilha.",
         descricaoTI: "Aguardando resposta do fornecedor.",
         status: "NAO RESOLVIDO",
         visualizadoTI: true,
         resolvido: true,
+        imagens: [
+            "/img/chamados/1.png",
+            "/img/chamados/2.png",
+        ],
     },
     {
         id: 3,
@@ -32,10 +42,12 @@ export const chamadosMock = [
         setor: "Gabinete Esporinha",
         perfil: "Patrícia",
         dataHora: "2025-10-14T11:20:00",
-        descricaoProblema: "A impressora não finaliza a impressão e dá erro de papel.",
+        descricaoProblema:
+            "A impressora não finaliza a impressão e dá erro de papel.",
         descricaoTI: "Resolvido após reiniciar.",
         status: "RESOLVIDO",
         visualizadoTI: true,
         resolvido: true,
+        imagens: ["/img/chamados/1.png"],
     },
 ];
