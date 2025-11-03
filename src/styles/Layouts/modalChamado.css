@@ -247,7 +247,8 @@ textarea::placeholder {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 3000;
+    z-index: 6000;
+    top: 50%;
     animation: fadeInOverlay 0.3s ease forwards;
 }
 
