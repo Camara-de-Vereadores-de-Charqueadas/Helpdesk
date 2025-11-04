@@ -1,5 +1,4 @@
 .chamado-card {
-    background: var(--branco);
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     padding: 14px 20px;
@@ -81,7 +80,7 @@
 
 @media (max-width: 768px) {
     .chamado-card {
-        background-color: var(--azul-raf);
+        /* background-color: var(--azul-raf); */
     }
 
     .chamado-corpo {
@@ -91,8 +90,8 @@
 
     .chamado-topo {
         font-size: 0.7em;
-        color: var(--branco);
-        border: #ffffff3e 1px solid;
+        /* color: var(--branco);
+        border: #ffffff3e 1px solid; */
 
     }
 
@@ -101,20 +100,20 @@
     .perfil-ticket-p,
     .descricao {
         font-size: 0.7em !important;
-        color: var(--branco);
+        /* color: var(--branco); */
     }
 
     .lado-esquerdo,
     .lado-direito {
-        background-color: #27648ddb;
-        color: var(--branco);
+        /* background-color: #27648ddb;
+        color: var(--branco); */
         padding: 10px 5px;
         border-radius: 10px;
         width: 100%;
     }
 
     .lado-direito {
-        background-color: #27648d84;
+        /* background-color: #27648d84; */
     }
 
     .descricao,
@@ -127,15 +126,10 @@
     }
 
     .titulo-info {
-        color: var(--branco);
+        /* color: var(--branco); */
     }
 
-    .icone-visualizar {
-        background: none;
-        color: var(--branco);
-        scale: 2;
-        margin-bottom: 5px;
-    }
+    
 
 }
 

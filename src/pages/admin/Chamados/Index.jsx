@@ -114,7 +114,7 @@ export default function Chamados() {
                             const tituloData = formatarData(primeiroChamado.dataHora);
 
                             return (
-                                <div key={data}>
+                                <div className="container-chamado" key={data}>
                                     <h3 className="data-separador">{tituloData}</h3>
 
                                     <div className="lista-chamados">

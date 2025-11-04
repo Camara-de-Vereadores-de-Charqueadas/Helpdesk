@@ -99,21 +99,42 @@
 
 /* ===== RESPONSIVIDADE ===== */
 @media (max-width: 768px) {
-    .banner {
-        height: 140px;
+    .banner h1{
+      display: none;
     }
-
-    .banner-overlay h1 {
+    .banner p{
         font-size: 2rem;
+        font-weight: 1000;
+        margin: 50px;
     }
-
-    .banner-overlay p {
-        font-size: 0.7rem;
+    .card-admin{
+        width: 200px;
+        padding: 10px;
     }
-
-
+    .card-admin .title-h3{
+        font-size: 1rem;
+        margin: 0;
+    }
+    .card-admin .data{
+        font-size: 0.8rem;
+    }
+    .card-admin .info{
+        font-size: 0.6rem;
+    }
 
     .em-desenvolvimento {
         font-size: 3rem;
     }
+}
+@media (max-width: 576px) {
+    .banner p{
+        font-size: 1.5rem;
+    }
+}
+@media (max-width: 480px) {
+    .banner{
+        display: none;
+    }
+   
+
 }

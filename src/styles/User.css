@@ -8,7 +8,15 @@
 }
 
 .abrir-chamado {
-    margin-bottom: 32px;
+    margin-bottom: 20px;
+}
+
+.btn-abrir {
+    margin-top: 20px;
+}
+
+.card-chamados {
+    margin-top: 0px;
 }
 
 .btn-abrir {
@@ -32,9 +40,9 @@
 }
 
 .card-chamados {
-    background: #faeded;
+    background: var(--branco);
     border-radius: 16px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(192, 7, 7, 0.1);
     width: 100%;
     max-width: 1500px;
     padding: 24px;
@@ -43,7 +51,8 @@
 }
 
 .card-chamados:last-child {
-    background-color: #edfaee;
+    box-shadow: 0 4px 10px rgba(21, 161, 3, 0.1);
+
 }
 
 .card-header {

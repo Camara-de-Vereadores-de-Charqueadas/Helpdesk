@@ -148,7 +148,10 @@
     .login-left {
         max-height: 12vh;
         padding: 50px;
-        background: var(--grad-azul-raf);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* background: var(--grad-azul-raf); */
     }
 
     .login-right {
@@ -162,11 +165,23 @@
     }
 
     .login-logo-bottom {
-        display: block;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
     }
 
     .login-text h1 {
         font-size: 2.2rem;
+        margin: 0px;
+        padding: 0px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .login-text p {
+        font-size: 0.6rem;
     }
 
     .login-input {

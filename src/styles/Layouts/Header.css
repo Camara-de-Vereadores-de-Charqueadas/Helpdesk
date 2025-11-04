@@ -355,8 +355,6 @@
         display: flex;
         flex-direction: column;
         width: 100%;
-        border-bottom: 1px solid #3498db8c;
-        padding-bottom: 10px;
     }
 
     .submenu {
@@ -396,9 +394,14 @@
         padding-bottom: 15px;
     }
 
-    .nav-item:last-child {
-        border-bottom: none;
+    .perfil {
+        border: none;
         padding-bottom: 10px;
+    }
+    .nav-item small{
+        display: block;
+        font-weight: 1000;
+        font-size: 0.9rem;
     }
 
     .header-right.open .nav-item {

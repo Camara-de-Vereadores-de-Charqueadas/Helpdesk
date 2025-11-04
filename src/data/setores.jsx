@@ -56,7 +56,7 @@ const setores = [
         codigoEntrada: "GBC367C3",
         imagemPerfil: "/img/claudio.jpg",
         perfis: [
-            { id: 1, nome: "Cladio" },
+            { id: 1, nome: "Claudio" },
             { id: 2, nome: "Liane" },
             { id: 3, nome: "Renata" },
             { id: 4, nome: "Cinara" },
