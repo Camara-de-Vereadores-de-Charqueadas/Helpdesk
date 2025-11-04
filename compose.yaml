@@ -1,0 +1,60 @@
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: ${NODE_ENV:-development}
+    env_file: .env
+    restart: ${RESTART_POLICY:-unless-stopped}
+    ports:
+      - "${API_PORT:-3000}:3000"
+    volumes:
+      - ./api:/app
+      - node_modules_api:/app/node_modules
+    depends_on:
+      - mysql
+    networks:
+      - network
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: ${NODE_ENV:-development}
+    env_file: .env
+    restart: ${RESTART_POLICY:-unless-stopped}
+    ports:
+      - "${WEB_PORT:-5173}:5173"
+    volumes:
+      - ./web:/app
+      - node_modules_web:/app/node_modules
+    depends_on:
+      - api
+    networks:
+      - network
+
+  mysql:
+    image: mysql:8.0
+    restart: ${RESTART_POLICY:-unless-stopped}
+    env_file: .env
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-helpdesk}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-secret}
+    volumes:
+      - mysql:/var/lib/mysql
+      # - ./mysql/database.sql:/docker-entrypoint-initdb.d/database.sql
+    ports:
+      - "127.0.0.1:${MYSQL_PORT:-3306}:3306"
+    networks:
+      - network
+
+volumes:
+  node_modules_api:
+  node_modules_web:
+  mysql:
+
+networks:
+  network:
+    name: ${COMPOSE_PROJECT_NAME:-helpdesk}
