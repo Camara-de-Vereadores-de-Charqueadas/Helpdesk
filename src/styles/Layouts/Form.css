@@ -1,0 +1,50 @@
+.form-dev {
+    background: var(--branco);
+    border: 1px solid var(--azul-claro);
+    padding: 1.5rem;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 300px;
+    margin: 1rem auto;
+}
+
+.form-dev input {
+    padding: 0.7rem;
+    border: 1px solid var(--cinza);
+    border-radius: 6px;
+}
+
+.form-dev button {
+    background: linear-gradient(to right, #27648d, #4e8eb8);
+    color: var(--branco);
+    border: none;
+    padding: 0.7rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.form-dev button:hover {
+    opacity: 0.9;
+}
+
+.user-modal-dev {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.user-modal-content {
+    background: var(--branco);
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    width: 400px;
+    max-width: 90%;
+}

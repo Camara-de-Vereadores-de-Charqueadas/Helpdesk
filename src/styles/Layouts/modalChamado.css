@@ -1,0 +1,372 @@
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    /* fundo escuro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5000;
+    /* acima de tudo */
+    animation: fadeInOverlay 0.3s ease forwards;
+}
+
+option {
+    color: var(--azul-raf);
+}
+
+.modal-chamado-user {
+    width: 95%;
+    max-width: 700px;
+    background: var(--azul-raf);
+    border-radius: 1.5rem;
+    padding: 1rem 1.8rem 1.8rem 1.8rem;
+    color: white;
+    position: relative;
+    border: 1px solid var(--azul-claro);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Animação suave de entrada */
+.fade-in-modal {
+    animation: slideInModal 0.35s ease forwards;
+}
+
+/* Overlay entrando */
+@keyframes fadeInOverlay {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Modal entrando de baixo com fade */
+@keyframes slideInModal {
+    from {
+        transform: translateY(40px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Fechar modal com transição (opcional) */
+.fade-out-modal {
+    animation: slideOutModal 0.25s ease forwards;
+}
+
+@keyframes slideOutModal {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateY(40px);
+        opacity: 0;
+    }
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.6rem;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.close-btn:hover {
+    color: var(--azul-claro);
+}
+
+
+.modal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.modal-header h2 {
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    color: var(--branco);
+    margin: 0;
+    padding: 0;
+}
+
+.modal-header .close-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    border: none;
+    background: transparent;
+    color: var(--azul-claro);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.setor-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2.5rem;
+    background: var(--grad-azul-raf);
+    padding: 1rem;
+    border-radius: 1rem;
+
+}
+
+.setor-foto {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.setor-info h3 {
+    margin: 1px 0 0 0;
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: var(--azul-claro);
+
+}
+
+.form-grid {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.6rem;
+    margin-top: 1rem;
+}
+
+.form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.full {
+    margin-top: 1rem;
+}
+
+label.grad-bundi {
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-align: left;
+}
+
+label.grad-roxo {
+    background: linear-gradient(90deg, #a26bff, #d097ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+input,
+textarea,
+select {
+    background: var(--grad-azul-raf);
+    border: none;
+    border-radius: 0.6rem;
+    padding: 0.7rem 0.9rem;
+    color: var(--azul-claro);
+    font-size: 0.85rem;
+}
+
+textarea {
+    resize: none;
+    height: 80px;
+}
+
+select {
+    color: var(--azul-claro);
+}
+
+
+.select-wrapper {
+    position: relative;
+}
+
+.select-wrapper select {
+    width: 100%;
+    appearance: none;
+}
+
+.select-wrapper .icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #ddd;
+}
+
+.css-tj5bde-Svg:hover,
+.css-tj5bde-Svg::after,
+.css-tj5bde-Svg::before,
+.css-tj5bde-Svg:focus,
+.css-tj5bde-Svg::selection,
+.css-tj5bde-Svg:open,
+.css-tj5bde-Svg:active,
+.css-tj5bde-Svg:enabled,
+.css-tj5bde-Svg:disabled,
+.css-tj5bde-Svg:checked,
+.css-tj5bde-Svg:no-button {
+    fill: var(--azul-claro) !important;
+}
+
+.css-1dimb5e-singleValue {
+    color: var(--azul-claro) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: var(--azul-claro);
+    font-family: 'Inter';
+}
+
+/* Mini modal de imagens */
+.mini-modal-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 6000;
+    top: 50%;
+    animation: fadeInOverlay 0.3s ease forwards;
+}
+
+.mini-modal {
+    width: 90%;
+    max-width: 420px;
+    background: var(--azul-raf);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    border: 1px solid var(--azul-claro);
+    color: white;
+    position: relative;
+    bottom: 150px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+.mini-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.mini-modal-header h3 {
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    color: var(--branco);
+    margin: 0;
+    padding: 0;
+}
+
+.imagens-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    justify-items: center;
+}
+
+.imagem-item {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 0.8rem;
+    border: 1px solid var(--azul-claro);
+}
+
+.imagem-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.delete-img-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 0.2rem 0.4rem;
+}
+
+.add-img-btn {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px dashed var(--azul-claro);
+    color: var(--azul-claro);
+    font-size: 2.5rem;
+    border-radius: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.add-img-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.anexos-group {
+    text-align: left;
+}
+
+.btn-anexar {
+    background: linear-gradient(120deg, #6f278d, #b84eb4);
+    border: none;
+    padding: 0.65rem 1rem;
+    border-radius: 0.6rem;
+    font-weight: 600;
+    color: #f4e9ff;
+    cursor: pointer;
+}
+
+
+.btn-anexar:hover {
+    opacity: 0.9;
+}
+
+.btn-criar {
+    margin-top: 1.5rem;
+    width: 100%;
+    background: var(--grad-verde);
+    border: none;
+    border-radius: 0.8rem;
+    padding: 0.9rem;
+    color: #c6ffdb;
+    font-weight: 900;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+
+.btn-criar:hover {
+    opacity: 0.9;
+}
