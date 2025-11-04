@@ -1,0 +1,10 @@
+.notification-dev {
+    background: var(--verde-claro);
+    color: var(--azul-raf);
+    border-left: 4px solid var(--verde);
+    padding: 0.8rem;
+    margin: 1rem auto;
+    width: 80%;
+    border-radius: 6px;
+    text-align: center;
+}

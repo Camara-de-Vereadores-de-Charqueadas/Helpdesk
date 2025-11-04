@@ -1,0 +1,7 @@
+.footer-dev {
+    background: var(--azul-raf);
+    color: var(--branco);
+    padding: 1rem;
+    text-align: center;
+    margin-top: 2rem;
+}
