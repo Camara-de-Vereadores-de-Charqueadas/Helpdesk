@@ -1,42 +1,205 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* ===== Estilo do App geral ===== */
+.App {
+  display: flex;
+  flex-direction: column;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.select-user-type {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 24px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+.select-user-type h1 {
+  color: #27648d;
+}
+
+.btn-group {
+  display: flex;
+  gap: 20px;
+}
+
+.btn-select {
+  background-color: #27648d;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.btn-select:hover {
+  background-color: #1c4f70;
+}
+
+/* ===== MENU FIXO INFERIOR ===== */
+.dev-menu {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-top: 1px solid var(--azul-claro);
+  background: transparent;
+  backdrop-filter: blur(6px);
+  font-family: "Inter", sans-serif;
+  z-index: 50;
+}
+
+.dev-menu a {
+  color: var(--azul-raf);
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.3s;
+  font-size: 0.95rem;
+  border-radius: 5px;
+  padding: 0.5rem;
+}
+
+.dev-menu a:hover {
+  color: var(--azul-bondi);
+}
+
+.dev-menu a.active {
+  background-color: var(--laranja);
+  font-weight: 700;
+  color: var(--branco);
+}
+
+.dev-menu {
+  color: #000;
+}
+
+
+
+/* ===== menu2 COMPONENTES ===== */
+.menu2 {
+  position: relative;
+  cursor: pointer;
+}
+
+.menu2 summary {
+  list-style: none;
+  font-weight: 600;
+  color: var(--azul-raf);
+}
+
+.menu2 summary::marker {
+  display: none;
+}
+
+.menu2-content {
+  position: absolute;
+  bottom: 2.5rem;
+  left: -2rem;
+  display: flex;
+  flex-direction: column;
+  background: var(--branco);
+  border: 1px solid var(--azul-claro);
+  border-radius: 10px;
+  padding: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.menu2-content a {
+  padding: 0.4rem 0.8rem;
+  color: var(--azul-raf);
+  text-decoration: none;
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+.menu2-content a:hover {
+  background: var(--azul-claro);
+  color: var(--branco);
+}
+
+.menu2-content a.active {
+  background: var(--laranja);
+  color: var(--branco);
+}
+
+.menu2-content .check .active {
+  background-color: var(--verde) !important;
+  color: white;
+}
+
+.check {
+  background-color: var(--verde);
+  color: white !important;
+  font-weight: 700 !important;
+}
+
+a.check.active {
+  background-color: var(--azul);
+  color: white !important;
+  font-weight: 700 !important;
+}
+
+/* ===== Ajuste visual para evitar sobreposição ===== */
+.app {
+  /* padding-bottom: 70px; */
+  /* espaço pro menu fixo */
+}
+
+/* ===== DEV-MENU RESPONSIVO ===== */
+@media (max-width: 480px) {
+  .dev-menu {
+    flex-direction: row;
+    gap: 0.2rem;
+    padding: 0.5rem;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(39, 100, 141, 0.95);
+    /* mesma cor do header */
+    border-top: none;
+    backdrop-filter: blur(6px);
+    max-height: 210px;
+    font-size: 0.6rem;
+
   }
-  to {
-    transform: rotate(360deg);
+
+  .dev-menu a {
+    font-size: 0.6rem;
+    padding: 0.4rem 0.6rem;
+    width: 90%;
+    text-align: center;
+    color: white;
+
   }
-}
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+  /* Ajuste menu2 (Componentes) */
+  .menu2-content {
+
+    position: static;
+    bottom: auto;
+    left: auto;
+    width: 100%;
+    margin-top: 0.3rem;
+    border: 1px solid var(--azul-claro);
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   }
-}
 
-.card {
-  padding: 2em;
-}
+  .menu2 summary {
+    text-align: center;
+    padding: 0.5rem 0;
+    color: white;
 
-.read-the-docs {
-  color: #888;
+  }
+
+  .menu2-content a {
+    width: 100%;
+    padding: 0.4rem 0;
+    text-align: center;
+    color: var(--azul-bondi);
+  }
 }

@@ -1,0 +1,369 @@
+/* Container principal do modal */
+.modal-perfil {
+    width: 65%;
+    margin: 2rem auto;
+    border-radius: 14px;
+    padding: 1.6rem;
+    position: relative;
+    background: var(--azul-raf);
+    /* gradiente principal */
+    color: var(--azul-claro);
+    border: 2px solid var(--azul);
+    box-shadow: 0 8px 24px rgba(2, 18, 28, 0.12);
+    font-family: "Inter", system-ui, Arial, sans-serif;
+}
+
+/* botão fechar X */
+.close-btn {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    background: none;
+    border: none;
+    color: var(--azul-claro);
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+/* Topo */
+.modal-top {
+    display: flex;
+    gap: 1.2rem;
+    align-items: center;
+    margin-bottom: 1.2rem;
+    padding: 12px 5px;
+    background-image: linear-gradient(160deg, #27648d1f, #4e8eb8);
+
+
+}
+
+/* Imagem de perfil: círculo */
+.perfil-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    flex: 0 0 100px;
+    border: 3px solid rgba(255, 255, 255, 0.06);
+}
+
+.perfil-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* quando em edição, aplicamos opacidade e mostramos overlay */
+.perfil-img--edit img {
+    opacity: 0.45;
+    transition: opacity .2s;
+}
+
+.perfil-img__overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+    color: var(--azul-claro);
+    cursor: pointer;
+}
+
+/* Nome do setor — letras maiúsculas */
+.setor-nome h2 {
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin: 0;
+    font-size: 1.8rem;
+    color: var(--azul-claro);
+    font-weight: 800;
+    margin: 0 30px;
+}
+
+/* Middle: três colunas */
+.modal-middle {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.6rem;
+    margin-bottom: 1rem;
+}
+
+/* bloco genérico com contorno e fundo grad */
+/* Remove fundo e borda dos blocos principais */
+.bloco {
+    padding: 1rem;
+    border: none;
+    background: transparent;
+}
+
+/* título fora do fundo */
+.titulo-ultimo {
+    display: block;
+    color: var(--branco);
+    background: none;
+    border: none;
+    padding: 0;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+}
+
+/* descrição do último chamado — leve destaque */
+.descricao-ultimo {
+    color: var(--azul-claro);
+    font-size: 0.82rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+}
+
+/* perfis */
+.perfil-item,
+.modal-top,
+.numero-chamados,
+.ver-mais,
+.chamado-info {
+    transition: 0.2s ease;
+}
+
+.perfil-item:hover,
+.valor-pequena:hover,
+.chamado-info:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Perfis */
+.perfis {
+    width: 55%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.perfis h3 {
+    margin: 0;
+    color: var(--branco);
+    font-size: 0.82rem;
+    text-transform: uppercase;
+}
+
+/* cards de perfil */
+.lista-perfis {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 0.4rem;
+    flex-direction: column;
+}
+
+.perfil-item {
+    padding: 0.55rem 0.8rem;
+    border-radius: 8px;
+    color: var(--branco);
+    font-size: 0.95rem;
+    width: 100%;
+}
+
+.perfil-item,
+.modal-top,
+.ver-mais,
+.valor-pequena,
+.numero-chamados,
+.chamado-info,
+.codigo {
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    width: 100%;
+}
+
+.perfil-item,
+.valor-pequena,
+.codigo {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.valor-pequena {
+    padding: 10px 20px;
+}
+
+.numero-chamados {
+    background: var(--grad-laranja);
+    height: 75px;
+    color: var(--laranja-claro);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.numero-chamados:hover {
+    background: var(--grad-vermelho);
+    color: var(--branco);
+    cursor: default;
+}
+
+.chamados {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.criado-em {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* botão ver mais */
+.ver-mais {
+    margin-top: 0.6rem;
+    background: none;
+    border: 0;
+    font-weight: 800;
+    color: var(--azul-raf);
+    cursor: pointer;
+    background: var(--azul-claro);
+    padding: 10px;
+}
+
+/* Dados do meio (criado em / chamados) */
+.dados-meio {
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: start;
+    padding: 1rem 0rem;
+}
+
+.criado-em {
+    gap: 0;
+    width: 100%;
+}
+
+.label-pequena {
+    color: var(--branco);
+    font-size: 0.72rem;
+    margin: 10px 0;
+    text-transform: uppercase;
+}
+
+.valor-pequena {
+    color: var(--azul-claro);
+    font-size: 0.86rem;
+}
+
+/* Dados direita */
+.dados-direita {
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+/* Ultimo chamado */
+.ultimo-chamado .titulo-ultimo {
+    display: block;
+    text-transform: uppercase;
+    color: var(--azul-claro);
+    font-size: 0.7rem;
+}
+
+.ultimo-chamado .descricao-ultimo {
+    margin: 0.25rem 0 0 0;
+    color: var(--azul-claro);
+    font-size: 0.82rem;
+}
+
+/* Rodapé */
+.modal-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+}
+
+/* codigo de entrada */
+.codigo-entrada {
+    width: 55%;
+}
+
+.interno-com-contorno {
+    padding: 0.4rem 1rem;
+}
+
+.codigo {
+    margin-top: 0.4rem;
+    padding: 0.45rem 0.8rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--branco);
+    display: inline-block;
+    width: auto;
+    font-weight: 1000;
+    color: var(--azul-claro);
+    font-size: 1.5rem;
+}
+
+/* botão editar foto (lápis) */
+.btn-editar-foto {
+    background: var(--grad-azul);
+    /* fallback gradiente */
+    color: var(--branco);
+    border: none;
+    padding: 0.9rem 1rem;
+    border-radius: 100%;
+    cursor: pointer;
+}
+
+.btn-editar-foto:hover {
+    transition: 0.2s ease-in-out;
+    background: var(--grad-azul-raf);
+}
+
+/* modal pequeno (ver mais) */
+.modal-pequeno-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1200;
+}
+
+.modal-pequeno {
+    width: 360px;
+    background: var(--azul-raf);
+    color: var(--azul-claro);
+    border-radius: 10px;
+    padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    position: relative;
+}
+
+.close-pequeno {
+    position: absolute;
+    right: 10px;
+    top: 8px;
+    background: none;
+    border: none;
+    color: var(--azul-claro);
+    cursor: pointer;
+}
+
+.lista-vermais {
+    margin-top: 0.8rem;
+    padding-left: 1rem;
+    list-style: none;
+}
+
+h4 {
+    color: white;
+}
