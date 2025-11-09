@@ -4,10 +4,16 @@ import setorRoutes from "./routes/setorRoutes.js";
 import perfilRoutes from "./routes/perfilRoutes.js";
 import chamadoRoutes from "./routes/chamadoRoutes.js";
 import loginRoutes from "./routes/loginRoutes.js";
-
 import initDatabase from "./db/init.js";
-
+import path from "path";
+import { fileURLToPath } from "url";
 const app = express();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 app.use(cors());
 app.use(express.json()); // para ler JSON no body
 

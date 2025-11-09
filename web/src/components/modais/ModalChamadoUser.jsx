@@ -4,95 +4,109 @@ import { createPortal } from "react-dom";
 import { CaretDown, PlusCircle, TrashSimple } from "@phosphor-icons/react";
 
 export default function ModalChamadoUser({ onClose, setorSelecionado }) {
-    const [titulo, setTitulo] = useState("");
-    const [descricao, setDescricao] = useState("");
-    const [imagens, setImagens] = useState([]);
-    const [showImageModal, setShowImageModal] = useState(false);
     const [setor, setSetor] = useState(null);
     const [perfis, setPerfis] = useState([]);
     const [perfilSelecionado, setPerfilSelecionado] = useState("");
+    const [titulo, setTitulo] = useState("");
+    const [descricao, setDescricao] = useState("");
+    const [imagens, setImagens] = useState([]); // aqui guardamos File objects
+    const [showImageModal, setShowImageModal] = useState(false);
+    const [carregando, setCarregando] = useState(false);
 
-    // 🔹 Carregar dados do setor e seus perfis ao abrir o modal
+    // 🔹 Busca setor e perfis
     useEffect(() => {
         async function fetchSetor() {
             try {
-                const res = await fetch(`/api/setores`);
-                const setores = await res.json();
-                const setorEncontrado = setores.find((s) => s.id === setorSelecionado);
-                setSetor(setorEncontrado || null);
-            } catch (err) {
-                console.error("Erro ao carregar setor:", err);
+                const res = await fetch(`http://localhost:3000/api/setores`);
+                const data = await res.json();
+                const encontrado = data.find((s) => s.id === Number(setorSelecionado));
+                setSetor(encontrado);
+            } catch (error) {
+                console.error("Erro ao buscar setor:", error);
             }
         }
 
         async function fetchPerfis() {
             try {
-                const res = await fetch(`/api/perfis/setores/${setorSelecionado}`);
+                const res = await fetch(
+                    `http://localhost:3000/api/perfis/setor/${setorSelecionado}`
+                );
                 const data = await res.json();
                 setPerfis(data);
-            } catch (err) {
-                console.error("Erro ao buscar perfis:", err);
+            } catch (error) {
+                console.error("Erro ao buscar perfis:", error);
             }
         }
 
-        fetchSetor();
-        fetchPerfis();
+        if (setorSelecionado) {
+            fetchSetor();
+            fetchPerfis();
+        }
     }, [setorSelecionado]);
 
-    // 🔹 Envio do chamado ao backend
-    const handleCriarChamado = async () => {
-        if (!titulo || !descricao || !perfilSelecionado || !setorSelecionado) {
-            alert("Preencha todos os campos obrigatórios!");
-            return;
-        }
-
-        try {
-            const payload = {
-                titulo,
-                descricaoProblema: descricao,
-                setorId: setorSelecionado,
-                perfilId: perfilSelecionado,
-                imagens, // opcional, limitado a 2
-            };
-
-            const res = await fetch("/api/chamados", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(payload),
-            });
-
-            if (!res.ok) throw new Error("Erro ao criar chamado.");
-            const data = await res.json();
-
-            alert("Chamado criado com sucesso!");
-            console.log("Novo chamado:", data);
-            onClose(); // fecha o modal
-        } catch (err) {
-            console.error(err);
-            alert("Erro ao enviar chamado.");
-        }
+    // 🔹 Fecha modal ao clicar fora
+    const handleOverlayClick = (e) => {
+        if (e.target.classList.contains("modal-overlay")) onClose();
     };
 
-    // 🔹 Adicionar imagem (máximo 2)
+    // 🔹 Adiciona imagem (máx. 2)
     const handleAddImage = (e) => {
         const file = e.target.files[0];
-        if (file && imagens.length < 2) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                setImagens((prev) => [...prev, reader.result]);
-            };
-            reader.readAsDataURL(file);
-        }
+        if (!file) return;
+        if (imagens.length >= 2)
+            return alert("Máximo de 2 imagens por chamado.");
+        setImagens((prev) => [...prev, file]); // salva o File, não base64
     };
 
+    // 🔹 Remove imagem
     const handleRemoveImage = (index) => {
         setImagens((prev) => prev.filter((_, i) => i !== index));
     };
 
-    const handleOverlayClick = (e) => {
-        if (e.target.classList.contains("modal-overlay")) onClose();
+    // 🔹 Cria chamado
+    const handleCriarChamado = async () => {
+        if (!titulo || !descricao || !perfilSelecionado) {
+            alert("Preencha todos os campos obrigatórios.");
+            return;
+        }
+
+        setCarregando(true);
+
+        try {
+            // 👉 agora usamos FormData
+            const formData = new FormData();
+            formData.append("titulo", titulo);
+            formData.append("descricaoProblema", descricao);
+            formData.append("setorId", setorSelecionado);
+            formData.append("perfilId", perfilSelecionado);
+            console.log({
+                titulo,
+                descricaoProblema: descricao,
+                setorId: setorSelecionado,
+                perfilId: perfilSelecionado,
+                imagens
+            });
+
+            imagens.forEach((img) => {
+                formData.append("imagens", img);
+            });
+
+            const res = await fetch("http://localhost:3000/api/chamados", {
+                method: "POST",
+                body: formData, // sem headers
+            });
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Erro ao criar chamado.");
+
+            alert("Chamado criado com sucesso!");
+            onClose();
+        } catch (error) {
+            console.error(error);
+            alert("Erro ao enviar chamado.");
+        } finally {
+            setCarregando(false);
+        }
     };
 
     if (!setor) return null;
@@ -103,40 +117,36 @@ export default function ModalChamadoUser({ onClose, setorSelecionado }) {
                 <div className="modal-chamado-user fade-in-modal">
                     <div className="modal-header">
                         <h2>NOVO CHAMADO</h2>
-                        <button className="close-btn" onClick={onClose}>×</button>
+                        <button className="close-btn" onClick={onClose}>
+                            ×
+                        </button>
                     </div>
 
                     <div className="setor-info">
-                        <img
-                            src={setor.imagem_perfil}
-                            alt={setor.nome}
-                            className="setor-foto"
-                        />
+                        <img src={setor.imagem_perfil} alt={setor.nome} className="setor-foto" />
                         <h3>{setor.nome}</h3>
                     </div>
 
                     <div className="form-grid">
-                        <div className="form-grid full">
-                            <div className="form-group">
-                                <label className="grad-bundi">Selecione o perfil</label>
-                                <div className="select-wrapper">
-                                    <select
-                                        value={perfilSelecionado}
-                                        onChange={(e) => setPerfilSelecionado(e.target.value)}
-                                    >
-                                        <option value="">Selecione...</option>
-                                        {perfis.length > 0 ? (
-                                            perfis.map((perfil) => (
-                                                <option key={perfil.id} value={perfil.id}>
-                                                    {perfil.nome}
-                                                </option>
-                                            ))
-                                        ) : (
-                                            <option disabled>(Nenhum perfil cadastrado)</option>
-                                        )}
-                                    </select>
-                                    <CaretDown size={18} className="icon" />
-                                </div>
+                        <div className="form-group full">
+                            <label className="grad-bundi">Selecione o perfil</label>
+                            <div className="select-wrapper">
+                                <select
+                                    value={perfilSelecionado}
+                                    onChange={(e) => setPerfilSelecionado(e.target.value)}
+                                >
+                                    <option value="">Selecione...</option>
+                                    {perfis.length > 0 ? (
+                                        perfis.map((perfil) => (
+                                            <option key={perfil.id} value={perfil.id}>
+                                                {perfil.nome}
+                                            </option>
+                                        ))
+                                    ) : (
+                                        <option disabled>(Nenhum perfil cadastrado)</option>
+                                    )}
+                                </select>
+                                <CaretDown size={18} className="icon" />
                             </div>
                         </div>
 
@@ -162,21 +172,25 @@ export default function ModalChamadoUser({ onClose, setorSelecionado }) {
                     </div>
 
                     <div className="form-group full">
-                        <label className="grad-bundi">BREVE DESCRIÇÃO DO PROBLEMA</label>
+                        <label className="grad-bundi">BREVE DESCRIÇÃO DO PROBLEMA *</label>
                         <textarea
-                            placeholder="Exemplo: Wi-Fi do notebook caiu há 10 minutos..."
+                            placeholder="Descreva o que aconteceu..."
                             value={descricao}
                             onChange={(e) => setDescricao(e.target.value)}
                         ></textarea>
                     </div>
 
-                    <button className="btn-criar" onClick={handleCriarChamado}>
-                        CRIAR NOVO CHAMADO
+                    <button
+                        className="btn-criar"
+                        onClick={handleCriarChamado}
+                        disabled={carregando}
+                    >
+                        {carregando ? "Enviando..." : "CRIAR NOVO CHAMADO"}
                     </button>
                 </div>
             </div>
 
-            {/* Mini modal de imagens */}
+            {/* 🔹 Modal de imagens */}
             {showImageModal && (
                 <div
                     className="mini-modal-overlay"
@@ -188,13 +202,18 @@ export default function ModalChamadoUser({ onClose, setorSelecionado }) {
                     <div className="mini-modal fade-in-modal">
                         <div className="mini-modal-header">
                             <h3>Imagens do chamado</h3>
-                            <button className="close-btn" onClick={() => setShowImageModal(false)}>×</button>
+                            <button
+                                className="close-btn"
+                                onClick={() => setShowImageModal(false)}
+                            >
+                                ×
+                            </button>
                         </div>
 
                         <div className="imagens-grid">
-                            {imagens.map((img, index) => (
+                            {imagens.map((file, index) => (
                                 <div key={index} className="imagem-item">
-                                    <img src={img} alt={`Imagem ${index + 1}`} />
+                                    <img src={URL.createObjectURL(file)} alt={`Imagem ${index + 1}`} />
                                     <button
                                         className="delete-img-btn"
                                         onClick={() => handleRemoveImage(index)}
@@ -206,7 +225,11 @@ export default function ModalChamadoUser({ onClose, setorSelecionado }) {
 
                             {imagens.length < 2 && (
                                 <label className="add-img-btn">
-                                    <PlusCircle size={32} color="var(--azul-claro)" weight="fill" />
+                                    <PlusCircle
+                                        size={32}
+                                        color="var(--azul-claro)"
+                                        weight="fill"
+                                    />
                                     <input
                                         type="file"
                                         accept="image/*"

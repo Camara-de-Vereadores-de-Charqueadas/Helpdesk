@@ -45,21 +45,22 @@ export const listarChamadosPorPerfil = async (req, res) => {
 // Cria novo chamado ou vários (em lote)
 export const criarChamado = async (req, res) => {
     try {
-        const body = req.body;
-
-        if (Array.isArray(body)) {
-            const resultados = await createChamadosEmLote(body);
-            return res.status(201).json({ message: "Chamados criados com sucesso.", resultados });
-        }
-
-        const { titulo, descricaoProblema, setorId, perfilId, imagens = [] } = body;
+        const { titulo, descricaoProblema, setorId, perfilId } = req.body;
+        const imagens = req.files?.map((file) => `/uploads/chamados/${file.filename}`) || [];
 
         if (!titulo || !descricaoProblema || !setorId || !perfilId) {
             return res.status(400).json({ error: "Campos obrigatórios: título, descrição, setorId e perfilId." });
         }
 
-        const novo = await createChamado({ titulo, descricaoProblema, setorId, perfilId, imagens });
-        res.status(201).json({ id: novo.id, titulo, setorId, perfilId });
+        const novo = await createChamado({
+            titulo,
+            descricaoProblema,
+            setorId,
+            perfilId,
+            imagens: JSON.stringify(imagens), // salva como array JSON no BD
+        });
+
+        res.status(201).json({ id: novo.id, titulo, setorId, perfilId, imagens });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Erro ao criar chamado." });

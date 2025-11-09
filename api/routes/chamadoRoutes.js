@@ -1,4 +1,5 @@
 import express from "express";
+import upload from "../uploads/upload.js";
 import {
     listarChamados,
     listarChamadosPorSetor,
@@ -15,5 +16,7 @@ router.get("/setores/:setorId", listarChamadosPorSetor);
 router.get("/perfis/:perfilId", listarChamadosPorPerfil);
 router.post("/", criarChamado);
 router.put("/:id", atualizarChamadoTI);
+router.post("/", upload.array("imagens", 2), criarChamado);
+
 
 export default router;

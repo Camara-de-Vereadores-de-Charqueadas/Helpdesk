@@ -14,6 +14,7 @@ export default function VisualizacaoUsuario() {
     const [chamados, setChamados] = useState([]);
     const [loading, setLoading] = useState(true);
     const [erro, setErro] = useState(null);
+    console.log("Setor no localStorage:", localStorage.getItem("setorId"));
 
     const [filtrosAbertos, setFiltrosAbertos] = useState({
         periodo: "Últimos 30 dias",
@@ -95,6 +96,7 @@ export default function VisualizacaoUsuario() {
                 </button>
                 {abrirModal && (
                     <ModalChamadoUser
+                        setorSelecionado={localStorage.getItem("setorId")}
                         onClose={() => {
                             const modal = document.querySelector(".modal-chamado-user");
                             modal.classList.add("fade-out-modal");
