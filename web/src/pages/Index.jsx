@@ -5,12 +5,21 @@ import VisualizacaoAdmin from "../components/Admin";
 import "../styles/Index.css";
 import bannerImg from "../assets/banner.png";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { DotsThreeCircle, CheckCircle } from "@phosphor-icons/react";
-import { chamadosMock } from "../data/chamados";
 
 export default function Home() {
     const location = useLocation();
+    const navigate = useNavigate();
+
+    // 🔒 Se não houver login, redireciona
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            navigate("/login");
+        }
+    }, [navigate]);
+
     const setor = location.state?.setor || { nome: "Usuário", imagem: null };
     const userType = location.state?.userType || "user";
     const isAdmin = userType === "admin";
@@ -23,37 +32,19 @@ export default function Home() {
         const opcoes = { day: "2-digit", month: "2-digit", year: "numeric" };
         setDataAtual(hoje.toLocaleDateString("pt-BR", opcoes));
 
-        const isMesmoDia = (dataHora) => {
-            const dataChamado = new Date(dataHora.split(" ")[0].split("/").reverse().join("-"));
-            return (
-                dataChamado.getDate() === hoje.getDate() &&
-                dataChamado.getMonth() === hoje.getMonth() &&
-                dataChamado.getFullYear() === hoje.getFullYear()
-            );
-        };
-
-        const chamadosHoje = chamadosMock.filter((c) => isMesmoDia(c.dataHora));
-        const abertosHoje = chamadosHoje.filter((c) => !c.resolvido);
-        const resolvidosHoje = chamadosHoje.filter((c) => c.resolvido);
-
+        // Aqui você pode futuramente popular menuItems com dados reais
         setMenuItems([
             {
                 name: "Chamados Abertos",
                 color: "var(--azul)",
                 icon: <DotsThreeCircle size={80} weight="fill" color="var(--azul)" />,
-                info:
-                    abertosHoje.length > 0
-                        ? `${abertosHoje.length} chamado(s) aberto(s)`
-                        : "Nenhum chamado aberto",
+                info: "Nenhum chamado aberto",
             },
             {
                 name: "Chamados Concluídos",
                 color: "var(--verde)",
                 icon: <CheckCircle size={80} weight="fill" color="var(--verde)" />,
-                info:
-                    resolvidosHoje.length > 0
-                        ? `${resolvidosHoje.length} chamado(s) concluído(s)`
-                        : "Nenhum chamado concluído",
+                info: "Nenhum chamado concluído",
             },
         ]);
     }, []);
@@ -61,7 +52,6 @@ export default function Home() {
     return (
         <>
             <User userType={userType} />
-            {/* Passa o nome e imagem do setor pro Header */}
             <Header isAdmin={isAdmin} userName={setor.nome} userImage={setor.imagem} />
 
             <section

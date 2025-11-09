@@ -28,6 +28,7 @@ const Login = () => {
 
             // Salva os dados e o token no localStorage
             localStorage.setItem("setorLogado", JSON.stringify(data.setor));
+            localStorage.setItem("setorId", data.setor.id);
             localStorage.setItem("token", data.token);
             localStorage.setItem("userType", data.setor.nome === "Informática" ? "admin" : "user");
 
@@ -65,7 +66,7 @@ const Login = () => {
 
                         <div className="login-input-group">
                             <input
-                                type="text"
+                                type="password"
                                 className="login-input"
                                 value={codigo}
                                 onChange={(e) => setCodigo(e.target.value)}

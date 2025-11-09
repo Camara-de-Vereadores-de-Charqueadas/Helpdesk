@@ -8,7 +8,6 @@ import {
     DotsThree,
 } from "@phosphor-icons/react";
 import logo from "../assets/Logo.png";
-import { chamadosMock } from "../data/chamados";
 
 export default function Header() {
     const navigate = useNavigate();
@@ -43,16 +42,6 @@ export default function Header() {
         else setActive("");
     }, [location]);
 
-    useEffect(() => {
-        const mock = userData.isAdmin
-            ? chamadosMock.map((c) => ({
-                id: c.id,
-                title: `Chamado no setor ${c.setor} - ${c.titulo}`,
-                read: false,
-            }))
-            : [];
-        setNotifications(mock);
-    }, [userData.isAdmin]);
 
     useEffect(() => {
         const handleClickOutside = (e) => {

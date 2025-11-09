@@ -1,41 +1,66 @@
-import { useState, useMemo } from "react";
-import { chamadosMock } from "../data/chamados";
+import { useState, useMemo, useEffect } from "react";
 import { PlusCircle, CaretCircleDown } from "@phosphor-icons/react";
 import "../styles/User.css";
 import Ticket from "../components/Ticket";
-import ModalChamadoUser from "../components/modais/ModalChamadoUser"; // 👈 importa o modal
+import ModalChamadoUser from "../components/modais/ModalChamadoUser";
+
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 export default function VisualizacaoUsuario() {
     const [expandidoAbertos, setExpandidoAbertos] = useState(true);
     const [expandidoResolvidos, setExpandidoResolvidos] = useState(false);
     const [abrirModal, setAbrirModal] = useState(false);
 
-    // Filtros separados para cada card
+    const [chamados, setChamados] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [erro, setErro] = useState(null);
+
     const [filtrosAbertos, setFiltrosAbertos] = useState({
         periodo: "Últimos 30 dias",
         perfil: "Qualquer",
+        urgencia: "Qualquer",
     });
 
     const [filtrosResolvidos, setFiltrosResolvidos] = useState({
         periodo: "Últimos 30 dias",
         perfil: "Qualquer",
+        urgencia: "Qualquer",
     });
 
-    const [chamados] = useState(chamadosMock);
+    useEffect(() => {
+        const carregarChamados = async () => {
+            try {
+                const setorId = localStorage.getItem("setorId");
+                if (!setorId) return setErro("Setor não logado.");
 
-    // Funções genéricas
+                // 🧩 Corrigido: endpoint correto
+                const res = await fetch(`${API_URL}/api/chamados/setores/${setorId}`);
+                if (!res.ok) throw new Error("Erro ao buscar chamados.");
+
+                const data = await res.json();
+                setChamados(data);
+            } catch (error) {
+                console.error(error);
+                setErro(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        carregarChamados();
+    }, []);
+
     const handleFiltroChange = (setFiltroFn, campo, valor) => {
         setFiltroFn((prev) => ({ ...prev, [campo]: valor }));
     };
 
     const filtrarChamados = (lista, filtros) => {
         let resultado = [...lista];
-
         if (filtros.urgencia !== "Qualquer") {
             resultado = resultado.filter((c) => c.urgencia === filtros.urgencia);
         }
         if (filtros.perfil !== "Qualquer") {
-            resultado = resultado.filter((c) => c.perfil === filtros.perfil);
+            resultado = resultado.filter((c) => c.perfilNome === filtros.perfil);
         }
         return resultado;
     };
@@ -47,19 +72,20 @@ export default function VisualizacaoUsuario() {
         );
     };
 
-    // Abertos
     const chamadosAbertos = useMemo(() => {
         return ordenarChamados(
-            filtrarChamados(chamados.filter((c) => !c.resolvido), filtrosAbertos)
+            filtrarChamados(chamados.filter((c) => !c.fechado), filtrosAbertos)
         );
     }, [chamados, filtrosAbertos]);
 
-    // Resolvidos
     const chamadosResolvidos = useMemo(() => {
         return ordenarChamados(
-            filtrarChamados(chamados.filter((c) => c.resolvido), filtrosResolvidos)
+            filtrarChamados(chamados.filter((c) => c.fechado), filtrosResolvidos)
         );
     }, [chamados, filtrosResolvidos]);
+
+    if (loading) return <div className="visualizacao-usuario">Carregando chamados...</div>;
+    if (erro) return <div className="visualizacao-usuario erro">{erro}</div>;
 
     return (
         <div className="visualizacao-usuario fade-in">
@@ -68,18 +94,16 @@ export default function VisualizacaoUsuario() {
                     ABRIR CHAMADO <PlusCircle size={20} />
                 </button>
                 {abrirModal && (
-
                     <ModalChamadoUser
                         onClose={() => {
                             const modal = document.querySelector(".modal-chamado-user");
                             modal.classList.add("fade-out-modal");
-                            setTimeout(() => setAbrirModal(false), 250); // espera a animação acabar
+                            setTimeout(() => setAbrirModal(false), 250);
                         }}
                     />
                 )}
             </div>
 
-            {/* ======== CHAMADOS ABERTOS ======== */}
             <CardChamados
                 titulo="ABERTOS"
                 expandido={expandidoAbertos}
@@ -90,7 +114,6 @@ export default function VisualizacaoUsuario() {
                 handleFiltroChange={handleFiltroChange}
             />
 
-            {/* ======== CHAMADOS RESOLVIDOS ======== */}
             <CardChamados
                 titulo="RESOLVIDOS"
                 expandido={expandidoResolvidos}
@@ -100,7 +123,6 @@ export default function VisualizacaoUsuario() {
                 setFiltros={setFiltrosResolvidos}
                 handleFiltroChange={handleFiltroChange}
             />
-
         </div>
     );
 }
@@ -131,11 +153,8 @@ function CardChamados({
                 <>
                     <hr />
                     <div className="card-conteudo fade-in">
-                        <h2 className="quantidade-chamados">
-                            {chamados.length} CHAMADOS
-                        </h2>
+                        <h2 className="quantidade-chamados">{chamados.length} CHAMADOS</h2>
 
-                        {/* ===== FILTROS ===== */}
                         <div className="filtros">
                             <div className="filtro">
                                 <span className="label">Período:</span>
@@ -165,21 +184,6 @@ function CardChamados({
                                     <option>Alta</option>
                                     <option>Média</option>
                                     <option>Baixa</option>
-                                </select>
-                            </div>
-
-                            <div className="filtro">
-                                <span className="label">Perfil:</span>
-                                <select
-                                    className="select-estilizado"
-                                    value={filtros.perfil}
-                                    onChange={(e) =>
-                                        handleFiltroChange(setFiltros, "perfil", e.target.value)
-                                    }
-                                >
-                                    <option>Qualquer</option>
-                                    <option>Patrick</option>
-                                    <option>Talles</option>
                                 </select>
                             </div>
                         </div>

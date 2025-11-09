@@ -1,5 +1,13 @@
-import { getAllChamados, getChamadosBySetor, createChamado, createChamadosEmLote, updateChamadoTI } from "../models/chamadoModel.js";
+import {
+    getAllChamados,
+    getChamadosBySetor,
+    getChamadosByPerfil,
+    createChamado,
+    createChamadosEmLote,
+    updateChamadoTI
+} from "../models/chamadoModel.js";
 
+// Lista todos os chamados
 export const listarChamados = async (req, res) => {
     try {
         const chamados = await getAllChamados();
@@ -10,6 +18,7 @@ export const listarChamados = async (req, res) => {
     }
 };
 
+// Lista chamados por setor
 export const listarChamadosPorSetor = async (req, res) => {
     try {
         const { setorId } = req.params;
@@ -21,11 +30,23 @@ export const listarChamadosPorSetor = async (req, res) => {
     }
 };
 
+// Lista chamados por perfil
+export const listarChamadosPorPerfil = async (req, res) => {
+    try {
+        const { perfilId } = req.params;
+        const chamados = await getChamadosByPerfil(perfilId);
+        res.json(chamados);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Erro ao listar chamados do perfil." });
+    }
+};
+
+// Cria novo chamado ou vários (em lote)
 export const criarChamado = async (req, res) => {
     try {
         const body = req.body;
 
-        // caso seja um array, é um envio em lote
         if (Array.isArray(body)) {
             const resultados = await createChamadosEmLote(body);
             return res.status(201).json({ message: "Chamados criados com sucesso.", resultados });
@@ -45,6 +66,7 @@ export const criarChamado = async (req, res) => {
     }
 };
 
+// Atualiza informações de TI no chamado
 export const atualizarChamadoTI = async (req, res) => {
     try {
         const { id } = req.params;

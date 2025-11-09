@@ -4,7 +4,7 @@ import { listarPerfis, listarPerfisPorSetor, criarPerfil } from "../controllers/
 const router = express.Router();
 
 router.get("/", listarPerfis);
-router.get("/setor/:setorId", listarPerfisPorSetor);
+router.get("/setores/:setorId", listarPerfisPorSetor);
 router.post("/", criarPerfil);
 
 export default router;
