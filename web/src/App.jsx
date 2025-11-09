@@ -1,18 +1,51 @@
-import { useState } from 'react'
-import './App.css'
+// App.jsx
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import Login from "./pages/Login";
+import Home from "./pages/Index";
+import ProtectedRoute from "./components/ProtectedRoute";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const setorLogado = localStorage.getItem("setorLogado");
+  const token = localStorage.getItem("token");
 
   return (
-    <>
-      <h1 className="title">
-        HELPDESK
-      </h1>
-      <h3>PLATAFORMA DE CHAMADOS DA INFORMÁTICA</h3>
-      <img src="logoCharqueadas.png" alt="" />
-    </>
-  )
-}
+    <Router>
+      <Routes>
+        {/* Redireciona raiz dependendo do login */}
+        <Route
+          path="/"
+          element={
+            setorLogado && token ? (
+              <Navigate to="/home" replace />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
 
-export default App
+        {/* Login aberto */}
+        <Route path="/login" element={<Login />} />
+
+        {/* Home protegida */}
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Exemplo: outras páginas protegidas */}
+        {/* <Route
+                    path="/Chamados"
+                    element={
+                        <ProtectedRoute>
+                            <Chamados />
+                        </ProtectedRoute>
+                    }
+                /> */}
+      </Routes>
+    </Router>
+  );
+}

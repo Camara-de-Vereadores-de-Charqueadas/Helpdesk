@@ -7,18 +7,14 @@ WORKDIR /app
 
 COPY package*.json ./
 
-# isso aqui serve pra ele não instalar coisas de dev em caso de production
-# - production
-# - development
-RUN if ["$NODE_ENV" = "production"]; then \
+RUN if [ "$NODE_ENV" = "production" ]; then \
     npm ci --only=production; \
-    else \
-        npm install; \
-    fi
+else \
+    npm install; \
+fi
 
 COPY . .
 
 EXPOSE 3000
 
-# pressupõe que package.json existe.
-CMD [ "npm", "run", "start" ]
+CMD ["npm", "run", "start"]
