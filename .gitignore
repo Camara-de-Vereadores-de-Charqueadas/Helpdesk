@@ -23,9 +23,9 @@ dist-ssr
 *.sln
 *.sw?
 # general
-.env
+# .env
 node_modules
-*/package*.json
+# */package*.json
 
 # API
 *.sql
