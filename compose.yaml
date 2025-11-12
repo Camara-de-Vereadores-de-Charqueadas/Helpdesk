@@ -13,19 +13,11 @@ services:
     networks:
       - network
     healthcheck:
-      test:
-        [
-          "CMD",
-          "mysqladmin",
-          "ping",
-          "-h",
-          "localhost",
-          "-p${MYSQL_ROOT_PASSWORD:-fubar}",
-        ]
-      interval: 5s
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_ROOT_PASSWORD:-fubar}" ]
+      interval: 10s # Aumenta o intervalo entre as verificações
       timeout: 5s
-      retries: 10
-      start_period: 10s
+      retries: 10 # Aumenta o número de tentativas antes de considerar o serviço como não saudável
+      start_period: 30s # Dá um tempo adicional para o MySQL inicializar
 
   api:
     build:
@@ -68,6 +60,7 @@ volumes:
   node_modules_api:
   node_modules_web:
   mysql:
+
 
 networks:
   network:
