@@ -1,0 +1,14 @@
+### Testar criação de chamado
+POST http://localhost:3000/api/chamados
+Content-Type: application/json
+
+{
+  "titulo": "Teste via VSCode",
+  "descricaoProblema": "Só testando envio.",
+  "setorId": 3,
+  "perfilId": 5,
+  "imagens": []
+}
+
+### Listar chamados
+GET http://localhost:3000/api/chamados

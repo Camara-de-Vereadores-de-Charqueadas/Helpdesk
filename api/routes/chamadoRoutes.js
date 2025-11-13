@@ -14,9 +14,10 @@ const router = express.Router();
 router.get("/", listarChamados);
 router.get("/setores/:setorId", listarChamadosPorSetor);
 router.get("/perfis/:perfilId", listarChamadosPorPerfil);
-router.post("/", criarChamado);
-router.put("/:id", atualizarChamadoTI);
+
+// 🔹 AQUI: só essa rota POST deve existir
 router.post("/", upload.array("imagens", 2), criarChamado);
 
+router.put("/:id", atualizarChamadoTI);
 
 export default router;
