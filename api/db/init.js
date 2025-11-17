@@ -1,25 +1,120 @@
 import pool from "../config/db.js";
 
 const setores = [
-  { nome: "Informática", criado_por: "Rafael Barth", codigo_entrada: "INF123X9", imagem_perfil: "/img/perfil_informatica.png" },
-  { nome: "Financeiro", criado_por: "Henrique Guimarães", codigo_entrada: "FNC244M7", imagem_perfil: "/img/perfil_financeiro.png" },
-  { nome: "Gabinete Gilvan", criado_por: "Sistema", codigo_entrada: "GBG123A1", imagem_perfil: "/img/perfil_gab_gilvan.jpg" },
-  { nome: "Gabinete PC", criado_por: "Sistema", codigo_entrada: "GBC245B2", imagem_perfil: "/img/perfil_gab_pc.png" },
-  { nome: "Gabinete Claudio", criado_por: "Sistema", codigo_entrada: "GBC367C3", imagem_perfil: "/img/claudio.jpg" },
-  { nome: "Gabinete Tati", criado_por: "Sistema", codigo_entrada: "GBT489D4", imagem_perfil: "/img/perfil_gab_tati.png" },
-  { nome: "Gabinete Rose", criado_por: "Sistema", codigo_entrada: "GBR501E5", imagem_perfil: "/img/perfil_gab_rose.png" },
-  { nome: "Gabinete Patrick", criado_por: "Sistema", codigo_entrada: "GBP623F6", imagem_perfil: "/img/perfil_gab_patrick.png" },
-  { nome: "Gabinete Adriano", criado_por: "Sistema", codigo_entrada: "GBA745G7", imagem_perfil: "/img/perfil_gab_adriano.png" },
-  { nome: "Gabinete Chines", criado_por: "Sistema", codigo_entrada: "GBC867H8", imagem_perfil: "/img/perfil_gab_chines.png" },
-  { nome: "Gabinete Esporinha", criado_por: "Sistema", codigo_entrada: "GBE989I9", imagem_perfil: "/img/esporinha.png" },
-  { nome: "Gabinete Giovane", criado_por: "Sistema", codigo_entrada: "GBG111J1", imagem_perfil: "/img/perfil_gab_giovane.png" },
-  { nome: "Gabinete Paula", criado_por: "Sistema", codigo_entrada: "GBP222K2", imagem_perfil: "/img/perfil_gab_paula.png" },
-  { nome: "Gabinete Wilson", criado_por: "Sistema", codigo_entrada: "GBW333L3", imagem_perfil: "/img/perfil_gab_wilson.png" },
-  { nome: "Gabinete Mulito", criado_por: "Sistema", codigo_entrada: "GBM444M4", imagem_perfil: "/img/perfil_gab_mulito.png" },
-  { nome: "Comissões", criado_por: "Sistema", codigo_entrada: "COM444M4", imagem_perfil: "/img/perfil_comissoes.png" },
-  { nome: "Diretoria", criado_por: "Sistema", codigo_entrada: "DIR555N5", imagem_perfil: "/img/perfil_diretoria.png" },
-  { nome: "Secretaria Geral", criado_por: "Sistema", codigo_entrada: "SEC666O6", imagem_perfil: "/img/perfil_secretaria.png" },
-  { nome: "Recepção", criado_por: "Sistema", codigo_entrada: "REC777P7", imagem_perfil: "/img/perfil_recepcao.png" },
+  {
+    nome: "Informática",
+    criado_por: "Rafael Barth",
+    codigo_entrada: "INF123X9",
+    imagem_perfil: "/img/perfil_informatica.png",
+  },
+  {
+    nome: "Financeiro",
+    criado_por: "Henrique Guimarães",
+    codigo_entrada: "FNC244M7",
+    imagem_perfil: "/img/perfil_financeiro.png",
+  },
+  {
+    nome: "Gabinete Gilvan",
+    criado_por: "Sistema",
+    codigo_entrada: "GBG123A1",
+    imagem_perfil: "/img/perfil_gab_gilvan.jpeg",
+  },
+  {
+    nome: "Gabinete PC",
+    criado_por: "Sistema",
+    codigo_entrada: "GBC245B2",
+    imagem_perfil: "/img/perfil_gab_pc.jpeg",
+  },
+  {
+    nome: "Gabinete Claudio",
+    criado_por: "Sistema",
+    codigo_entrada: "GBC367C3",
+    imagem_perfil: "/img/perfil_gab_claudio.jpg",
+  },
+  {
+    nome: "Gabinete Tati",
+    criado_por: "Sistema",
+    codigo_entrada: "GBT489D4",
+    imagem_perfil: "/img/perfil_gab_tati.jpg",
+  },
+  {
+    nome: "Gabinete Rose",
+    criado_por: "Sistema",
+    codigo_entrada: "GBR501E5",
+    imagem_perfil: "/img/perfil_gab_rose.jpg",
+  },
+  {
+    nome: "Gabinete Patrick",
+    criado_por: "Sistema",
+    codigo_entrada: "GBP623F6",
+    imagem_perfil: "/img/perfil_gab_patrick.jpg",
+  },
+  {
+    nome: "Gabinete Adriano",
+    criado_por: "Sistema",
+    codigo_entrada: "GBA745G7",
+    imagem_perfil: "/img/perfil_gab_adriano.png",
+  },
+  {
+    nome: "Gabinete Chines",
+    criado_por: "Sistema",
+    codigo_entrada: "GBC867H8",
+    imagem_perfil: "/img/perfil_gab_chines.jpg",
+  },
+  {
+    nome: "Gabinete Esporinha",
+    criado_por: "Sistema",
+    codigo_entrada: "GBE989I9",
+    imagem_perfil: "/img/perfil_gab_esporinha.jpeg",
+  },
+  {
+    nome: "Gabinete Giovane",
+    criado_por: "Sistema",
+    codigo_entrada: "GBG111J1",
+    imagem_perfil: "/img/perfil_gab_giovane.jpeg",
+  },
+  {
+    nome: "Gabinete Paula",
+    criado_por: "Sistema",
+    codigo_entrada: "GBP222K2",
+    imagem_perfil: "/img/perfil_gab_paula.jpeg",
+  },
+  {
+    nome: "Gabinete Wilson",
+    criado_por: "Sistema",
+    codigo_entrada: "GBW333L3",
+    imagem_perfil: "/img/perfil_gab_wilson.png",
+  },
+  {
+    nome: "Gabinete Mulito",
+    criado_por: "Sistema",
+    codigo_entrada: "GBM444M4",
+    imagem_perfil: "/img/perfil_gab_mulito.jpeg",
+  },
+  {
+    nome: "Comissões",
+    criado_por: "Sistema",
+    codigo_entrada: "COM444M4",
+    imagem_perfil: "/img/perfil_comissoes.png",
+  },
+  {
+    nome: "Diretoria",
+    criado_por: "Sistema",
+    codigo_entrada: "DIR555N5",
+    imagem_perfil: "/img/perfil_direcao.png",
+  },
+  {
+    nome: "Secretaria Geral",
+    criado_por: "Sistema",
+    codigo_entrada: "SEC666O6",
+    imagem_perfil: "/img/perfil_secretaria.png",
+  },
+  {
+    nome: "Recepção",
+    criado_por: "Sistema",
+    codigo_entrada: "REC777P7",
+    imagem_perfil: "/img/perfil_recepcao.png",
+  },
 ];
 
 const perfis = [
@@ -51,24 +146,8 @@ const perfis = [
   { nome: "Waner Vargas", setorId: 15 },
   { nome: "Camila Vieira", setorId: 16 },
   { nome: "Talles Garcia", setorId: 17 },
+  { nome: "Samanta", setorId: 17 },
   { nome: "Adriana de Oliveira", setorId: 18 },
-];
-
-const chamados = [
-  {
-    titulo: "Computador não liga",
-    descricaoProblema: "O computador da recepção não liga mesmo após reiniciar o estabilizador.",
-    setorId: 1,
-    perfilId: 5,
-    imagens: ["/img/chamados/comp1.png"],
-  },
-  {
-    titulo: "Problema no Telefone",
-    descricaoProblema: "Sistema de ponto apresenta erro ao exportar planilha.",
-    setorId: 5,
-    perfilId: 2,
-    imagens: ["/img/chamados/tel1.png", "/img/chamados/tel2.png"],
-  },
 ];
 
 async function initDatabase() {
@@ -121,29 +200,52 @@ async function initDatabase() {
     console.log("✅ Tabelas criadas/verificadas.");
 
     // Inserir setores se estiverem vazios
-    const [countSetores] = await conn.query("SELECT COUNT(*) AS total FROM setores;");
+    const [countSetores] = await conn.query(
+      "SELECT COUNT(*) AS total FROM setores;"
+    );
     if (countSetores[0].total === 0) {
-      await conn.query("INSERT INTO setores (nome, criado_por, codigo_entrada, imagem_perfil) VALUES ?", [
-        setores.map(s => [s.nome, s.criado_por, s.codigo_entrada, s.imagem_perfil]),
-      ]);
+      await conn.query(
+        "INSERT INTO setores (nome, criado_por, codigo_entrada, imagem_perfil) VALUES ?",
+        [
+          setores.map((s) => [
+            s.nome,
+            s.criado_por,
+            s.codigo_entrada,
+            s.imagem_perfil,
+          ]),
+        ]
+      );
       console.log("📦 Setores inseridos!");
     }
 
     // Inserir perfis se estiverem vazios
-    const [countPerfis] = await conn.query("SELECT COUNT(*) AS total FROM perfis;");
+    const [countPerfis] = await conn.query(
+      "SELECT COUNT(*) AS total FROM perfis;"
+    );
     if (countPerfis[0].total === 0) {
       await conn.query("INSERT INTO perfis (nome, setorId) VALUES ?", [
-        perfis.map(p => [p.nome, p.setorId]),
+        perfis.map((p) => [p.nome, p.setorId]),
       ]);
       console.log("👤 Perfis inseridos!");
     }
 
     // Inserir chamados se estiverem vazios
-    const [countChamados] = await conn.query("SELECT COUNT(*) AS total FROM chamados;");
+    const [countChamados] = await conn.query(
+      "SELECT COUNT(*) AS total FROM chamados;"
+    );
     if (countChamados[0].total === 0) {
-      await conn.query("INSERT INTO chamados (titulo, descricaoProblema, setorId, perfilId, imagens) VALUES ?", [
-        chamados.map(c => [c.titulo, c.descricaoProblema, c.setorId, c.perfilId, JSON.stringify(c.imagens)]),
-      ]);
+      await conn.query(
+        "INSERT INTO chamados (titulo, descricaoProblema, setorId, perfilId, imagens) VALUES ?",
+        [
+          chamados.map((c) => [
+            c.titulo,
+            c.descricaoProblema,
+            c.setorId,
+            c.perfilId,
+            JSON.stringify(c.imagens),
+          ]),
+        ]
+      );
       console.log("📞 Chamados inseridos!");
     }
 

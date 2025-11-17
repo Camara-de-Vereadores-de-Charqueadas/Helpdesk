@@ -39,11 +39,9 @@ export default function Chamados() {
       const data = await res.json();
 
       // detectar novos chamados
-      const novos = data.filter(
-        (c) => !prevIdsRef.current.includes(c.id)
-      );
+      const novos = data.filter((c) => !prevIdsRef.current.includes(c.id));
       if (novos.length > 0) {
-        audioRef.current?.play(); // toca som
+        audioRef.current?.play();
         setNovosChamados((n) => n + novos.length);
       }
 
@@ -65,10 +63,10 @@ export default function Chamados() {
     else document.title = "Helpdesk - Chamados";
   }, [chamados]);
 
-  // --- Efeito inicial e atualização automática ---
+  // --- Efeito inicial ---
   useEffect(() => {
     buscarChamados();
-    const interval = setInterval(buscarChamados, 10000); // 10s
+    const interval = setInterval(buscarChamados, 10000);
     return () => clearInterval(interval);
   }, []);
 
@@ -171,18 +169,18 @@ export default function Chamados() {
                           <div className="chamado-esquerda">
                             <img
                               src={chamado.setorImg}
-                              alt={chamado.setor}
+                              alt={chamado.setorNome}
                               className="setor-img"
                             />
                             <div className="chamado-info">
-                              <strong>{chamado.setor}</strong>
+                              <strong>{chamado.setorNome}</strong>
                               <p>{chamado.titulo}</p>
                             </div>
                           </div>
 
                           <div className="chamado-info-meio">
                             <span className="aberto-por">
-                              Aberto por {chamado.perfil}
+                              Aberto por {chamado.perfilNome}
                             </span>
                             <strong>
                               {formatarHora(chamado.dataHora)} -{" "}
@@ -203,6 +201,7 @@ export default function Chamados() {
                                 <Eye size={22} className="icone-olho" />
                               </button>
                             </div>
+
                             <div
                               className={`status ${
                                 chamado.status
@@ -212,7 +211,7 @@ export default function Chamados() {
                                   : "nao-visualizado"
                               }`}
                             >
-                              {chamado.status || "NÃO VISUALIZADO"}
+                              {chamado.status || "NAO VISUALIZADO"}
                             </div>
                           </div>
                         </div>
@@ -238,15 +237,15 @@ export default function Chamados() {
             </button>
 
             <h2>{chamadoSelecionado.titulo}</h2>
+
             <p>
-              <strong>Setor:</strong> {chamadoSelecionado.setor}
+              <strong>Setor:</strong> {chamadoSelecionado.setorNome}
             </p>
             <p>
-              <strong>Aberto por:</strong> {chamadoSelecionado.perfil}
+              <strong>Aberto por:</strong> {chamadoSelecionado.perfilNome}
             </p>
             <p>
-              <strong>Descrição:</strong>{" "}
-              {chamadoSelecionado.descricaoProblema}
+              <strong>Descrição:</strong> {chamadoSelecionado.descricaoProblema}
             </p>
 
             <div className="modal-buttons">
@@ -259,18 +258,14 @@ export default function Chamados() {
 
               <button
                 className="btn-resolvido"
-                onClick={() =>
-                  finalizarChamado(chamadoSelecionado, true)
-                }
+                onClick={() => finalizarChamado(chamadoSelecionado, true)}
               >
                 Resolvido
               </button>
 
               <button
                 className="btn-nao-resolvido"
-                onClick={() =>
-                  finalizarChamado(chamadoSelecionado, false)
-                }
+                onClick={() => finalizarChamado(chamadoSelecionado, false)}
               >
                 Não Resolvido
               </button>
@@ -289,16 +284,20 @@ export default function Chamados() {
             >
               <XCircle size={28} />
             </button>
+
             <h2>Imagens do Chamado</h2>
+
             <div className="imagens-container">
-              {chamadoSelecionado.imagens?.map((img, idx) => (
-                <img
-                  key={idx}
-                  src={img}
-                  alt={`Imagem ${idx + 1}`}
-                  onClick={() => window.open(img, "_blank")}
-                />
-              ))}
+              {JSON.parse(chamadoSelecionado.imagens || "[]").map(
+                (img, idx) => (
+                  <img
+                    key={idx}
+                    src={img}
+                    alt={`Imagem ${idx + 1}`}
+                    onClick={() => window.open(img, "_blank")}
+                  />
+                )
+              )}
             </div>
           </div>
         </div>
