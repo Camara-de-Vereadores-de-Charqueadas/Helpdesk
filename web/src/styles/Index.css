@@ -52,10 +52,9 @@
     background-size: cover;
     background-position: center;
     position: relative;
-    height: 200px;
+    height: 250px;
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
     justify-content: center;
 }
 

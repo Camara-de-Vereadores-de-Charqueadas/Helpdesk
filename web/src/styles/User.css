@@ -11,19 +11,20 @@
     margin-bottom: 20px;
 }
 
-.btn-abrir {
-    margin-top: 20px;
-}
-
 .card-chamados {
     margin-top: 0px;
 }
 
+.visualizacao-usuario {
+    background: var(--grad-azul);
+}
+
 .btn-abrir {
+    margin-top: 20px;
     display: flex;
     align-items: center;
     gap: 8px;
-    background: var(--grad-azul-raf);
+    background: #55a1d3;
     color: var(--branco);
     border: none;
     border-radius: 20px;
@@ -42,7 +43,7 @@
 .card-chamados {
     background: var(--branco);
     border-radius: 16px;
-    box-shadow: 0 4px 10px rgba(192, 7, 7, 0.1);
+    box-shadow: 0 4px 10px rgba(255, 0, 0, 0.217);
     width: 100%;
     max-width: 1500px;
     padding: 24px;
@@ -51,7 +52,7 @@
 }
 
 .card-chamados:last-child {
-    box-shadow: 0 4px 10px rgba(21, 161, 3, 0.1);
+    box-shadow: 0 4px 10px rgba(24, 173, 4, 0.237);
 
 }
 

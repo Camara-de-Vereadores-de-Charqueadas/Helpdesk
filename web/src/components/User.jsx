@@ -14,7 +14,6 @@ export default function VisualizacaoUsuario() {
   const [chamados, setChamados] = useState([]);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState(null);
-  console.log("Setor no localStorage:", localStorage.getItem("setorId"));
 
   const [filtrosAbertos, setFiltrosAbertos] = useState({
     periodo: "Últimos 30 dias",
@@ -128,7 +127,7 @@ export default function VisualizacaoUsuario() {
       />
 
       <CardChamados
-        titulo="RESOLVIDOS"
+        titulo="FECHADOS"
         expandido={expandidoResolvidos}
         setExpandido={setExpandidoResolvidos}
         chamados={chamadosResolvidos}

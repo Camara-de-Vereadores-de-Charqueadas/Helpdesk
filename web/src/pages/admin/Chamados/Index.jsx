@@ -10,6 +10,7 @@ import {
 } from "@phosphor-icons/react";
 import { useState, useEffect, useRef } from "react";
 import { formatarData } from "../../../utils/formatarData";
+import notifySound from "../../../assets/notify.mp3";
 
 const API_URL = "http://localhost:3000/api/chamados"; // ajuste se necessário
 
@@ -31,7 +32,7 @@ export default function Chamados() {
   const [novosChamados, setNovosChamados] = useState(0);
   const audioRef = useRef(null);
   const prevIdsRef = useRef([]);
-
+  const primeiraExecucaoRef = useRef(true);
   // --- Buscar chamados do back-end ---
   async function buscarChamados() {
     try {
@@ -39,11 +40,17 @@ export default function Chamados() {
       if (!res.ok) throw new Error("Erro ao buscar chamados");
       const data = await res.json();
 
-      // detectar novos chamados
+      // Detectar novos chamados (ignora na primeira execução)
       const novos = data.filter((c) => !prevIdsRef.current.includes(c.id));
-      if (novos.length > 0) {
+
+      if (novos.length > 0 && !primeiraExecucaoRef.current) {
         audioRef.current?.play();
         setNovosChamados((n) => n + novos.length);
+      }
+
+      // Marca que a primeira execução já aconteceu
+      if (primeiraExecucaoRef.current) {
+        primeiraExecucaoRef.current = false;
       }
 
       prevIdsRef.current = data.map((c) => c.id);
@@ -119,6 +126,8 @@ export default function Chamados() {
   });
 
   const abrirModal = (chamado) => {
+    console.log("Imagens do chamado:", chamado.imagens); // Deve ser um array
+    console.log("Tipo:", typeof chamado.imagens); // Deve ser 'object'
     setChamadoSelecionado(chamado);
     setMostrarModal(true);
   };
@@ -176,8 +185,7 @@ export default function Chamados() {
   return (
     <>
       <Header isAdmin={true} userName="Informática" />
-      <audio ref={audioRef} src="/assets/notify.mp3" preload="auto" />
-
+      <audio ref={audioRef} src={notifySound} preload="auto" />
       <div className="layout-inferior">
         <Aside
           isAdmin={true}
@@ -284,7 +292,7 @@ export default function Chamados() {
           </div>
         </div>
       </div>
-      {/* --- MODAL DE DETALHES DO CHAMADO --- */}
+      {/* --- MODAL DE DETALHES PRINCIPAL --- */}
       {mostrarModal && chamadoSelecionado && (
         <div className="modal-overlay-admin">
           <div className="modal">
@@ -307,32 +315,58 @@ export default function Chamados() {
               <strong>Descrição:</strong> {chamadoSelecionado.descricaoProblema}
             </p>
 
+            {/* Mostrar descrição da TI se existir */}
+            {chamadoSelecionado.descricaoTI && (
+              <p>
+                <strong>Descrição TI:</strong> {chamadoSelecionado.descricaoTI}
+              </p>
+            )}
+
             <div className="modal-buttons">
-              <button
-                className="btn-imagens"
-                onClick={() => setMostrarModalImagens(true)}
-              >
-                <ImageIcon size={32} />
-              </button>
+              {/* Botão para ver imagens - CORREÇÃO AQUI */}
+              {chamadoSelecionado.imagens &&
+                chamadoSelecionado.imagens.length > 0 && ( // REMOVEU JSON.parse
+                  <button
+                    className="btn-imagens"
+                    onClick={() => setMostrarModalImagens(true)}
+                  >
+                    <ImageIcon size={32} />
+                  </button>
+                )}
 
-              <button
-                className="btn-resolvido"
-                onClick={() => finalizarChamado(chamadoSelecionado, true)}
-              >
-                Resolvido
-              </button>
+              {/* Botões de finalização - só mostrar se não estiver fechado */}
+              {chamadoSelecionado.fechado !== 1 && (
+                <>
+                  <button
+                    className="btn-resolvido"
+                    onClick={() => finalizarChamado(chamadoSelecionado, true)}
+                  >
+                    Resolvido
+                  </button>
 
-              <button
-                className="btn-nao-resolvido"
-                onClick={() => finalizarChamado(chamadoSelecionado, false)}
-              >
-                Não Resolvido
-              </button>
+                  <button
+                    className="btn-nao-resolvido"
+                    onClick={() => finalizarChamado(chamadoSelecionado, false)}
+                  >
+                    Não Resolvido
+                  </button>
+                </>
+              )}
+
+              {/* Mostrar status se estiver fechado */}
+              {chamadoSelecionado.fechado === 1 && (
+                <div
+                  className={`status ${chamadoSelecionado.status
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")}`}
+                >
+                  {chamadoSelecionado.status}
+                </div>
+              )}
             </div>
           </div>
         </div>
       )}
-
       {/* --- MODAL DE IMAGENS --- */}
       {mostrarModalImagens && (
         <div className="modal-overlay">
@@ -347,20 +381,19 @@ export default function Chamados() {
             <h2>Imagens do Chamado</h2>
 
             <div className="imagens-container">
-              {JSON.parse(chamadoSelecionado?.imagens || "[]").map(
-                (img, idx) => (
-                  <img
-                    key={idx}
-                    src={img}
-                    alt={`Imagem ${idx + 1}`}
-                    onClick={() => window.open(img, "_blank")}
-                  />
-                )
-              )}
+              {/* CORREÇÃO AQUI - Remove JSON.parse */}
+              {(chamadoSelecionado?.imagens || []).map((img, idx) => (
+                <img
+                  key={idx}
+                  src={img}
+                  alt={`Imagem ${idx + 1}`}
+                  onClick={() => window.open(img, "_blank")}
+                />
+              ))}
             </div>
           </div>
         </div>
-      )}
+      )}{" "}
     </>
   );
 }

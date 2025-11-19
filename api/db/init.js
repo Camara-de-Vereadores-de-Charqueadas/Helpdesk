@@ -148,6 +148,7 @@ const perfis = [
   { nome: "Talles Garcia", setorId: 17 },
   { nome: "Samanta", setorId: 17 },
   { nome: "Adriana de Oliveira", setorId: 18 },
+  { nome: "Usuário", setorId: 19 },
 ];
 
 async function initDatabase() {
@@ -185,7 +186,7 @@ async function initDatabase() {
         titulo VARCHAR(255) NOT NULL,
         descricaoProblema TEXT NOT NULL,
         descricaoTI TEXT,
-        status VARCHAR(50) DEFAULT 'NAO RESOLVIDO',
+        status VARCHAR(50),
         visualizadoTI BOOLEAN DEFAULT FALSE,
         fechado BOOLEAN DEFAULT FALSE,
         dataHora DATETIME DEFAULT CURRENT_TIMESTAMP,

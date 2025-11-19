@@ -188,15 +188,18 @@ export const updateChamadoTI = async (id, campos) => {
   let novoStatus = atual.status;
   let novoVisualizado =
     visualizadoTI !== undefined ? visualizadoTI : atual.visualizadoTI;
+  let novoFechado = fechado !== undefined ? fechado : atual.fechado; // CORREÇÃO IMPORTANTE
 
   // Se está marcando como visualizado E ainda não foi visualizado
   if (visualizadoTI === 1 && atual.visualizadoTI === 0) {
     novoStatus = "EM ANDAMENTO";
   }
 
-  // Se está fechando o chamado
-  if (fechado === 1) {
-    novoStatus = status || atual.status;
+  // Se está fechando o chamado (RESOLVIDO/NAO RESOLVIDO)
+  if (status === "RESOLVIDO" || status === "NAO RESOLVIDO") {
+    novoStatus = status;
+    novoFechado = 1; // CORREÇÃO: Fecha o chamado
+    novoVisualizado = 1; // CORREÇÃO: Marca como visualizado ao fechar
   }
 
   // Executa atualização
@@ -205,9 +208,9 @@ export const updateChamadoTI = async (id, campos) => {
      SET descricaoTI = COALESCE(?, descricaoTI),
          status = ?,
          visualizadoTI = ?,
-         fechado = COALESCE(?, fechado)
+         fechado = ?
      WHERE id = ?`,
-    [descricaoTI, novoStatus, novoVisualizado, fechado, id]
+    [descricaoTI, novoStatus, novoVisualizado, novoFechado, id] // CORREÇÃO: Use novoFechado
   );
 
   return result.affectedRows > 0;

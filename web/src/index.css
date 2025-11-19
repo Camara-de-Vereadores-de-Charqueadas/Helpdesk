@@ -26,7 +26,7 @@
 
   /* ===== Gradientes ===== */
   --grad-laranja: linear-gradient(to bottom right, #8d6727, #b8914e);
-  --grad-azul: linear-gradient(to bottom right, #27648d, #4b75c8);
+  --grad-azul: linear-gradient(to bottom right, #27648d, #2c54a4);
   --grad-vermelho: linear-gradient(to bottom right, #8d2746, #b84e4e);
   --grad-azul-raf: linear-gradient(to bottom right, #27648d, #4e8eb8);
   --grad-verde: linear-gradient(to bottom right, #0d8223, #45b256);
@@ -50,7 +50,6 @@ body {
   font-family: var(--font-primary);
   background-color: var(--cinza-claro);
   color: var(--cinza);
-  scroll-behavior: smooth;
 }
 
 /* ===== Links ===== */
@@ -86,11 +85,12 @@ button:hover {
 
 /* ===== Scrollbar ===== */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 5px;
+  height: 1px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--azul-bondi);
+  background: #466072;
   border-radius: 4px;
 }
 

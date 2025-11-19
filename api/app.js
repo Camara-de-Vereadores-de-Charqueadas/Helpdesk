@@ -7,16 +7,17 @@ import loginRoutes from "./routes/loginRoutes.js";
 import initDatabase from "./db/init.js";
 import path from "path";
 import { fileURLToPath } from "url";
+
 const app = express();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// Servir arquivos estáticos
+app.use("/api/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use(cors());
-app.use(express.json()); // para ler JSON no body
-
+app.use(express.json());
 
 const PORT = process.env.API_PORT || 3000;
 
@@ -27,10 +28,9 @@ app.use("/api/perfis", perfilRoutes);
 app.use("/api/setores", setorRoutes);
 app.use("/api/chamados", chamadoRoutes);
 
-
 const startServer = async () => {
-    await initDatabase(); // só prossegue se o banco responder
-    app.listen(PORT, () => console.log(`🚀 API rodando na porta ${PORT}`));
+  await initDatabase();
+  app.listen(PORT, () => console.log(`🚀 API rodando na porta ${PORT}`));
 };
 
 startServer();

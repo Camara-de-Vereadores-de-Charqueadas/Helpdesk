@@ -5,6 +5,7 @@
     margin-bottom: 16px;
     transition: all 0.3s ease;
     width: 100%;
+    background-color: #e6f3f9;
 }
 
 .chamado-card:hover {
@@ -35,7 +36,7 @@
 
 .titulo-info {
     font-weight: bold;
-    color: var(--cinza);
+    color: var(--azul-raf);
     font-size: 0.9rem;
     margin-bottom: 4px;
 }
@@ -50,13 +51,43 @@
 
 .perfil-ticket-p {
     margin-left: 5px;
+    color: var(--azul-bondi);
 }
 
 .descricao {
     font-size: 0.9rem;
-    color: var(--cinza-escuro);
+    color: var(--azul-bondi);
     margin-top: 8px;
     text-align: justify;
+}
+
+.status-response {
+    color: var(--azul-bondi);
+}
+
+.status-response {
+    font-weight: bold;
+    padding: 0.3rem 0.8rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    color: white;
+}
+
+.status-response.concluído {
+    background: var(--verde);
+}
+
+.status-response.não-resolvido {
+    background: var(--vermelho);
+}
+
+.status-response.não-visualizado {
+    background: var(--amarelo);
+    color: #000;
+}
+
+.status-response.em-andamento {
+    background: var(--laranja);
 }
 
 .icone-visualizar {
@@ -129,7 +160,7 @@
         /* color: var(--branco); */
     }
 
-    
+
 
 }
 

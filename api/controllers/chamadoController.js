@@ -65,7 +65,6 @@ export const deletarChamado = async (req, res) => {
 };
 
 // Cria novo chamado (renomeia imagens usando o id do chamado)
-// Cria novo chamado (renomeia imagens usando o id do chamado)
 export const criarChamado = async (req, res) => {
   try {
     const { titulo, descricaoProblema, setorId, perfilId } = req.body;
@@ -99,7 +98,7 @@ export const criarChamado = async (req, res) => {
       fs.renameSync(oldPath, newPath);
 
       // salvar caminho relativo para front
-      imagensFinais.push(`/uploads/${newName}`);
+      imagensFinais.push(`http://localhost:3000/api/uploads/${newName}`);
     }
 
     // 3) Atualiza o chamado se houver imagens finais
