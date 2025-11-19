@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import {
   getAllChamados,
   getChamadosBySetor,
@@ -5,15 +7,18 @@ import {
   createChamado,
   createChamadosEmLote,
   updateChamadoTI,
+  updateChamadoImages,
+  deleteChamado,
+  getChamados,
 } from "../models/chamadoModel.js";
 
-// Lista todos os chamados
+// Lista todos os chamados (com imagens parseadas)
 export const listarChamados = async (req, res) => {
   try {
     const chamados = await getAllChamados();
     res.json(chamados);
   } catch (error) {
-    console.error(error);
+    console.error("Erro ao listar chamados:", error);
     res.status(500).json({ error: "Erro ao listar chamados." });
   }
 };
@@ -25,7 +30,7 @@ export const listarChamadosPorSetor = async (req, res) => {
     const chamados = await getChamadosBySetor(setorId);
     res.json(chamados);
   } catch (error) {
-    console.error(error);
+    console.error("Erro ao listar chamados por setor:", error);
     res.status(500).json({ error: "Erro ao listar chamados do setor." });
   }
 };
@@ -37,36 +42,80 @@ export const listarChamadosPorPerfil = async (req, res) => {
     const chamados = await getChamadosByPerfil(perfilId);
     res.json(chamados);
   } catch (error) {
-    console.error(error);
+    console.error("Erro ao listar chamados por perfil:", error);
     res.status(500).json({ error: "Erro ao listar chamados do perfil." });
   }
 };
 
-// Cria novo chamado ou vários (em lote)
+// Deletar chamado (apaga arquivos do disco se houver)
+export const deletarChamado = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const resultado = await deleteChamado(id);
+
+    if (!resultado || resultado.affectedRows === 0)
+      return res.status(404).json({ error: "Chamado não encontrado." });
+
+    res.json({ message: "Chamado deletado com sucesso." });
+  } catch (error) {
+    console.error("Erro ao deletar chamado:", error);
+    res.status(500).json({ error: "Erro ao deletar chamado." });
+  }
+};
+
+// Cria novo chamado (renomeia imagens usando o id do chamado)
+// Cria novo chamado (renomeia imagens usando o id do chamado)
 export const criarChamado = async (req, res) => {
   try {
     const { titulo, descricaoProblema, setorId, perfilId } = req.body;
-    const imagens =
-      req.files?.map((file) => `/uploads/chamados/${file.filename}`) || [];
 
-    if (!titulo || !descricaoProblema || !setorId || !perfilId) {
-      return res.status(400).json({
-        error: "Campos obrigatórios: título, descrição, setorId e perfilId.",
-      });
-    }
+    // Arquivos enviados via multer (salvos temporariamente)
+    const imagensTemp = req.files || [];
 
-    const novo = await createChamado({
+    // 1) Primeiro salva o chamado com status inicial correto
+    const chamadoId = await createChamado({
       titulo,
       descricaoProblema,
       setorId,
       perfilId,
-      imagens: JSON.stringify(imagens), // salva como array JSON no BD
+      status: "NÃO VISUALIZADO", // Status inicial correto
+      visualizadoTI: 0, // Não visualizado inicialmente
+      fechado: 0, // Não fechado
     });
 
-    res.status(201).json({ id: novo.id, titulo, setorId, perfilId, imagens });
+    // 2) Renomear as imagens (se houver)
+    const imagensFinais = [];
+    const uploadDir = path.join(process.cwd(), "uploads");
+
+    for (let i = 0; i < imagensTemp.length; i++) {
+      const img = imagensTemp[i];
+      const ext = path.extname(img.originalname) || "";
+      const newName = `${chamadoId}-${i + 1}${ext}`;
+      const oldPath = img.path;
+      const newPath = path.join(uploadDir, newName);
+
+      // mover/renomear arquivo
+      fs.renameSync(oldPath, newPath);
+
+      // salvar caminho relativo para front
+      imagensFinais.push(`/uploads/${newName}`);
+    }
+
+    // 3) Atualiza o chamado se houver imagens finais
+    if (imagensFinais.length > 0) {
+      await updateChamadoImages(chamadoId, imagensFinais);
+    }
+
+    // Retorna o chamado recém-criado
+    res.status(201).json({
+      message: "Chamado criado!",
+      id: chamadoId,
+      imagens: imagensFinais.length > 0 ? imagensFinais : null,
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Erro ao criar chamado." });
+    console.error("Erro ao criar chamado:", error);
+    res.status(500).json({ error: "Erro ao criar chamado" });
   }
 };
 
@@ -76,24 +125,24 @@ export const atualizarChamadoTI = async (req, res) => {
     const { id } = req.params;
     const { descricaoTI, status, visualizadoTI, fechado } = req.body;
 
-    // 🔹 Converte strings para boolean
-    const visualizadoBool =
-      visualizadoTI === true || visualizadoTI === "true" ? 1 : 0;
+    // Converte para 0/1 de forma consistente
+    const visualizadoBool = visualizadoTI ? 1 : 0;
+    const fechadoBool = fechado ? 1 : 0;
 
-    const fechadoBool = fechado === true || fechado === "true" ? 1 : 0;
-
-    // 🔹 Mantém o status se vier do front
-    const statusFinal = status || "NAO RESOLVIDO";
-
-    await updateChamadoTI(id, {
+    const atualizado = await updateChamadoTI(id, {
       descricaoTI,
-      status: statusFinal,
+      status,
       visualizadoTI: visualizadoBool,
       fechado: fechadoBool,
     });
+
+    if (!atualizado) {
+      return res.status(404).json({ error: "Chamado não encontrado." });
+    }
+
     res.json({ message: "Chamado atualizado com sucesso." });
   } catch (error) {
-    console.error(error);
+    console.error("Erro ao atualizar chamado:", error);
     res.status(500).json({ error: "Erro ao atualizar chamado." });
   }
 };

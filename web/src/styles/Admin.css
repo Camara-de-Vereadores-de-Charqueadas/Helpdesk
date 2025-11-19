@@ -111,10 +111,7 @@
     /* três colunas iguais */
     align-items: center;
     border: 2px solid transparent;
-}
-
-.chamado-card-admin.nao-visualizado {
-    border: 2px solid var(--vermelho);
+    transition: transform 0.3s ease;
 }
 
 .chamado-esquerda {
@@ -190,21 +187,6 @@
     background: var(--laranja);
 }
 
-.btn-visualizar.azul {
-    background: var(--azul-vivo);
-}
-
-.btn-visualizar.azul:hover {
-    background: #4a90e2;
-}
-
-.btn-visualizar.vermelho {
-    background: var(--vermelho);
-}
-
-.btn-visualizar.vermelho:hover {
-    background: #e98d8d;
-}
 
 .btn-finalizar {
     background: var(--verde);
@@ -213,7 +195,34 @@
 .btn-finalizar:hover {
     background: #6fc36f;
 }
+.btn-delete {
+  background-color: #ff4b4b;
+  border: none;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: white;
+  transition: 0.2s;
+}
 
+.btn-delete:hover {
+  background-color: #d63333;
+}
+
+/* Card com borda vermelha quando não visualizado */
+.chamado-card-admin.nao-visualizado {
+    border: 2px solid var(--vermelho);
+}
+
+/* Botão Eye - sempre azul, apenas muda opacidade */
+.btn-visualizar {
+  background-color: #007bff;
+  border-color: #007bff;
+  transition: opacity 0.3s;
+}
+
+
+/* Status styles - CORRIGIDO */
 .status {
     font-size: 0.85rem;
     font-weight: bold;
@@ -223,7 +232,7 @@
     color: var(--branco);
 }
 
-.status.nao-visualizado {
+.status.não-visualizado {
     background: var(--amarelo);
     color: #000;
 }
@@ -239,7 +248,6 @@
 .status.resolvido {
     background: var(--verde);
 }
-
 .layout-inferior {
     display: flex;
 }

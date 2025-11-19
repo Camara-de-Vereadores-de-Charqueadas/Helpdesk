@@ -6,6 +6,7 @@ import {
   CheckCircle,
   Image as ImageIcon,
   XCircle,
+  TrashSimple,
 } from "@phosphor-icons/react";
 import { useState, useEffect, useRef } from "react";
 import { formatarData } from "../../../utils/formatarData";
@@ -55,7 +56,7 @@ export default function Chamados() {
   // --- Atualiza título da aba ---
   useEffect(() => {
     const naoVisualizados = chamados.filter(
-      (c) => c.status === "NAO VISUALIZADO"
+      (c) => c.visualizadoTI === 0 // CORREÇÃO: usar visualizadoTI em vez de status
     ).length;
 
     if (naoVisualizados > 0)
@@ -81,6 +82,16 @@ export default function Chamados() {
         (c) => c.status === "RESOLVIDO" || c.status === "NAO RESOLVIDO"
       );
     return chamados;
+  };
+  const deletarChamado = async (id) => {
+    if (!confirm("Deseja realmente deletar este chamado?")) return;
+
+    try {
+      await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+      buscarChamados();
+    } catch (err) {
+      console.error("Erro ao deletar chamado (ERRO REAL):", error.sqlMessage);
+    }
   };
 
   const chamadosFiltrados = filtrarChamados();
@@ -111,18 +122,55 @@ export default function Chamados() {
     setChamadoSelecionado(chamado);
     setMostrarModal(true);
   };
+  const marcarComoVisualizado = async (chamado) => {
+    try {
+      await fetch(`http://localhost:3000/api/chamados/${chamado.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          visualizadoTI: true,
+        }),
+      });
 
-  const finalizarChamado = (chamado, resolvido) => {
-    fetch(`${API_URL}/${chamado.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        status: resolvido ? "RESOLVIDO" : "NAO RESOLVIDO",
-      }),
-    })
-      .then(() => buscarChamados())
-      .catch((err) => console.error(err));
-    setMostrarModal(false);
+      // Atualiza apenas o chamado específico no estado
+      setChamados((prevChamados) =>
+        prevChamados.map((c) =>
+          c.id === chamado.id
+            ? { ...c, visualizadoTI: 1, status: "EM ANDAMENTO" }
+            : c
+        )
+      );
+    } catch (err) {
+      console.error("Erro ao marcar como visualizado:", err);
+    }
+  };
+  const finalizarChamado = async (chamado, resolvido) => {
+    try {
+      await fetch(`${API_URL}/${chamado.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          status: resolvido ? "RESOLVIDO" : "NAO RESOLVIDO",
+        }),
+      });
+
+      // Atualiza localmente
+      setChamados((prevChamados) =>
+        prevChamados.map((c) =>
+          c.id === chamado.id
+            ? {
+                ...c,
+                status: resolvido ? "RESOLVIDO" : "NAO RESOLVIDO",
+                fechado: 1,
+              }
+            : c
+        )
+      );
+
+      setMostrarModal(false);
+    } catch (err) {
+      console.error("Erro ao finalizar chamado:", err);
+    }
   };
 
   return (
@@ -136,7 +184,6 @@ export default function Chamados() {
           userName="Informática"
           onFiltroChange={(novoFiltro) => setFiltro(novoFiltro)}
         />
-
         <div className="conteudo-principal">
           <div className="page chamados-page">
             <div className="chamados-header">
@@ -161,9 +208,7 @@ export default function Chamados() {
                         <div
                           key={chamado.id}
                           className={`chamado-card-admin ${
-                            chamado.status === "NAO VISUALIZADO"
-                              ? "nao-visualizado"
-                              : ""
+                            chamado.visualizadoTI === 0 ? "nao-visualizado" : "" // CORREÇÃO: usar visualizadoTI
                           }`}
                         >
                           <div className="chamado-esquerda">
@@ -192,26 +237,41 @@ export default function Chamados() {
                             <div className="buttons">
                               <button
                                 className={`btn-visualizar ${
-                                  chamado.status === "NAO VISUALIZADO"
-                                    ? "vermelho"
-                                    : "azul"
+                                  chamado.visualizadoTI === 0
+                                    ? "nao-visualizado"
+                                    : "visualizado"
                                 }`}
-                                onClick={() => abrirModal(chamado)}
+                                onClick={() => {
+                                  // Primeiro abre o modal imediatamente
+                                  abrirModal(chamado);
+
+                                  // Depois marca como visualizado (se necessário)
+                                  if (chamado.visualizadoTI === 0) {
+                                    marcarComoVisualizado(chamado);
+                                  }
+                                }}
                               >
                                 <Eye size={22} className="icone-olho" />
+                              </button>{" "}
+                              <button
+                                className="btn-delete"
+                                onClick={() => deletarChamado(chamado.id)}
+                              >
+                                <TrashSimple size={22} />
                               </button>
                             </div>
 
+                            {/* CORREÇÃO: Status com classe correta */}
                             <div
                               className={`status ${
                                 chamado.status
                                   ? chamado.status
                                       .toLowerCase()
-                                      .replace(" ", "-")
+                                      .replace(/\s+/g, "-")
                                   : "nao-visualizado"
                               }`}
                             >
-                              {chamado.status || "NAO VISUALIZADO"}
+                              {chamado.status || "NÃO VISUALIZADO"}
                             </div>
                           </div>
                         </div>
@@ -224,8 +284,7 @@ export default function Chamados() {
           </div>
         </div>
       </div>
-
-      {/* --- MODAL DE DETALHES --- */}
+      {/* --- MODAL DE DETALHES DO CHAMADO --- */}
       {mostrarModal && chamadoSelecionado && (
         <div className="modal-overlay-admin">
           <div className="modal">
@@ -288,7 +347,7 @@ export default function Chamados() {
             <h2>Imagens do Chamado</h2>
 
             <div className="imagens-container">
-              {JSON.parse(chamadoSelecionado.imagens || "[]").map(
+              {JSON.parse(chamadoSelecionado?.imagens || "[]").map(
                 (img, idx) => (
                   <img
                     key={idx}
