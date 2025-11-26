@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { SignIn } from "@phosphor-icons/react";
 import "../styles/login.css";
 import logoCamara from "../assets/logoCharqueadasPreto.png";
+const api = import.meta.env.VITE_API_URL;
 
 const Login = () => {
   const [codigo, setCodigo] = useState("");
@@ -13,7 +14,7 @@ const Login = () => {
     if (!codigo.trim()) return alert("Digite o código de entrada!");
 
     try {
-      const res = await fetch("http://localhost:3000/api/login", {
+      const res = await fetch(`${api}/api/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ codigo_entrada: codigo.trim() }),

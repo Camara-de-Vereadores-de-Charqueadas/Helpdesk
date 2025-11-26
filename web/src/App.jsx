@@ -1,9 +1,15 @@
 // App.jsx
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import Login from "./pages/Login";
 import Home from "./pages/Index";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Chamados from "./pages/admin/Chamados/Index";
+
 export default function App() {
   const setorLogado = localStorage.getItem("setorLogado");
   const token = localStorage.getItem("token");
@@ -38,13 +44,13 @@ export default function App() {
 
         {/* Exemplo: outras páginas protegidas */}
         <Route
-                    path="/Chamados"
-                    element={
-                        <ProtectedRoute>
-                            <Chamados />
-                        </ProtectedRoute>
-                    }
-                />
+          path="/Chamados"
+          element={
+            <ProtectedRoute>
+              <Chamados />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );

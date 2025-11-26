@@ -1,13 +1,10 @@
-import mysql from "mysql2/promise";
+// api/config/db.js
+import Database from "better-sqlite3";
 
-const pool = mysql.createPool({
-    host: "mysql", // nome do serviço no docker-compose
-    user: "root",
-    password: process.env.MYSQL_ROOT_PASSWORD || "fubar",
-    database: process.env.MYSQL_DATABASE || "helpdesk",
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0,
-});
+// Cria (ou abre) o arquivo database.db na raiz da API
+const db = new Database("database.db");
 
-export default pool;
+// Habilita FK (SQLite não vem ligado por padrão)
+db.pragma("foreign_keys = ON");
+
+export default db;

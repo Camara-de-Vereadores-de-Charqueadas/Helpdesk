@@ -1,5 +1,7 @@
-import pool from "../config/db.js";
+// api/db/init.js
+import db from "../config/db.js";
 
+// Seus dados existentes
 const setores = [
   {
     nome: "Informática",
@@ -151,111 +153,76 @@ const perfis = [
   { nome: "Usuário", setorId: 19 },
 ];
 
-async function initDatabase() {
-  const conn = await pool.getConnection();
-  try {
-    console.log("🧩 Inicializando banco...");
+function initDatabase() {
+  console.log("🧩 Inicializando SQLite...");
 
-    await conn.query("CREATE DATABASE IF NOT EXISTS helpdesk;");
-    await conn.query("USE helpdesk;");
-
-    await conn.query(`
-      CREATE TABLE IF NOT EXISTS setores (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        nome VARCHAR(100) NOT NULL,
-        criado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
-        criado_por VARCHAR(100),
-        codigo_entrada VARCHAR(20) UNIQUE NOT NULL,
-        imagem_perfil VARCHAR(255)
-      );
-    `);
-
-    await conn.query(`
-      CREATE TABLE IF NOT EXISTS perfis (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        nome VARCHAR(100) NOT NULL,
-        setorId INT NOT NULL,
-        criado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (setorId) REFERENCES setores(id) ON DELETE CASCADE
-      );
-    `);
-
-    await conn.query(`
-      CREATE TABLE IF NOT EXISTS chamados (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        titulo VARCHAR(255) NOT NULL,
-        descricaoProblema TEXT NOT NULL,
-        descricaoTI TEXT,
-        status VARCHAR(50),
-        visualizadoTI BOOLEAN DEFAULT FALSE,
-        fechado BOOLEAN DEFAULT FALSE,
-        dataHora DATETIME DEFAULT CURRENT_TIMESTAMP,
-        imagens JSON,
-        setorId INT NOT NULL,
-        perfilId INT NOT NULL,
-        FOREIGN KEY (setorId) REFERENCES setores(id),
-        FOREIGN KEY (perfilId) REFERENCES perfis(id)
-      );
-    `);
-
-    console.log("✅ Tabelas criadas/verificadas.");
-
-    // Inserir setores se estiverem vazios
-    const [countSetores] = await conn.query(
-      "SELECT COUNT(*) AS total FROM setores;"
+  // Criar tabelas (adaptado para SQLite)
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS setores (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nome TEXT NOT NULL,
+      criado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
+      criado_por TEXT,
+      codigo_entrada TEXT UNIQUE NOT NULL,
+      imagem_perfil TEXT
     );
-    if (countSetores[0].total === 0) {
-      await conn.query(
-        "INSERT INTO setores (nome, criado_por, codigo_entrada, imagem_perfil) VALUES ?",
-        [
-          setores.map((s) => [
-            s.nome,
-            s.criado_por,
-            s.codigo_entrada,
-            s.imagem_perfil,
-          ]),
-        ]
-      );
-      console.log("📦 Setores inseridos!");
-    }
 
-    // Inserir perfis se estiverem vazios
-    const [countPerfis] = await conn.query(
-      "SELECT COUNT(*) AS total FROM perfis;"
+    CREATE TABLE IF NOT EXISTS perfis (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nome TEXT NOT NULL,
+      setorId INTEGER NOT NULL,
+      criado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (setorId) REFERENCES setores(id) ON DELETE CASCADE
     );
-    if (countPerfis[0].total === 0) {
-      await conn.query("INSERT INTO perfis (nome, setorId) VALUES ?", [
-        perfis.map((p) => [p.nome, p.setorId]),
-      ]);
-      console.log("👤 Perfis inseridos!");
-    }
 
-    // Inserir chamados se estiverem vazios
-    const [countChamados] = await conn.query(
-      "SELECT COUNT(*) AS total FROM chamados;"
+    CREATE TABLE IF NOT EXISTS chamados (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      titulo TEXT NOT NULL,
+      descricaoProblema TEXT NOT NULL,
+      descricaoTI TEXT,
+      status TEXT,
+      visualizadoTI BOOLEAN DEFAULT 0,
+      fechado BOOLEAN DEFAULT 0,
+      dataHora DATETIME DEFAULT CURRENT_TIMESTAMP,
+      imagens TEXT,
+      setorId INTEGER NOT NULL,
+      perfilId INTEGER NOT NULL,
+      FOREIGN KEY (setorId) REFERENCES setores(id),
+      FOREIGN KEY (perfilId) REFERENCES perfis(id)
     );
-    if (countChamados[0].total === 0) {
-      await conn.query(
-        "INSERT INTO chamados (titulo, descricaoProblema, setorId, perfilId, imagens) VALUES ?",
-        [
-          chamados.map((c) => [
-            c.titulo,
-            c.descricaoProblema,
-            c.setorId,
-            c.perfilId,
-            JSON.stringify(c.imagens),
-          ]),
-        ]
-      );
-      console.log("📞 Chamados inseridos!");
-    }
+  `);
 
-    console.log("🏁 Banco pronto para uso!");
-  } catch (err) {
-    console.error("Erro ao inicializar o banco:", err);
-  } finally {
-    conn.release();
+  console.log("✅ Tabelas criadas.");
+
+  // Inserir setores se vazio
+  const totalSetores = db.prepare("SELECT COUNT(*) AS t FROM setores").get().t;
+  if (totalSetores === 0) {
+    const insert = db.prepare(`
+      INSERT INTO setores (nome, criado_por, codigo_entrada, imagem_perfil)
+      VALUES (?, ?, ?, ?)
+    `);
+    const transaction = db.transaction((items) => {
+      for (const s of items)
+        insert.run(s.nome, s.criado_por, s.codigo_entrada, s.imagem_perfil);
+    });
+    transaction(setores);
+    console.log("📦 Setores inseridos!");
   }
+
+  // Inserir perfis se vazio
+  const totalPerfis = db.prepare("SELECT COUNT(*) AS t FROM perfis").get().t;
+  if (totalPerfis === 0) {
+    const insert = db.prepare(`
+      INSERT INTO perfis (nome, setorId) VALUES (?, ?)
+    `);
+    const transaction = db.transaction((items) => {
+      for (const p of items) insert.run(p.nome, p.setorId);
+    });
+    transaction(perfis);
+    console.log("👤 Perfis inseridos!");
+  }
+
+  console.log("🏁 Banco pronto!");
 }
 
 export default initDatabase;

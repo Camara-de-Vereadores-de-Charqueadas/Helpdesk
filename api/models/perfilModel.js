@@ -1,24 +1,39 @@
-import pool from "../config/db.js";
+import db from "../config/db.js";
 
-export async function getAllPerfis() {
-    const [rows] = await pool.query(
-        "SELECT p.*, s.nome AS setor_nome FROM perfis p JOIN setores s ON p.setorId = s.id"
-    );
-    return rows;
+// Lista perfis com o nome do setor
+export function getAllPerfis() {
+  return db
+    .prepare(
+      `
+        SELECT p.*, s.nome AS setor_nome
+        FROM perfis p
+        JOIN setores s ON p.setorId = s.id
+    `
+    )
+    .all();
 }
 
-export async function createPerfil({ nome, setorId }) {
-    const [result] = await pool.query(
-        "INSERT INTO perfis (nome, setorId) VALUES (?, ?)",
-        [nome, setorId]
-    );
-    return { id: result.insertId };
+// Cria perfil
+export function createPerfil({ nome, setorId }) {
+  const result = db
+    .prepare(
+      `
+        INSERT INTO perfis (nome, setorId)
+        VALUES (?, ?)
+    `
+    )
+    .run(nome, setorId);
+
+  return { id: result.lastInsertRowid };
 }
 
-export async function getPerfisBySetor(setorId) {
-    const [rows] = await pool.query(
-        "SELECT * FROM perfis WHERE setorId = ?",
-        [setorId]
-    );
-    return rows;
+// Busca perfis por setor
+export function getPerfisBySetor(setorId) {
+  return db
+    .prepare(
+      `
+        SELECT * FROM perfis WHERE setorId = ?
+    `
+    )
+    .all(setorId);
 }

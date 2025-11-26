@@ -98,7 +98,7 @@ export const criarChamado = async (req, res) => {
       fs.renameSync(oldPath, newPath);
 
       // salvar caminho relativo para front
-      imagensFinais.push(`http://localhost:3000/api/uploads/${newName}`);
+      imagensFinais.push(`http://192.168.0.106:3000/api/uploads/${newName}`);
     }
 
     // 3) Atualiza o chamado se houver imagens finais

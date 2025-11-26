@@ -4,7 +4,7 @@ import "../styles/User.css";
 import Ticket from "../components/Ticket";
 import ModalChamadoUser from "../components/modais/ModalChamadoUser";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function VisualizacaoUsuario() {
   const [expandidoAbertos, setExpandidoAbertos] = useState(true);

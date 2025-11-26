@@ -10,7 +10,6 @@ const __dirname = path.dirname(__filename);
 const parseImagens = (val) => {
   if (!val) return null;
   try {
-    // Se já for array, retorna
     if (Array.isArray(val)) return val;
     const parsed = typeof val === "string" ? JSON.parse(val) : val;
     return Array.isArray(parsed) ? parsed : null;
@@ -24,19 +23,21 @@ const parseImagens = (val) => {
  * Retorna imagens como array ou null.
  */
 export const getAllChamados = async () => {
-  const [rows] = await db.query(
-    `
+  const rows = db
+    .prepare(
+      `
     SELECT 
-      c.*, 
-      s.nome AS setorNome, 
-      s.imagem_perfil AS setorImg, 
+      c.*,
+      s.nome AS setorNome,
+      s.imagem_perfil AS setorImg,
       p.nome AS perfilNome
     FROM chamados c
     INNER JOIN setores s ON c.setorId = s.id
     INNER JOIN perfis p ON c.perfilId = p.id
     ORDER BY c.dataHora DESC
   `
-  );
+    )
+    .all();
 
   return rows.map((r) => ({ ...r, imagens: parseImagens(r.imagens) }));
 };
@@ -45,21 +46,22 @@ export const getAllChamados = async () => {
  * Lista chamados de um setor específico.
  */
 export const getChamadosBySetor = async (setorId) => {
-  const [rows] = await db.query(
-    `
+  const rows = db
+    .prepare(
+      `
     SELECT 
-      c.*, 
-      s.nome AS setorNome, 
-      s.imagem_perfil AS setorImg, 
+      c.*,
+      s.nome AS setorNome,
+      s.imagem_perfil AS setorImg,
       p.nome AS perfilNome
     FROM chamados c
     INNER JOIN setores s ON c.setorId = s.id
-    INNER JOIN perfis p ON c.perfilId = p.id
+    INNER INNER JOIN perfis p ON c.perfilId = p.id
     WHERE c.setorId = ?
     ORDER BY c.dataHora DESC
-  `,
-    [setorId]
-  );
+  `
+    )
+    .all(setorId);
 
   return rows.map((r) => ({ ...r, imagens: parseImagens(r.imagens) }));
 };
@@ -68,21 +70,22 @@ export const getChamadosBySetor = async (setorId) => {
  * Lista chamados de um perfil específico.
  */
 export const getChamadosByPerfil = async (perfilId) => {
-  const [rows] = await db.query(
-    `
+  const rows = db
+    .prepare(
+      `
     SELECT 
-      c.*, 
-      s.nome AS setorNome, 
-      s.imagem_perfil AS setorImg, 
+      c.*,
+      s.nome AS setorNome,
+      s.imagem_perfil AS setorImg,
       p.nome AS perfilNome
     FROM chamados c
     INNER JOIN setores s ON c.setorId = s.id
     INNER JOIN perfis p ON c.perfilId = p.id
     WHERE c.perfilId = ?
     ORDER BY c.dataHora DESC
-  `,
-    [perfilId]
-  );
+  `
+    )
+    .all(perfilId);
 
   return rows.map((r) => ({ ...r, imagens: parseImagens(r.imagens) }));
 };
@@ -100,36 +103,39 @@ export const createChamado = async ({
   descricaoProblema,
   setorId,
   perfilId,
-  status = "NÃO VISUALIZADO", // Valor padrão
-  visualizadoTI = 0, // Valor padrão
-  fechado = 0, // Valor padrão
+  status = "NÃO VISUALIZADO",
+  visualizadoTI = 0,
+  fechado = 0,
 }) => {
-  const [result] = await db.query(
-    `INSERT INTO chamados 
-     (titulo, descricaoProblema, setorId, perfilId, status, visualizadoTI, fechado, imagens)
-     VALUES (?, ?, ?, ?, ?, ?, ?, NULL)`,
-    [
-      titulo,
-      descricaoProblema,
-      setorId,
-      perfilId,
-      status,
-      visualizadoTI,
-      fechado,
-    ]
+  const stmt = db.prepare(`
+    INSERT INTO chamados 
+    (titulo, descricaoProblema, setorId, perfilId, status, visualizadoTI, fechado, imagens)
+    VALUES (?, ?, ?, ?, ?, ?, ?, NULL)
+  `);
+
+  const result = stmt.run(
+    titulo,
+    descricaoProblema,
+    setorId,
+    perfilId,
+    status,
+    visualizadoTI,
+    fechado
   );
 
-  return result.insertId;
+  return result.lastInsertRowid;
 };
 /**
  * Atualiza campo de imagens (recebe array).
  */
 export const updateChamadoImages = async (id, imagensArray) => {
-  const json =
-    imagensArray && imagensArray.length > 0
-      ? JSON.stringify(imagensArray)
-      : null;
-  await db.query("UPDATE chamados SET imagens = ? WHERE id = ?", [json, id]);
+  const json = imagensArray?.length ? JSON.stringify(imagensArray) : null;
+
+  db.prepare(
+    `
+    UPDATE chamados SET imagens = ? WHERE id = ?
+  `
+  ).run(json, id);
 };
 
 /**
@@ -163,57 +169,59 @@ export const createChamadosEmLote = async (lista) => {
 export const updateChamadoTI = async (id, campos) => {
   const { descricaoTI, status, visualizadoTI, fechado } = campos;
 
-  // Busca o chamado atual
-  const [rows] = await db.query(
-    "SELECT status, visualizadoTI, fechado FROM chamados WHERE id = ?",
-    [id]
-  );
+  const atual = db
+    .prepare(
+      `
+    SELECT status, visualizadoTI, fechado FROM chamados WHERE id = ?
+  `
+    )
+    .get(id);
 
-  if (rows.length === 0) return false;
+  if (!atual) return false;
 
-  const atual = rows[0];
-
-  // SE O CHAMADO JÁ ESTIVER FECHADO, NÃO ALTERA STATUS NEM VISUALIZADO
   if (atual.fechado === 1) {
-    const [result] = await db.query(
-      `UPDATE chamados 
-       SET descricaoTI = COALESCE(?, descricaoTI)
-       WHERE id = ?`,
-      [descricaoTI, id]
-    );
-    return result.affectedRows > 0;
+    const result = db
+      .prepare(
+        `
+      UPDATE chamados 
+      SET descricaoTI = COALESCE(?, descricaoTI)
+      WHERE id = ?
+    `
+      )
+      .run(descricaoTI, id);
+
+    return result.changes > 0;
   }
 
-  // Lógica para marcar como visualizado
   let novoStatus = atual.status;
   let novoVisualizado =
     visualizadoTI !== undefined ? visualizadoTI : atual.visualizadoTI;
-  let novoFechado = fechado !== undefined ? fechado : atual.fechado; // CORREÇÃO IMPORTANTE
+  let novoFechado = fechado !== undefined ? fechado : atual.fechado;
 
-  // Se está marcando como visualizado E ainda não foi visualizado
   if (visualizadoTI === 1 && atual.visualizadoTI === 0) {
     novoStatus = "EM ANDAMENTO";
   }
 
-  // Se está fechando o chamado (RESOLVIDO/NAO RESOLVIDO)
   if (status === "RESOLVIDO" || status === "NAO RESOLVIDO") {
     novoStatus = status;
-    novoFechado = 1; // CORREÇÃO: Fecha o chamado
-    novoVisualizado = 1; // CORREÇÃO: Marca como visualizado ao fechar
+    novoFechado = 1;
+    novoVisualizado = 1;
   }
 
-  // Executa atualização
-  const [result] = await db.query(
-    `UPDATE chamados 
-     SET descricaoTI = COALESCE(?, descricaoTI),
-         status = ?,
-         visualizadoTI = ?,
-         fechado = ?
-     WHERE id = ?`,
-    [descricaoTI, novoStatus, novoVisualizado, novoFechado, id] // CORREÇÃO: Use novoFechado
-  );
+  const result = db
+    .prepare(
+      `
+    UPDATE chamados
+    SET descricaoTI = COALESCE(?, descricaoTI),
+        status = ?,
+        visualizadoTI = ?,
+        fechado = ?
+    WHERE id = ?
+  `
+    )
+    .run(descricaoTI, novoStatus, novoVisualizado, novoFechado, id);
 
-  return result.affectedRows > 0;
+  return result.changes > 0;
 };
 // -------------------------------------------------------
 // PEGAR CHAMADOS (alternativa que já parseia imagens)
@@ -236,38 +244,40 @@ export const getChamados = async () => {
   return rows.map((r) => ({ ...r, imagens: parseImagens(r.imagens) }));
 };
 
-// -------------------------------------------------------
-// DELETAR CHAMADO + APAGAR IMAGENS DO DISCO
-// -------------------------------------------------------
+// Buscar imagens + deletar arquivos + remover registro
 export const deleteChamado = async (id) => {
-  // primeiro busca imagens
-  const [rows] = await db.query("SELECT imagens FROM chamados WHERE id = ?", [
-    id,
-  ]);
+  try {
+    // 1) Buscar o chamado
+    const row = db.prepare("SELECT imagens FROM chamados WHERE id = ?").get(id);
 
-  if (rows.length === 0) return { affectedRows: 0 };
-
-  const imagens = parseImagens(rows[0].imagens) || [];
-
-  // se tiver imagens, deletar arquivos físicos
-  const uploadDir = path.join(process.cwd(), "uploads");
-
-  for (const imgPath of imagens) {
-    const fileName = imgPath.split("/").pop();
-    const fullPath = path.join(uploadDir, fileName);
-
-    try {
-      if (fs.existsSync(fullPath)) {
-        fs.unlinkSync(fullPath);
-      }
-    } catch (err) {
-      // não interrompe o processo caso nao consiga deletar um arquivo
-      console.warn("Falha ao apagar arquivo:", fullPath, err.message);
+    if (!row) {
+      return { changes: 0 }; // não encontrado
     }
+
+    const imagens = parseImagens(row.imagens) || [];
+
+    // 2) Deletar arquivos
+    const uploadDir = path.join(process.cwd(), "uploads");
+
+    for (const imgPath of imagens) {
+      const fileName = imgPath.split("/").pop();
+      const fullPath = path.join(uploadDir, fileName);
+
+      if (fs.existsSync(fullPath)) {
+        try {
+          fs.unlinkSync(fullPath);
+        } catch (err) {
+          console.warn("Falha ao apagar arquivo:", fullPath, err.message);
+        }
+      }
+    }
+
+    // 3) Deletar do banco
+    const result = db.prepare("DELETE FROM chamados WHERE id = ?").run(id);
+
+    return result; // contém { changes: X }
+  } catch (err) {
+    console.error("Erro no deleteChamado:", err);
+    throw err;
   }
-
-  // depois apaga o registro do chamado
-  const [result] = await db.query("DELETE FROM chamados WHERE id = ?", [id]);
-
-  return result;
 };

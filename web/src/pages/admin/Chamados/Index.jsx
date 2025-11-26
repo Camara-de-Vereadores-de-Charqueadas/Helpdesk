@@ -12,8 +12,6 @@ import { useState, useEffect, useRef } from "react";
 import { formatarData } from "../../../utils/formatarData";
 import notifySound from "../../../assets/notify.mp3";
 
-const API_URL = "http://localhost:3000/api/chamados"; // ajuste se necessário
-
 const formatarDataAgrupamento = (dataISO) => {
   const data = new Date(dataISO);
   return data.toLocaleDateString("pt-BR", {
@@ -31,14 +29,46 @@ export default function Chamados() {
   const [mostrarModalImagens, setMostrarModalImagens] = useState(false);
   const [novosChamados, setNovosChamados] = useState(0);
   const audioRef = useRef(null);
+  const api = import.meta.env.VITE_API_URL;
+
   const prevIdsRef = useRef([]);
   const primeiraExecucaoRef = useRef(true);
   // --- Buscar chamados do back-end ---
   async function buscarChamados() {
     try {
-      const res = await fetch(API_URL);
-      if (!res.ok) throw new Error("Erro ao buscar chamados");
+      const endpoint = `${api}/api/chamados`; // <- certifique-se que este é o endpoint correto da sua API
+
+      const res = await fetch(endpoint, { method: "GET" });
+
+      // Se status não OK, lê o corpo como texto para debug e lança
+      if (!res.ok) {
+        const text = await res.text();
+        console.error("Resposta não OK ao buscar chamados:", res.status, text);
+        throw new Error("Erro ao buscar chamados: " + res.status);
+      }
+
+      // Checa header Content-Type para garantir que seja JSON
+      const contentType = res.headers.get("content-type") || "";
+
+      if (!contentType.includes("application/json")) {
+        const text = await res.text();
+        console.error(
+          "Esperado JSON mas o servidor retornou outro conteúdo:",
+          contentType,
+          text
+        );
+        throw new Error("Resposta inválida (não é JSON)");
+      }
+
+      // Aqui sim parse seguro
       const data = await res.json();
+
+      if (!Array.isArray(data)) {
+        console.warn("Resposta de chamados não é um array. Data:", data);
+        // opcional: converter em array vazio para não quebrar o front
+        // setChamados([]);
+        throw new Error("Formato de dados de chamados inválido");
+      }
 
       // Detectar novos chamados (ignora na primeira execução)
       const novos = data.filter((c) => !prevIdsRef.current.includes(c.id));
@@ -48,10 +78,7 @@ export default function Chamados() {
         setNovosChamados((n) => n + novos.length);
       }
 
-      // Marca que a primeira execução já aconteceu
-      if (primeiraExecucaoRef.current) {
-        primeiraExecucaoRef.current = false;
-      }
+      if (primeiraExecucaoRef.current) primeiraExecucaoRef.current = false;
 
       prevIdsRef.current = data.map((c) => c.id);
       setChamados(data);
@@ -94,10 +121,10 @@ export default function Chamados() {
     if (!confirm("Deseja realmente deletar este chamado?")) return;
 
     try {
-      await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+      await fetch(`${api}/api/chamados/${id}`, { method: "DELETE" });
       buscarChamados();
     } catch (err) {
-      console.error("Erro ao deletar chamado (ERRO REAL):", error.sqlMessage);
+      console.error("Erro ao deletar chamado:", err);
     }
   };
 
@@ -133,7 +160,7 @@ export default function Chamados() {
   };
   const marcarComoVisualizado = async (chamado) => {
     try {
-      await fetch(`http://localhost:3000/api/chamados/${chamado.id}`, {
+      await fetch(`${api}/api/chamados/${chamado.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -155,7 +182,7 @@ export default function Chamados() {
   };
   const finalizarChamado = async (chamado, resolvido) => {
     try {
-      await fetch(`${API_URL}/${chamado.id}`, {
+      await fetch(`${api}/api/chamados/${chamado.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
