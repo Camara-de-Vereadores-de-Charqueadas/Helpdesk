@@ -29,48 +29,40 @@ export default function Chamados() {
   const [mostrarModalImagens, setMostrarModalImagens] = useState(false);
   const [novosChamados, setNovosChamados] = useState(0);
   const audioRef = useRef(null);
+
+  // NOVO: Campo para descrição da TI
+  const [descricaoTI, setDescricaoTI] = useState("");
+
   const api = import.meta.env.VITE_API_URL;
 
   const prevIdsRef = useRef([]);
   const primeiraExecucaoRef = useRef(true);
-  // --- Buscar chamados do back-end ---
+
+  // ---------------------------------------------------------
+  // BUSCAR CHAMADOS
+  // ---------------------------------------------------------
   async function buscarChamados() {
     try {
-      const endpoint = `${api}/api/chamados`; // <- certifique-se que este é o endpoint correto da sua API
+      const endpoint = `${api}/api/chamados`;
 
       const res = await fetch(endpoint, { method: "GET" });
 
-      // Se status não OK, lê o corpo como texto para debug e lança
       if (!res.ok) {
         const text = await res.text();
-        console.error("Resposta não OK ao buscar chamados:", res.status, text);
-        throw new Error("Erro ao buscar chamados: " + res.status);
+        console.error("Erro ao buscar chamados:", res.status, text);
+        throw new Error("Erro ao buscar chamados");
       }
 
-      // Checa header Content-Type para garantir que seja JSON
       const contentType = res.headers.get("content-type") || "";
-
       if (!contentType.includes("application/json")) {
         const text = await res.text();
-        console.error(
-          "Esperado JSON mas o servidor retornou outro conteúdo:",
-          contentType,
-          text
-        );
-        throw new Error("Resposta inválida (não é JSON)");
+        console.error("Resposta não JSON:", contentType, text);
+        throw new Error("Formato inválido");
       }
 
-      // Aqui sim parse seguro
       const data = await res.json();
+      if (!Array.isArray(data)) throw new Error("Dados inválidos");
 
-      if (!Array.isArray(data)) {
-        console.warn("Resposta de chamados não é um array. Data:", data);
-        // opcional: converter em array vazio para não quebrar o front
-        // setChamados([]);
-        throw new Error("Formato de dados de chamados inválido");
-      }
-
-      // Detectar novos chamados (ignora na primeira execução)
       const novos = data.filter((c) => !prevIdsRef.current.includes(c.id));
 
       if (novos.length > 0 && !primeiraExecucaoRef.current) {
@@ -87,25 +79,28 @@ export default function Chamados() {
     }
   }
 
-  // --- Atualiza título da aba ---
+  // Título da aba
   useEffect(() => {
     const naoVisualizados = chamados.filter(
-      (c) => c.visualizadoTI === 0 // CORREÇÃO: usar visualizadoTI em vez de status
+      (c) => c.visualizadoTI === 0
     ).length;
 
-    if (naoVisualizados > 0)
-      document.title = `(${naoVisualizados}) Novos Chamados - Helpdesk`;
-    else document.title = "Helpdesk - Chamados";
+    document.title =
+      naoVisualizados > 0
+        ? `(${naoVisualizados}) Novos Chamados - Helpdesk`
+        : "Helpdesk - Chamados";
   }, [chamados]);
 
-  // --- Efeito inicial ---
+  // Recarregar a cada 10s
   useEffect(() => {
     buscarChamados();
     const interval = setInterval(buscarChamados, 10000);
     return () => clearInterval(interval);
   }, []);
 
-  // --- Filtro local ---
+  // ---------------------------------------------------------
+  // FILTRO
+  // ---------------------------------------------------------
   const filtrarChamados = () => {
     if (filtro === "Abertos")
       return chamados.filter(
@@ -117,6 +112,9 @@ export default function Chamados() {
       );
     return chamados;
   };
+
+  const chamadosFiltrados = filtrarChamados();
+
   const deletarChamado = async (id) => {
     if (!confirm("Deseja realmente deletar este chamado?")) return;
 
@@ -128,8 +126,6 @@ export default function Chamados() {
     }
   };
 
-  const chamadosFiltrados = filtrarChamados();
-
   const formatarHora = (dataISO) => {
     const data = new Date(dataISO);
     return data.toLocaleTimeString("pt-BR", {
@@ -138,7 +134,7 @@ export default function Chamados() {
     });
   };
 
-  // --- Agrupar por data ---
+  // Agrupamento por data
   const chamadosPorData = chamadosFiltrados.reduce((acc, chamado) => {
     const data = formatarDataAgrupamento(chamado.dataHora);
     if (!acc[data]) acc[data] = [];
@@ -153,11 +149,13 @@ export default function Chamados() {
   });
 
   const abrirModal = (chamado) => {
-    console.log("Imagens do chamado:", chamado.imagens); // Deve ser um array
-    console.log("Tipo:", typeof chamado.imagens); // Deve ser 'object'
+    console.log("Imagens:", chamado.imagens);
+
     setChamadoSelecionado(chamado);
+    setDescricaoTI(chamado.descricaoTI || ""); // CARREGA DESCRIÇÃO TI SE EXISTIR
     setMostrarModal(true);
   };
+
   const marcarComoVisualizado = async (chamado) => {
     try {
       await fetch(`${api}/api/chamados/${chamado.id}`, {
@@ -168,35 +166,48 @@ export default function Chamados() {
         }),
       });
 
-      // Atualiza apenas o chamado específico no estado
-      setChamados((prevChamados) =>
-        prevChamados.map((c) =>
+      setChamados((prev) =>
+        prev.map((c) =>
           c.id === chamado.id
             ? { ...c, visualizadoTI: 1, status: "EM ANDAMENTO" }
             : c
         )
       );
     } catch (err) {
-      console.error("Erro ao marcar como visualizado:", err);
+      console.error("Erro ao marcar visualizado:", err);
     }
   };
+
+  // ---------------------------------------------------------
+  // FINALIZAR CHAMADO (ATUALIZADO)
+  // ---------------------------------------------------------
   const finalizarChamado = async (chamado, resolvido) => {
+    if (!descricaoTI.trim()) {
+      alert("A descrição da TI é obrigatória para finalizar o chamado!");
+      return;
+    }
+
     try {
+      const dataFechamento = new Date().toISOString();
+
       await fetch(`${api}/api/chamados/${chamado.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           status: resolvido ? "RESOLVIDO" : "NAO RESOLVIDO",
+          descricaoTI: descricaoTI,
+          dataFechamento: dataFechamento,
         }),
       });
 
-      // Atualiza localmente
-      setChamados((prevChamados) =>
-        prevChamados.map((c) =>
+      setChamados((prev) =>
+        prev.map((c) =>
           c.id === chamado.id
             ? {
                 ...c,
                 status: resolvido ? "RESOLVIDO" : "NAO RESOLVIDO",
+                descricaoTI,
+                dataFechamento,
                 fechado: 1,
               }
             : c
@@ -343,10 +354,36 @@ export default function Chamados() {
             </p>
 
             {/* Mostrar descrição da TI se existir */}
-            {chamadoSelecionado.descricaoTI && (
-              <p>
-                <strong>Descrição TI:</strong> {chamadoSelecionado.descricaoTI}
-              </p>
+            {chamadoSelecionado.fechado === 1 && (
+              <>
+                {chamadoSelecionado.descricaoTI && (
+                  <p>
+                    <strong>Descrição TI:</strong>{" "}
+                    {chamadoSelecionado.descricaoTI}
+                  </p>
+                )}
+
+                {chamadoSelecionado.dataFechamento && (
+                  <p>
+                    <strong>Fechado em:</strong>{" "}
+                    {new Date(chamadoSelecionado.dataFechamento).toLocaleString(
+                      "pt-BR"
+                    )}
+                  </p>
+                )}
+              </>
+            )}
+            {chamadoSelecionado.fechado !== 1 && (
+              <div className="campo-ti">
+                <label>
+                  <strong>Descrição TI:</strong>
+                </label>
+                <textarea
+                  value={descricaoTI}
+                  onChange={(e) => setDescricaoTI(e.target.value)}
+                  placeholder="Descreva o que foi feito pela TI..."
+                ></textarea>
+              </div>
             )}
 
             <div className="modal-buttons">

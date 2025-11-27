@@ -48,7 +48,7 @@
 
 /* ===== BANNER ===== */
 .banner {
-    background-color: var(--azul-raf);
+    background-color: var(--azul-claro);
     background-size: cover;
     background-position: center;
     position: relative;
@@ -62,7 +62,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    background-color: var(--azul-raf);
+    background-color: var(--azul-bondi);
     opacity: 0.8;
 }
 
@@ -98,26 +98,31 @@
 
 /* ===== RESPONSIVIDADE ===== */
 @media (max-width: 768px) {
-    .banner h1{
-      display: none;
+    .banner h1 {
+        display: none;
     }
-    .banner p{
+
+    .banner p {
         font-size: 2rem;
         font-weight: 1000;
         margin: 50px;
     }
-    .card-admin{
+
+    .card-admin {
         width: 200px;
         padding: 10px;
     }
-    .card-admin .title-h3{
+
+    .card-admin .title-h3 {
         font-size: 1rem;
         margin: 0;
     }
-    .card-admin .data{
+
+    .card-admin .data {
         font-size: 0.8rem;
     }
-    .card-admin .info{
+
+    .card-admin .info {
         font-size: 0.6rem;
     }
 
@@ -125,15 +130,22 @@
         font-size: 3rem;
     }
 }
+
 @media (max-width: 576px) {
-    .banner p{
+    .banner p {
         font-size: 1.5rem;
     }
 }
+
 @media (max-width: 480px) {
-    .banner{
+    .banner {
         display: none;
     }
-   
+
+    .visualizacao-usuario {
+        min-height: 88vh;
+    }
+
+
 
 }
