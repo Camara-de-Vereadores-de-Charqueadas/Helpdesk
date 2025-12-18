@@ -119,29 +119,22 @@ export const criarChamado = async (req, res) => {
 };
 
 // Atualiza informações de TI no chamado
-export const atualizarChamadoTI = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { descricaoTI, status, visualizadoTI, fechado } = req.body;
+export const atualizarChamadoTI = (req, res) => {
+  const id = req.params.id;
+  const campos = req.body;
 
-    // Converte para 0/1 de forma consistente
-    const visualizadoBool = visualizadoTI ? 1 : 0;
-    const fechadoBool = fechado ? 1 : 0;
-
-    const atualizado = await updateChamadoTI(id, {
-      descricaoTI,
-      status,
-      visualizadoTI: visualizadoBool,
-      fechado: fechadoBool,
-    });
-
-    if (!atualizado) {
-      return res.status(404).json({ error: "Chamado não encontrado." });
-    }
-
-    res.json({ message: "Chamado atualizado com sucesso." });
-  } catch (error) {
-    console.error("Erro ao atualizar chamado:", error);
-    res.status(500).json({ error: "Erro ao atualizar chamado." });
+  // Se for finalização, garante inclusão automática da data
+  if (campos.status === "RESOLVIDO" || campos.status === "NAO RESOLVIDO") {
+    campos.dataFechamento = new Date().toISOString();
+    campos.fechado = 1;
+    campos.visualizadoTI = 1;
   }
+
+  const ok = updateChamadoTI(id, campos);
+
+  if (!ok) {
+    return res.status(400).json({ erro: "Falha ao atualizar chamado" });
+  }
+
+  res.json({ sucesso: true });
 };

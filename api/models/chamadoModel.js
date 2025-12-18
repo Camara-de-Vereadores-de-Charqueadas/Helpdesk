@@ -167,38 +167,50 @@ export const createChamadosEmLote = async (lista) => {
  */
 // Model - updateChamadoTI.js
 export const updateChamadoTI = async (id, campos) => {
-  const { descricaoTI, status, visualizadoTI, fechado } = campos;
+  let { descricaoTI, status, visualizadoTI, fechado, dataFechamento } = campos;
+
+  // 🔥 NORMALIZAÇÃO CRÍTICA
+  if (visualizadoTI !== undefined) visualizadoTI = Number(visualizadoTI);
+  if (fechado !== undefined) fechado = Number(fechado);
 
   const atual = db
     .prepare(
-      `
-    SELECT status, visualizadoTI, fechado FROM chamados WHERE id = ?
-  `
+      `SELECT status, visualizadoTI, fechado, dataFechamento FROM chamados WHERE id = ?`
     )
     .get(id);
 
   if (!atual) return false;
 
+  const descTI = descricaoTI ?? null;
+
+  // --------------------------------------------
+  // CASO JÁ FECHADO
+  // --------------------------------------------
   if (atual.fechado === 1) {
     const result = db
       .prepare(
         `
-      UPDATE chamados 
-      SET descricaoTI = COALESCE(?, descricaoTI)
-      WHERE id = ?
-    `
+        UPDATE chamados 
+        SET descricaoTI = COALESCE(?, descricaoTI)
+        WHERE id = ?
+      `
       )
-      .run(descricaoTI, id);
+      .run(descTI, id);
 
     return result.changes > 0;
   }
 
+  // --------------------------------------------
+  // CHAMADO ABERTO
+  // --------------------------------------------
   let novoStatus = atual.status;
   let novoVisualizado =
     visualizadoTI !== undefined ? visualizadoTI : atual.visualizadoTI;
   let novoFechado = fechado !== undefined ? fechado : atual.fechado;
+  let novaDataFechamento = atual.dataFechamento;
 
-  if (visualizadoTI === 1 && atual.visualizadoTI === 0) {
+  // ✅ AGORA FUNCIONA
+  if (novoVisualizado === 1 && atual.visualizadoTI === 0) {
     novoStatus = "EM ANDAMENTO";
   }
 
@@ -206,23 +218,33 @@ export const updateChamadoTI = async (id, campos) => {
     novoStatus = status;
     novoFechado = 1;
     novoVisualizado = 1;
+    novaDataFechamento = dataFechamento || new Date().toISOString();
   }
 
   const result = db
     .prepare(
       `
-    UPDATE chamados
-    SET descricaoTI = COALESCE(?, descricaoTI),
-        status = ?,
-        visualizadoTI = ?,
-        fechado = ?
-    WHERE id = ?
-  `
+      UPDATE chamados
+      SET descricaoTI = COALESCE(?, descricaoTI),
+          status = ?,
+          visualizadoTI = ?,
+          fechado = ?,
+          dataFechamento = COALESCE(?, dataFechamento)
+      WHERE id = ?
+    `
     )
-    .run(descricaoTI, novoStatus, novoVisualizado, novoFechado, id);
+    .run(
+      descTI,
+      novoStatus,
+      novoVisualizado,
+      novoFechado,
+      novaDataFechamento ?? null,
+      id
+    );
 
   return result.changes > 0;
 };
+
 // -------------------------------------------------------
 // PEGAR CHAMADOS (alternativa que já parseia imagens)
 // -------------------------------------------------------

@@ -1,4 +1,3 @@
-// api/config/db.js
 import Database from "better-sqlite3";
 
 // Cria (ou abre) o arquivo database.db na raiz da API
