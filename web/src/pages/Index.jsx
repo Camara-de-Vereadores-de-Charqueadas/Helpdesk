@@ -30,22 +30,7 @@ export default function Home() {
     const hoje = new Date();
     const opcoes = { day: "2-digit", month: "2-digit", year: "numeric" };
     setDataAtual(hoje.toLocaleDateString("pt-BR", opcoes));
-
-    setMenuItems([
-      {
-        name: "Chamados Abertos",
-        color: "var(--azul)",
-        icon: <DotsThreeCircle size={80} weight="fill" color="var(--azul)" />,
-        info: "Nenhum chamado aberto",
-      },
-      {
-        name: "Chamados Concluídos",
-        color: "var(--verde)",
-        icon: <CheckCircle size={80} weight="fill" color="var(--verde)" />,
-        info: "Nenhum chamado concluído",
-      },
-    ]);
-  }, []);
+  });
 
   return (
     <>

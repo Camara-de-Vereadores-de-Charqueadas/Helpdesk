@@ -22,7 +22,7 @@
 
 .chamado-corpo {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: space-between;
     gap: 20px;
 }
@@ -32,6 +32,17 @@
     display: flex;
     flex-direction: column;
     flex: 1;
+    height: 100%;
+
+}
+
+.lado-direito {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.lado-esquerdo {
+    gap: 5px;
 }
 
 .titulo-info {
@@ -56,13 +67,52 @@
 
 .descricao {
     font-size: 0.9rem;
-    color: var(--azul-bondi);
-    margin-top: 8px;
+    color: var(--azul-raf) !important;
     text-align: justify;
 }
 
+/* ===== INFORMAÇÕES DE FECHAMENTO ===== */
+
+.fechamento-info {
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(0, 0, 0, 0.15);
+}
+
+.data-fechamento {
+    font-size: 0.9rem;
+    color: var(--azul-bondi);
+    margin-bottom: 6px;
+    text-align: left;
+}
+
+.descricao-ti-container {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(0, 0, 0, 0.2);
+    width: 100%;
+}
+
+.descricao-ti-container .titulo-info {
+    margin-bottom: 6px;
+}
+
+.descricao-ti {
+    width: 100%;
+    background-color: var(--azul-vivo);
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: var(--branco);
+    text-align: justify;
+    line-height: 1.5;
+}
+
+
+
 .status-response {
     color: var(--azul-bondi);
+    height: 100%;
 }
 
 .status-response {
@@ -109,9 +159,20 @@
     transform: scale(1.15);
 }
 
+/* ===== AJUSTES MOBILE ===== */
 @media (max-width: 768px) {
-    .chamado-card {
-        /* background-color: var(--azul-raf); */
+    .fechamento-info {
+        margin-top: 10px;
+        padding-top: 8px;
+    }
+
+    .data-fechamento {
+        font-size: 0.7em;
+    }
+
+    .descricao-ti {
+        font-size: 0.7em;
+        padding: 10px;
     }
 
     .chamado-corpo {
@@ -121,9 +182,6 @@
 
     .chamado-topo {
         font-size: 0.7em;
-        /* color: var(--branco);
-        border: #ffffff3e 1px solid; */
-
     }
 
     .lado-direito,
@@ -143,10 +201,6 @@
         width: 100%;
     }
 
-    .lado-direito {
-        /* background-color: #27648d84; */
-    }
-
     .descricao,
     .lado-esquerdo .titulo-info {
         margin: 5px 10px;
@@ -155,12 +209,6 @@
     .perfil-ticket-p {
         margin-top: 5px;
     }
-
-    .titulo-info {
-        /* color: var(--branco); */
-    }
-
-
 
 }
 

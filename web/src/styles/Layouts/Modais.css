@@ -7,7 +7,7 @@
     position: relative;
     background: var(--azul-raf);
     /* gradiente principal */
-    color: var(--azul-claro);
+    color: var(--verde-claro);
     border: 2px solid var(--azul);
     box-shadow: 0 8px 24px rgba(2, 18, 28, 0.12);
     font-family: "Inter", system-ui, Arial, sans-serif;
@@ -69,7 +69,7 @@
     align-items: center;
     justify-content: center;
     pointer-events: auto;
-    color: var(--azul-claro);
+    color: var(--verde-claro);
     cursor: pointer;
 }
 
@@ -79,7 +79,7 @@
     letter-spacing: 0.8px;
     margin: 0;
     font-size: 1.8rem;
-    color: var(--azul-claro);
+    color: var(--verde-claro);
     font-weight: 800;
     margin: 0 30px;
 }
@@ -115,7 +115,7 @@
 
 /* descrição do último chamado — leve destaque */
 .descricao-ultimo {
-    color: var(--azul-claro);
+    color: var(--verde-claro);
     font-size: 0.82rem;
     background: rgba(255, 255, 255, 0.03);
     border-radius: 6px;
@@ -228,7 +228,7 @@
     font-weight: 800;
     color: var(--azul-raf);
     cursor: pointer;
-    background: var(--azul-claro);
+    color: var(--verde-claro);
     padding: 10px;
 }
 
@@ -255,7 +255,7 @@
 }
 
 .valor-pequena {
-    color: var(--azul-claro);
+    color: var(--verde-claro);
     font-size: 0.86rem;
 }
 

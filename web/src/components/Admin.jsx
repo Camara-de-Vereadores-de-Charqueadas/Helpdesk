@@ -1,20 +1,18 @@
 import "../styles/Admin.css";
+import { Book } from "@phosphor-icons/react";
 
 export default function Admin({ dataAtual, menuItems }) {
-    return (
-        <div className="visualizacao-admin">
-            <div className="cards-admin">
-                {menuItems.map((item, index) => (
-                    <div key={index} className="card-admin fade-in">
-                        {item.icon}
-                        <h3 className="title-h3" style={{ color: item.color }}>
-                            {item.name}
-                        </h3>
-                        <p className="data">{dataAtual}</p>
-                        <p className="info">{item.info}</p>
-                    </div>
-                ))}
-            </div>
+  return (
+    <div className="visualizacao-admin">
+      <div className="cards-admin">
+        <div className="card-admin fade-in">
+          <h3 className="title-h3">MANUAL HELPDESK</h3>
+          <button className="info">
+            ABRIR PDF
+            <Book size={15} color="#f9f1f1" weight="fill" />
+          </button>
         </div>
-    );
+      </div>
+    </div>
+  );
 }

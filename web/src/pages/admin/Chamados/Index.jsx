@@ -379,6 +379,7 @@ export default function Chamados() {
                   <strong>Descrição TI:</strong>
                 </label>
                 <textarea
+                  className="descricao-ti-admin"
                   value={descricaoTI}
                   onChange={(e) => setDescricaoTI(e.target.value)}
                   placeholder="Descreva o que foi feito pela TI..."
@@ -405,14 +406,14 @@ export default function Chamados() {
                     className="btn-resolvido"
                     onClick={() => finalizarChamado(chamadoSelecionado, true)}
                   >
-                    Resolvido
+                    <CheckCircle size={32} weight="fill" />
                   </button>
 
                   <button
                     className="btn-nao-resolvido"
                     onClick={() => finalizarChamado(chamadoSelecionado, false)}
                   >
-                    Não Resolvido
+                    <XCircle size={32} weight="fill" />
                   </button>
                 </>
               )}

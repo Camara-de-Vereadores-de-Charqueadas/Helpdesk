@@ -1,6 +1,6 @@
 .header {
     width: 100%;
-    background-color: #27648d;
+    background-color: #135e8f;
     /* Azul bondi */
     display: flex;
     justify-content: space-between;
@@ -290,10 +290,11 @@
 }
 
 @media (max-width: 480px) {
-    .nav-item .perfil{
+    .nav-item .perfil {
         color: #FFF;
         width: 100px;
     }
+
     .header {
         flex-direction: row;
         align-items: center;
@@ -398,7 +399,8 @@
         border: none;
         padding-bottom: 10px;
     }
-    .nav-item small{
+
+    .nav-item small {
         display: block;
         font-weight: 1000;
         font-size: 0.9rem;

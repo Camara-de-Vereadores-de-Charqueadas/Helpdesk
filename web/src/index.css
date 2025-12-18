@@ -21,6 +21,7 @@
   --cinza: #9b9a9a;
   --vermelho-claro: #f8b4ad;
   --verde-claro: #ceffe2;
+  --verde-mais-claro: #ceffe265;
   --roxo-claro: #ecc2ff;
   --laranja-claro: #d8bc96;
   --amarelo: #f1c40f;
@@ -122,7 +123,7 @@ textarea {
 input:focus,
 select:focus,
 textarea:focus {
-  box-shadow: 0 0 0 2px var(--azul-claro);
+  box-shadow: 0 0 0 2px var(--verde-claro);
 }
 
 /* ===== Layout Padrão ===== */

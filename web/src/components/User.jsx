@@ -182,22 +182,6 @@ function CardChamados({
                   <option>Últimos 90 dias</option>
                 </select>
               </div>
-              {/*
-              <div className="filtro">
-                <span className="label">Urgência:</span>
-                <select
-                  className="select-estilizado"
-                  value={filtros.urgencia}
-                  onChange={(e) =>
-                    handleFiltroChange(setFiltros, "urgencia", e.target.value)
-                  }
-                >
-                  <option>Qualquer</option>
-                  <option>Alta</option>
-                  <option>Média</option>
-                  <option>Baixa</option>
-                </select>
-              </div>*/}
             </div>
 
             <div className="lista-chamados fade-in">
