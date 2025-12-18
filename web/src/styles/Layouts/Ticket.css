@@ -99,11 +99,11 @@
 
 .descricao-ti {
     width: 100%;
-    background-color: var(--azul-vivo);
+    background-color: #6091e023;
     padding: 12px;
     border-radius: 8px;
     font-size: 0.9rem;
-    color: var(--branco);
+    color: var(--azul-raf);
     text-align: justify;
     line-height: 1.5;
 }
