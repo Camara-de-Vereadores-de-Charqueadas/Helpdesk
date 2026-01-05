@@ -98,19 +98,26 @@ export const getChamadosByPerfil = async (perfilId) => {
  * Cria um novo chamado com status inicial "NÃO VISUALIZADO"
  * Retorna insertId.
  */
-export const createChamado = async ({
+export const createChamado = ({
   titulo,
   descricaoProblema,
   setorId,
   perfilId,
-  status = "NÃO VISUALIZADO",
-  visualizadoTI = 0,
-  fechado = 0,
 }) => {
   const stmt = db.prepare(`
     INSERT INTO chamados 
-    (titulo, descricaoProblema, setorId, perfilId, status, visualizadoTI, fechado, imagens)
-    VALUES (?, ?, ?, ?, ?, ?, ?, NULL)
+    (
+      titulo,
+      descricaoProblema,
+      setorId,
+      perfilId,
+      status,
+      visualizadoTI,
+      fechado,
+      dataHora,
+      imagens
+    )
+    VALUES (?, ?, ?, ?, 'NAO VISUALIZADO', 0, 0, ?, NULL)
   `);
 
   const result = stmt.run(
@@ -118,9 +125,7 @@ export const createChamado = async ({
     descricaoProblema,
     setorId,
     perfilId,
-    status,
-    visualizadoTI,
-    fechado
+    new Date().toLocaleString("sv-SE").replace(" ", "T")
   );
 
   return result.lastInsertRowid;

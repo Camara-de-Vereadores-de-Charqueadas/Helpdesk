@@ -68,22 +68,15 @@ export const deletarChamado = async (req, res) => {
 export const criarChamado = async (req, res) => {
   try {
     const { titulo, descricaoProblema, setorId, perfilId } = req.body;
-
-    // Arquivos enviados via multer (salvos temporariamente)
     const imagensTemp = req.files || [];
 
-    // 1) Primeiro salva o chamado com status inicial correto
     const chamadoId = await createChamado({
       titulo,
       descricaoProblema,
       setorId,
       perfilId,
-      status: "NÃO VISUALIZADO", // Status inicial correto
-      visualizadoTI: 0, // Não visualizado inicialmente
-      fechado: 0, // Não fechado
     });
 
-    // 2) Renomear as imagens (se houver)
     const imagensFinais = [];
     const uploadDir = path.join(process.cwd(), "uploads");
 
@@ -91,29 +84,20 @@ export const criarChamado = async (req, res) => {
       const img = imagensTemp[i];
       const ext = path.extname(img.originalname) || "";
       const newName = `${chamadoId}-${i + 1}${ext}`;
-      const oldPath = img.path;
-      const newPath = path.join(uploadDir, newName);
-
-      // mover/renomear arquivo
-      fs.renameSync(oldPath, newPath);
-
-      // salvar caminho relativo para front
-      imagensFinais.push(`http://192.168.0.106:3000/api/uploads/${newName}`);
+      fs.renameSync(img.path, path.join(uploadDir, newName));
+      imagensFinais.push(`/uploads/${newName}`);
     }
 
-    // 3) Atualiza o chamado se houver imagens finais
     if (imagensFinais.length > 0) {
       await updateChamadoImages(chamadoId, imagensFinais);
     }
 
-    // Retorna o chamado recém-criado
     res.status(201).json({
-      message: "Chamado criado!",
       id: chamadoId,
-      imagens: imagensFinais.length > 0 ? imagensFinais : null,
+      imagens: imagensFinais.length ? imagensFinais : null,
     });
-  } catch (error) {
-    console.error("Erro ao criar chamado:", error);
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ error: "Erro ao criar chamado" });
   }
 };

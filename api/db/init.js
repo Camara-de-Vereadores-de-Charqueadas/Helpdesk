@@ -183,7 +183,7 @@ function initDatabase() {
       status TEXT,
       visualizadoTI BOOLEAN DEFAULT 0,
       fechado BOOLEAN DEFAULT 0,
-      dataHora DATETIME DEFAULT CURRENT_TIMESTAMP,
+      dataHora TEXT NOT NULL,
       imagens TEXT,
       setorId INTEGER NOT NULL,
       perfilId INTEGER NOT NULL,
