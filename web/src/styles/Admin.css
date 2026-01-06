@@ -242,7 +242,7 @@
     color: var(--branco);
 }
 
-.status.não-visualizado {
+.status.nao-visualizado {
     background: var(--amarelo);
     color: #000;
 }

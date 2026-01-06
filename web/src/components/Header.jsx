@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "../styles/Layouts/Header.css";
+import pdfManual from "../assets/manual_helpdesk_setores_gerais.pdf";
+
 import {
   CheckCircle,
   UserCircle,
   XCircle,
   DotsThree,
+  BookOpen,
 } from "@phosphor-icons/react";
 import logo from "../assets/Logo.png";
 
@@ -88,6 +91,18 @@ export default function Header() {
             <CheckCircle size={24} weight="fill" className="icon" />
             <span>CHAMADOS</span>
           </div>
+        )}
+        {!userData.isAdmin && (
+          <a
+            href={pdfManual}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="nav-item manual"
+            title="Abrir manual do sistema"
+          >
+            <BookOpen size={24} weight="fill" className="icon" />
+            <span>MANUAL</span>
+          </a>
         )}
 
         <div className="perfil-wrapper" ref={profileRef}>
