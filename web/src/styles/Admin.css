@@ -274,6 +274,12 @@
 
 }
 
+.modal-title {
+    color: var(--branco);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
 .modal-overlay-admin {
     position: fixed;
     top: 0;

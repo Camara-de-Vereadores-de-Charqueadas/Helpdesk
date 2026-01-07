@@ -341,7 +341,7 @@ export default function Chamados() {
               <XCircle size={28} />
             </button>
 
-            <h2>{chamadoSelecionado.titulo}</h2>
+            <h2 className="modal-title">{chamadoSelecionado.titulo}</h2>
 
             <p>
               <strong>Setor:</strong> {chamadoSelecionado.setorNome}
@@ -443,7 +443,7 @@ export default function Chamados() {
               <XCircle size={28} />
             </button>
 
-            <h2>Imagens do Chamado</h2>
+            <h2 className="modal-title">Imagens do Chamado</h2>
 
             <div className="imagens-container">
               {(chamadoSelecionado?.imagens || []).map((img, idx) => (
