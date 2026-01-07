@@ -446,7 +446,6 @@ export default function Chamados() {
             <h2>Imagens do Chamado</h2>
 
             <div className="imagens-container">
-              {/* CORREÇÃO AQUI - Remove JSON.parse */}
               {(chamadoSelecionado?.imagens || []).map((img, idx) => (
                 <img
                   key={idx}

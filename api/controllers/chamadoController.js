@@ -11,7 +11,7 @@ import {
   deleteChamado,
   getChamados,
 } from "../models/chamadoModel.js";
-
+const baseUrl = "http://localhost:3000";
 // Lista todos os chamados (com imagens parseadas)
 export const listarChamados = async (req, res) => {
   try {
@@ -85,7 +85,7 @@ export const criarChamado = async (req, res) => {
       const ext = path.extname(img.originalname) || "";
       const newName = `${chamadoId}-${i + 1}${ext}`;
       fs.renameSync(img.path, path.join(uploadDir, newName));
-      imagensFinais.push(`/uploads/${newName}`);
+      imagensFinais.push(`${baseUrl}/api/uploads/${newName}`);
     }
 
     if (imagensFinais.length > 0) {

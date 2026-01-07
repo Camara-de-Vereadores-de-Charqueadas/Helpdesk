@@ -184,6 +184,7 @@ function initDatabase() {
       visualizadoTI BOOLEAN DEFAULT 0,
       fechado BOOLEAN DEFAULT 0,
       dataHora TEXT NOT NULL,
+      dataFechamento TEXT,
       imagens TEXT,
       setorId INTEGER NOT NULL,
       perfilId INTEGER NOT NULL,
