@@ -33,7 +33,7 @@ config.js
 *.db
 *.sqlite
 *.sqlite3
-
+api/database.db
 # WEB
 node_modules
 node_modules
