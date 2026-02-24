@@ -30,7 +30,9 @@ node_modules
 # API
 *.sql
 config.js
-api/database.db
+*.db
+*.sqlite
+*.sqlite3
 
 # WEB
 node_modules
