@@ -8,7 +8,7 @@ export function getAllPerfis() {
         SELECT p.*, s.nome AS setor_nome
         FROM perfis p
         JOIN setores s ON p.setorId = s.id
-    `
+    `,
     )
     .all();
 }
@@ -20,7 +20,7 @@ export function createPerfil({ nome, setorId }) {
       `
         INSERT INTO perfis (nome, setorId)
         VALUES (?, ?)
-    `
+    `,
     )
     .run(nome, setorId);
 
@@ -32,8 +32,8 @@ export function getPerfisBySetor(setorId) {
   return db
     .prepare(
       `
-        SELECT * FROM perfis WHERE setorId = ?
-    `
+        SELECT id, nome, setorId FROM perfis WHERE setorId = ? ORDER BY nome
+    `,
     )
     .all(setorId);
 }

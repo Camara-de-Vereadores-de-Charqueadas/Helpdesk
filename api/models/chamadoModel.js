@@ -23,23 +23,28 @@ const parseImagens = (val) => {
  * Retorna imagens como array ou null.
  */
 export const getAllChamados = async () => {
-  const rows = db
+  const chamados = db
     .prepare(
       `
-    SELECT 
-      c.*,
-      s.nome AS setorNome,
-      s.imagem_perfil AS setorImg,
-      p.nome AS perfilNome
-    FROM chamados c
-    INNER JOIN setores s ON c.setorId = s.id
-    INNER JOIN perfis p ON c.perfilId = p.id
-    ORDER BY c.dataHora DESC
-  `
+      SELECT 
+        c.*,
+        s.nome AS setorNome,
+        s.imagem AS setorImg,
+        p.nome AS perfilNome,
+        pf.nome AS finalizadoPorNome
+      FROM chamados c
+      LEFT JOIN setores s ON s.id = c.setorId
+      LEFT JOIN perfis p ON p.id = c.perfilId
+      LEFT JOIN perfis pf ON pf.id = c.finalizadoPorPerfilId
+      ORDER BY c.dataHora DESC
+      `,
     )
     .all();
 
-  return rows.map((r) => ({ ...r, imagens: parseImagens(r.imagens) }));
+  return chamados.map((chamado) => ({
+    ...chamado,
+    imagens: chamado.imagens ? JSON.parse(chamado.imagens) : [],
+  }));
 };
 
 /**
@@ -59,7 +64,7 @@ export const getChamadosBySetor = async (setorId) => {
     INNER INNER JOIN perfis p ON c.perfilId = p.id
     WHERE c.setorId = ?
     ORDER BY c.dataHora DESC
-  `
+  `,
     )
     .all(setorId);
 
@@ -83,7 +88,7 @@ export const getChamadosByPerfil = async (perfilId) => {
     INNER JOIN perfis p ON c.perfilId = p.id
     WHERE c.perfilId = ?
     ORDER BY c.dataHora DESC
-  `
+  `,
     )
     .all(perfilId);
 
@@ -125,7 +130,7 @@ export const createChamado = ({
     descricaoProblema,
     setorId,
     perfilId,
-    new Date().toLocaleString("sv-SE").replace(" ", "T")
+    new Date().toLocaleString("sv-SE").replace(" ", "T"),
   );
 
   return result.lastInsertRowid;
@@ -139,7 +144,7 @@ export const updateChamadoImages = async (id, imagensArray) => {
   db.prepare(
     `
     UPDATE chamados SET imagens = ? WHERE id = ?
-  `
+  `,
   ).run(json, id);
 };
 
@@ -172,15 +177,26 @@ export const createChamadosEmLote = async (lista) => {
  */
 // Model - updateChamadoTI.js
 export const updateChamadoTI = async (id, campos) => {
-  let { descricaoTI, status, visualizadoTI, fechado, dataFechamento } = campos;
+  let {
+    descricaoTI,
+    status,
+    visualizadoTI,
+    fechado,
+    dataFechamento,
+    finalizadoPorPerfilId,
+  } = campos;
 
-  // 🔥 NORMALIZAÇÃO CRÍTICA
   if (visualizadoTI !== undefined) visualizadoTI = Number(visualizadoTI);
   if (fechado !== undefined) fechado = Number(fechado);
+  if (finalizadoPorPerfilId !== undefined && finalizadoPorPerfilId !== null) {
+    finalizadoPorPerfilId = Number(finalizadoPorPerfilId);
+  }
 
   const atual = db
     .prepare(
-      `SELECT status, visualizadoTI, fechado, dataFechamento FROM chamados WHERE id = ?`
+      `SELECT status, visualizadoTI, fechado, dataFechamento, finalizadoPorPerfilId
+       FROM chamados
+       WHERE id = ?`,
     )
     .get(id);
 
@@ -188,9 +204,6 @@ export const updateChamadoTI = async (id, campos) => {
 
   const descTI = descricaoTI ?? null;
 
-  // --------------------------------------------
-  // CASO JÁ FECHADO
-  // --------------------------------------------
   if (atual.fechado === 1) {
     const result = db
       .prepare(
@@ -198,23 +211,20 @@ export const updateChamadoTI = async (id, campos) => {
         UPDATE chamados 
         SET descricaoTI = COALESCE(?, descricaoTI)
         WHERE id = ?
-      `
+      `,
       )
       .run(descTI, id);
 
     return result.changes > 0;
   }
 
-  // --------------------------------------------
-  // CHAMADO ABERTO
-  // --------------------------------------------
   let novoStatus = atual.status;
   let novoVisualizado =
     visualizadoTI !== undefined ? visualizadoTI : atual.visualizadoTI;
   let novoFechado = fechado !== undefined ? fechado : atual.fechado;
   let novaDataFechamento = atual.dataFechamento;
+  let novoFinalizadoPorPerfilId = atual.finalizadoPorPerfilId ?? null;
 
-  // ✅ AGORA FUNCIONA
   if (novoVisualizado === 1 && atual.visualizadoTI === 0) {
     novoStatus = "EM ANDAMENTO";
   }
@@ -224,6 +234,8 @@ export const updateChamadoTI = async (id, campos) => {
     novoFechado = 1;
     novoVisualizado = 1;
     novaDataFechamento = dataFechamento || new Date().toISOString();
+    novoFinalizadoPorPerfilId =
+      finalizadoPorPerfilId !== undefined ? finalizadoPorPerfilId : null;
   }
 
   const result = db
@@ -234,9 +246,10 @@ export const updateChamadoTI = async (id, campos) => {
           status = ?,
           visualizadoTI = ?,
           fechado = ?,
-          dataFechamento = COALESCE(?, dataFechamento)
+          dataFechamento = COALESCE(?, dataFechamento),
+          finalizadoPorPerfilId = ?
       WHERE id = ?
-    `
+    `,
     )
     .run(
       descTI,
@@ -244,12 +257,12 @@ export const updateChamadoTI = async (id, campos) => {
       novoVisualizado,
       novoFechado,
       novaDataFechamento ?? null,
-      id
+      novoFinalizadoPorPerfilId,
+      id,
     );
 
   return result.changes > 0;
 };
-
 // -------------------------------------------------------
 // PEGAR CHAMADOS (alternativa que já parseia imagens)
 // -------------------------------------------------------
@@ -265,7 +278,7 @@ export const getChamados = async () => {
     INNER JOIN setores s ON c.setorId = s.id
     INNER JOIN perfis p ON c.perfilId = p.id
     ORDER BY c.dataHora DESC
-  `
+  `,
   );
 
   return rows.map((r) => ({ ...r, imagens: parseImagens(r.imagens) }));

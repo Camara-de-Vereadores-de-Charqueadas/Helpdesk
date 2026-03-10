@@ -104,22 +104,32 @@ export const criarChamado = async (req, res) => {
 };
 
 // Atualiza informações de TI no chamado
-export const atualizarChamadoTI = (req, res) => {
-  const id = req.params.id;
-  const campos = req.body;
+export const atualizarChamadoTI = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const campos = req.body;
 
-  // Se for finalização, garante inclusão automática da data
-  if (campos.status === "RESOLVIDO" || campos.status === "NAO RESOLVIDO") {
-    campos.dataFechamento = new Date().toISOString();
-    campos.fechado = 1;
-    campos.visualizadoTI = 1;
+    if (campos.status === "RESOLVIDO" || campos.status === "NAO RESOLVIDO") {
+      if (!campos.finalizadoPorPerfilId) {
+        return res.status(400).json({
+          erro: "É obrigatório informar o funcionário da TI que finalizou o chamado.",
+        });
+      }
+
+      campos.dataFechamento = new Date().toISOString();
+      campos.fechado = 1;
+      campos.visualizadoTI = 1;
+    }
+
+    const ok = await updateChamadoTI(id, campos);
+
+    if (!ok) {
+      return res.status(400).json({ erro: "Falha ao atualizar chamado" });
+    }
+
+    res.json({ sucesso: true });
+  } catch (error) {
+    console.error("Erro ao atualizar chamado TI:", error);
+    res.status(500).json({ erro: "Erro interno ao atualizar chamado" });
   }
-
-  const ok = updateChamadoTI(id, campos);
-
-  if (!ok) {
-    return res.status(400).json({ erro: "Falha ao atualizar chamado" });
-  }
-
-  res.json({ sucesso: true });
 };
