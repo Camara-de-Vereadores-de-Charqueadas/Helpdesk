@@ -29,7 +29,7 @@ export const getAllChamados = async () => {
       SELECT 
         c.*,
         s.nome AS setorNome,
-        s.imagem AS setorImg,
+        s.imagem_perfil AS setorImg,
         p.nome AS perfilNome,
         pf.nome AS finalizadoPorNome
       FROM chamados c
