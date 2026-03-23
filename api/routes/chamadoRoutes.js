@@ -6,6 +6,7 @@ import {
   listarChamadosPorPerfil,
   criarChamado,
   atualizarChamadoTI,
+  editarChamado,
 } from "../controllers/chamadoController.js";
 import { deletarChamado } from "../controllers/chamadoController.js";
 
@@ -21,6 +22,7 @@ router.post("/", upload.array("imagens", 2), criarChamado);
 
 router.put("/:id", atualizarChamadoTI); // rota normal
 router.put("/ti/:id", atualizarChamadoTI); // rota específica da TI
+router.put("/ti/edit/:id", editarChamado); // rota de editar chamados da TI
 
 router.delete("/:id", deletarChamado);
 

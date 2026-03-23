@@ -133,3 +133,33 @@ export const atualizarChamadoTI = async (req, res) => {
     res.status(500).json({ erro: "Erro interno ao atualizar chamado" });
   }
 };
+
+// Editar um chamado depois de ter sido fechado.
+export const editarChamado = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const campos = req.body;
+
+    if (campos.status === "RESOLVIDO" || campos.status === "NAO RESOLVIDO") {
+      if (!campos.finalizadoPorPerfilId) {
+        return res.status(400).json({
+          erro: "É obrigatório informar o funcionário da TI que editou o chamado.",
+        });
+      }
+
+      campos.dataFechamento = new Date().toISOString();
+    }
+
+    const ok = await atualizarChamadoTI(id, campos);
+
+    if (!ok) {
+      return res.status(400).json({ erro: "Falha ao editar chamado" });
+    }
+
+    res.json({ sucesso: true });
+
+  } catch (error) {
+    console.error("Erro ao atualizar chamado TI:", error);
+    res.status(500).json({ erro: "Erro interno ao atualizar chamado" });
+  }
+};
