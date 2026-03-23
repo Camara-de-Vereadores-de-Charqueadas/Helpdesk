@@ -29,7 +29,8 @@ export default function Chamados() {
   const [mostrarModalImagens, setMostrarModalImagens] = useState(false);
   const [novosChamados, setNovosChamados] = useState(0);
   const audioRef = useRef(null);
-
+  const [perfisTI, setPerfisTI] = useState([]);
+  const [finalizadoPorPerfilId, setFinalizadoPorPerfilId] = useState("");
   // NOVO: Campo para descrição da TI
   const [descricaoTI, setDescricaoTI] = useState("");
 
@@ -78,11 +79,27 @@ export default function Chamados() {
       console.error("Erro ao buscar chamados:", err);
     }
   }
+  // buscar perfil da TI para mostrar o nome do usuário que finalizou o chamado
+  useEffect(() => {
+    async function buscarPerfisTI() {
+      try {
+        const res = await fetch(`${api}/api/perfis/setor/1`);
+        if (!res.ok) throw new Error("Erro ao buscar perfis da TI");
+
+        const data = await res.json();
+        setPerfisTI(data);
+      } catch (err) {
+        console.error("Erro ao buscar perfis da TI:", err);
+      }
+    }
+
+    buscarPerfisTI();
+  }, [api]);
 
   // Título da aba
   useEffect(() => {
     const naoVisualizados = chamados.filter(
-      (c) => c.visualizadoTI === 0
+      (c) => c.visualizadoTI === 0,
     ).length;
 
     document.title =
@@ -104,11 +121,11 @@ export default function Chamados() {
   const filtrarChamados = () => {
     if (filtro === "Abertos")
       return chamados.filter(
-        (c) => c.status === "NAO VISUALIZADO" || c.status === "EM ANDAMENTO"
+        (c) => c.status === "NAO VISUALIZADO" || c.status === "EM ANDAMENTO",
       );
     if (filtro === "Fechados")
       return chamados.filter(
-        (c) => c.status === "RESOLVIDO" || c.status === "NAO RESOLVIDO"
+        (c) => c.status === "RESOLVIDO" || c.status === "NAO RESOLVIDO",
       );
     return chamados;
   };
@@ -153,6 +170,7 @@ export default function Chamados() {
 
     setChamadoSelecionado(chamado);
     setDescricaoTI(chamado.descricaoTI || ""); // CARREGA DESCRIÇÃO TI SE EXISTIR
+    setFinalizadoPorPerfilId(chamado.finalizadoPorPerfilId || ""); // CARREGA PERFIL QUE FINALIZOU SE EXISTIR
     setMostrarModal(true);
   };
 
@@ -170,8 +188,8 @@ export default function Chamados() {
         prev.map((c) =>
           c.id === chamado.id
             ? { ...c, visualizadoTI: 1, status: "EM ANDAMENTO" }
-            : c
-        )
+            : c,
+        ),
       );
     } catch (err) {
       console.error("Erro ao marcar visualizado:", err);
@@ -187,6 +205,11 @@ export default function Chamados() {
       return;
     }
 
+    if (!finalizadoPorPerfilId) {
+      alert("Selecione o funcionário da TI que está finalizando o chamado!");
+      return;
+    }
+
     try {
       const dataFechamento = new Date().toISOString();
 
@@ -197,8 +220,13 @@ export default function Chamados() {
           status: resolvido ? "RESOLVIDO" : "NAO RESOLVIDO",
           descricaoTI: descricaoTI,
           dataFechamento: dataFechamento,
+          finalizadoPorPerfilId: Number(finalizadoPorPerfilId),
         }),
       });
+
+      const perfilSelecionado = perfisTI.find(
+        (p) => Number(p.id) === Number(finalizadoPorPerfilId),
+      );
 
       setChamados((prev) =>
         prev.map((c) =>
@@ -209,9 +237,25 @@ export default function Chamados() {
                 descricaoTI,
                 dataFechamento,
                 fechado: 1,
+                finalizadoPorPerfilId: Number(finalizadoPorPerfilId),
+                finalizadoPorNome: perfilSelecionado?.nome || "",
               }
-            : c
-        )
+            : c,
+        ),
+      );
+
+      setChamadoSelecionado((prev) =>
+        prev
+          ? {
+              ...prev,
+              status: resolvido ? "RESOLVIDO" : "NAO RESOLVIDO",
+              descricaoTI,
+              dataFechamento,
+              fechado: 1,
+              finalizadoPorPerfilId: Number(finalizadoPorPerfilId),
+              finalizadoPorNome: perfilSelecionado?.nome || "",
+            }
+          : prev,
       );
 
       setMostrarModal(false);
@@ -219,7 +263,6 @@ export default function Chamados() {
       console.error("Erro ao finalizar chamado:", err);
     }
   };
-
   return (
     <>
       <Header isAdmin={true} userName="Informática" />
@@ -347,13 +390,19 @@ export default function Chamados() {
               <strong>Setor:</strong> {chamadoSelecionado.setorNome}
             </p>
             <p>
-              <strong>Aberto por:</strong> {chamadoSelecionado.perfilNome}
+              <strong>Finalizado por:</strong>{" "}
+              {chamadoSelecionado.finalizadoPorNome}
             </p>
+
             <p>
+              {" "}
+              <p>
+                <strong>Aberto por:</strong> {chamadoSelecionado.perfilNome}
+              </p>
               <strong>Descrição:</strong> {chamadoSelecionado.descricaoProblema}
             </p>
 
-            {/* Mostrar descrição da TI se existir */}
+            {/* Mostrar descrição da TI */}
             {chamadoSelecionado.fechado === 1 && (
               <>
                 {chamadoSelecionado.descricaoTI && (
@@ -362,12 +411,17 @@ export default function Chamados() {
                     {chamadoSelecionado.descricaoTI}
                   </p>
                 )}
-
+                {chamadoSelecionado.finalizadoPorNome && (
+                  <p>
+                    <strong>Finalizado por:</strong>{" "}
+                    {chamadoSelecionado.finalizadoPorNome}
+                  </p>
+                )}
                 {chamadoSelecionado.dataFechamento && (
                   <p>
                     <strong>Fechado em:</strong>{" "}
                     {new Date(chamadoSelecionado.dataFechamento).toLocaleString(
-                      "pt-BR"
+                      "pt-BR",
                     )}
                   </p>
                 )}
@@ -384,6 +438,25 @@ export default function Chamados() {
                   onChange={(e) => setDescricaoTI(e.target.value)}
                   placeholder="Descreva o que foi feito pela TI..."
                 ></textarea>
+                {chamadoSelecionado.fechado !== 1 && (
+                  <div className="campo-ti">
+                    <label>
+                      <strong>Funcionário da TI:</strong>
+                    </label>
+                    <select
+                      className="select-ti-admin"
+                      value={finalizadoPorPerfilId}
+                      onChange={(e) => setFinalizadoPorPerfilId(e.target.value)}
+                    >
+                      <option value="">Selecione o funcionário</option>
+                      {perfisTI.map((perfil) => (
+                        <option key={perfil.id} value={perfil.id}>
+                          {perfil.nome}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
               </div>
             )}
 
