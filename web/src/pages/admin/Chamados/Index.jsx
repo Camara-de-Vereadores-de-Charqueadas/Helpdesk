@@ -25,8 +25,13 @@ export default function Chamados() {
   const [filtro, setFiltro] = useState("Todos");
   const [chamados, setChamados] = useState([]);
   const [chamadoSelecionado, setChamadoSelecionado] = useState(null);
+
   const [mostrarModal, setMostrarModal] = useState(false);
   const [mostrarModalImagens, setMostrarModalImagens] = useState(false);
+
+  //Modal de edição
+  const [mostrarModalEdit, setMostrarModalEdit] = useState(false);
+
   const [novosChamados, setNovosChamados] = useState(0);
   const audioRef = useRef(null);
   const [perfisTI, setPerfisTI] = useState([]);
@@ -114,6 +119,11 @@ export default function Chamados() {
     const interval = setInterval(buscarChamados, 10000);
     return () => clearInterval(interval);
   }, []);
+
+  // Logging
+  useEffect(() => {
+    console.log(chamadoSelecionado);
+  }, [mostrarModalEdit, chamadoSelecionado])
 
   // ---------------------------------------------------------
   // FILTRO
@@ -394,13 +404,17 @@ export default function Chamados() {
               {chamadoSelecionado.finalizadoPorNome}
             </p>
 
+          <div>
             <p>
-              {" "}
-              <p>
-                <strong>Aberto por:</strong> {chamadoSelecionado.perfilNome}
-              </p>
-              <strong>Descrição:</strong> {chamadoSelecionado.descricaoProblema}
+              <strong>Aberto por:</strong> {chamadoSelecionado.perfilNome}
             </p>
+            <p>
+              <strong>Descrição:</strong>{" "}
+              <span className="descricao-texto">
+                {chamadoSelecionado.descricaoProblema}
+              </span>
+            </p>
+          </div>
 
             {/* Mostrar descrição da TI */}
             {chamadoSelecionado.fechado === 1 && (
@@ -408,7 +422,9 @@ export default function Chamados() {
                 {chamadoSelecionado.descricaoTI && (
                   <p>
                     <strong>Descrição TI:</strong>{" "}
-                    {chamadoSelecionado.descricaoTI}
+                    <span className="descricao-texto">
+                      {chamadoSelecionado.descricaoTI}
+                    </span>
                   </p>
                 )}
                 {chamadoSelecionado.finalizadoPorNome && (
@@ -461,9 +477,9 @@ export default function Chamados() {
             )}
 
             <div className="modal-buttons">
-              {/* Botão para ver imagens - CORREÇÃO AQUI */}
+              {/* Botão para ver imagens*/}
               {chamadoSelecionado.imagens &&
-                chamadoSelecionado.imagens.length > 0 && ( // REMOVEU JSON.parse
+                chamadoSelecionado.imagens.length > 0 && ( 
                   <button
                     className="btn-imagens"
                     onClick={() => setMostrarModalImagens(true)}
@@ -471,6 +487,7 @@ export default function Chamados() {
                     <ImageIcon size={32} />
                   </button>
                 )}
+
 
               {/* Botões de finalização - só mostrar se não estiver fechado */}
               {chamadoSelecionado.fechado !== 1 && (
@@ -492,14 +509,26 @@ export default function Chamados() {
               )}
 
               {/* Mostrar status se estiver fechado */}
+              {/* Botão para edição - Só mostrar se estiver fechado.*/}
               {chamadoSelecionado.fechado === 1 && (
-                <div
-                  className={`status ${chamadoSelecionado.status
-                    .toLowerCase()
-                    .replace(/\s+/g, "-")}`}
-                >
-                  {chamadoSelecionado.status}
-                </div>
+                <>
+                  <div>
+                    <button
+                      className="btn-edit"
+                      onClick={ () => setMostrarModalEdit(true)}
+                    >
+                      ✏️ Editar
+                    </button>
+                  </div>
+
+                  <div
+                    className={`status ${chamadoSelecionado.status
+                      .toLowerCase()
+                      .replace(/\s+/g, "-")}`}
+                  >
+                    {chamadoSelecionado.status}
+                  </div>
+                </>
               )}
             </div>
           </div>
@@ -531,6 +560,116 @@ export default function Chamados() {
           </div>
         </div>
       )}{" "}
+
+      {/* --- MODAL DE EDIÇÃO --- */}
+      { mostrarModalEdit && chamadoSelecionado.fechado === 1 && (
+        <div className="modal-overlay-admin">
+          
+          <div className="modal">
+            <button className="modal-close" 
+              onClick={ () => setMostrarModalEdit(false)}>
+              <XCircle size={28} />
+            </button>
+            <h2 className="modal-title">Modo de edição.</h2>
+
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                try {
+                  const form = e.target;
+                  const editDescricao = form.descricaoTI.value;
+                  const novoPerfilID = form.FinalizadoPorPerfilID.value;
+                  const status = form.resolvidoStatus.value;
+                  const currentTime = new Date().toISOString();
+
+                  const route = `${api}/api/chamados/ti/${chamadoSelecionado.id}`;
+                  await fetch(route, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      descricaoTI: editDescricao,
+                      finalizadoPorPerfilId: parseInt(novoPerfilID) || null,
+                      status: status,
+                    }),
+                  });
+
+                  setChamadoSelecionado((prev) => ({
+                    ...prev,
+                    descricaoTI: editDescricao,
+                    finalizadoPorPerfilId: parseInt(novoPerfilID),
+                    finalizadoPorNome:
+                      perfisTI.find((p) => String(p.id) === String(novoPerfilID))?.nome || "",
+                    status: status,
+                    dataFechamento: currentTime
+                  }));
+
+                  setChamados((prev) =>
+                    prev.map((c) =>
+                      c.id === chamadoSelecionado.id
+                        ? {
+                            ...c,
+                            descricaoTI: editDescricao,
+                            finalizadoPorPerfilId: parseInt(novoPerfilID),
+                            finalizadoPorNome:
+                              perfisTI.find((p) => String(p.id) === String(novoPerfilID))
+                                ?.nome || "",
+                            status: status,
+                            dataFechamento: currentTime,
+                          }
+                        : c
+                    )
+                  );
+
+                  setMostrarModalEdit(false);
+                } catch (err) {
+                  console.error("Erro ao editar chamado", err);
+                }
+              }}
+            >
+              <div className="campo-ti">
+                <label><strong>Descrição TI:</strong></label>
+                <textarea
+                  name="descricaoTI"
+                  className="descricao-ti-admin"
+                  defaultValue={ chamadoSelecionado.descricaoTI || "" }
+                />
+              </div>
+
+              <div>
+                <label><strong>Finalizado por:</strong></label>
+                <select 
+                  name="FinalizadoPorPerfilID"
+                  className="select-ti-admin"
+                  defaultValue={chamadoSelecionado.finalizadoPorPerfilId || "" }
+                >
+                  <option 
+                    value="">Selecione o funcionário</option>
+                    { perfisTI.map((p) => (
+                      <option key={p.id} value={p.id}>{p.nome} </option>
+                    ))}
+                </select>
+              </div>
+
+              <div>
+                <label><strong>Status:</strong></label>
+                <select
+                  name="resolvidoStatus"
+                  className="select-ti-admin"
+                  defaultValue={chamadoSelecionado.status}
+                >
+                  <option value="RESOLVIDO">Resolvido</option>
+                  <option value="NAO RESOLVIDO">Não resolvido</option>
+                </select>
+              </div>
+
+              <div className="modal-buttons">
+                <button className="btn-save">Salvar</button>
+                <button className="btn-cancel" type="button" onClick={() => setMostrarModalEdit(false)}>Cancelar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </>
   );
 }

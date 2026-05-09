@@ -13,6 +13,7 @@ import {
 } from "../models/chamadoModel.js";
 const baseUrl = "http://localhost:3000";
 // const baseUrl = "http://192.168.1.15:3000";
+// const baseUrl = "http://192.168.1.15:3000";
 // Lista todos os chamados (com imagens parseadas)
 export const listarChamados = async (req, res) => {
   try {
@@ -108,7 +109,22 @@ export const atualizarChamadoTI = async (req, res) => {
   try {
     const id = req.params.id;
     const campos = req.body;
+export const atualizarChamadoTI = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const campos = req.body;
 
+    if (campos.status === "RESOLVIDO" || campos.status === "NAO RESOLVIDO") {
+      if (!campos.finalizadoPorPerfilId) {
+        return res.status(400).json({
+          erro: "É obrigatório informar o funcionário da TI que finalizou o chamado.",
+        });
+      }
+
+      campos.dataFechamento = new Date().toISOString();
+      campos.fechado = 1;
+      campos.visualizadoTI = 1;
+    }
     if (campos.status === "RESOLVIDO" || campos.status === "NAO RESOLVIDO") {
       if (!campos.finalizadoPorPerfilId) {
         return res.status(400).json({
@@ -122,7 +138,11 @@ export const atualizarChamadoTI = async (req, res) => {
     }
 
     const ok = await updateChamadoTI(id, campos);
+    const ok = await updateChamadoTI(id, campos);
 
+    if (!ok) {
+      return res.status(400).json({ erro: "Falha ao atualizar chamado" });
+    }
     if (!ok) {
       return res.status(400).json({ erro: "Falha ao atualizar chamado" });
     }
