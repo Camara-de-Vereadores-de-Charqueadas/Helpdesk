@@ -259,6 +259,37 @@
     background: var(--verde);
 }
 
+/* MODAL DE EDIÇÃO */
+.btn-edit {
+    font-size: 0.85rem;
+    font-weight: bold;
+    padding: 0.3rem 0.8rem;
+    border-radius: 0.5rem;
+    text-transform: uppercase;
+    color: white;
+    background-color: orange;
+}
+
+.btn-save {
+    font-size: 0.85rem;
+    font-weight: bold;
+    padding: 0.3rem 0.8rem;
+    border-radius: 0.5rem;
+    text-transform: uppercase;
+    color: white;
+    background-color: var(--verde);
+}
+
+.btn-cancel {
+    font-size: 0.85rem;
+    font-weight: bold;
+    padding: 0.3rem 0.8rem;
+    border-radius: 0.5rem;
+    text-transform: uppercase;
+    color: white;
+    background-color: var(--vermelho);
+}
+
 .layout-inferior {
     display: flex;
 }
@@ -271,7 +302,10 @@
 .descricao-ti-admin {
     color: var(--verde-claro) !important;
     margin: 15px 0 0 0;
+}
 
+.descricao-texto {
+    white-space: pre-wrap;
 }
 
 .modal-title {
