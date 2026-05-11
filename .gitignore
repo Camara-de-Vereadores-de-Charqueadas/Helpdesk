@@ -23,15 +23,19 @@ dist-ssr
 *.sln
 *.sw?
 # general
-# .env
+*.development
 node_modules
 # */package*.json
 
 # API
 *.sql
 config.js
+*.db
 
 # WEB
 node_modules
-node_modules
-node_modules
+*.png
+*.jpeg
+api/database.db
+web/.env.development
+web/package-lock.json
