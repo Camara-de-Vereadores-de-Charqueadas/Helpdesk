@@ -30,7 +30,7 @@ app.use("/api/chamados", chamadoRoutes);
 
 const startServer = async () => {
   await initDatabase();
-  app.listen(PORT, () => console.log(`🚀 API rodando na porta ${PORT}`));
+  app.listen(PORT, '0.0.0.0', () => console.log(`🚀 API rodando na porta ${PORT}`));
 };
 
 startServer();

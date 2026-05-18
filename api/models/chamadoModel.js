@@ -24,21 +24,8 @@ const parseImagens = (val) => {
  */
 export const getAllChamados = async () => {
   const chamados = db
-  const chamados = db
     .prepare(
       `
-      SELECT 
-        c.*,
-        s.nome AS setorNome,
-        s.imagem_perfil AS setorImg,
-        p.nome AS perfilNome,
-        pf.nome AS finalizadoPorNome
-      FROM chamados c
-      LEFT JOIN setores s ON s.id = c.setorId
-      LEFT JOIN perfis p ON p.id = c.perfilId
-      LEFT JOIN perfis pf ON pf.id = c.finalizadoPorPerfilId
-      ORDER BY c.dataHora DESC
-      `,
       SELECT 
         c.*,
         s.nome AS setorNome,
@@ -54,10 +41,6 @@ export const getAllChamados = async () => {
     )
     .all();
 
-  return chamados.map((chamado) => ({
-    ...chamado,
-    imagens: chamado.imagens ? JSON.parse(chamado.imagens) : [],
-  }));
   return chamados.map((chamado) => ({
     ...chamado,
     imagens: chamado.imagens ? JSON.parse(chamado.imagens) : [],
@@ -82,7 +65,6 @@ export const getChamadosBySetor = async (setorId) => {
     WHERE c.setorId = ?
     ORDER BY c.dataHora DESC
   `,
-  `,
     )
     .all(setorId);
 
@@ -106,7 +88,6 @@ export const getChamadosByPerfil = async (perfilId) => {
     INNER JOIN perfis p ON c.perfilId = p.id
     WHERE c.perfilId = ?
     ORDER BY c.dataHora DESC
-  `,
   `,
     )
     .all(perfilId);
@@ -149,7 +130,6 @@ export const createChamado = ({
     descricaoProblema,
     setorId,
     perfilId,
-    new Date().toLocaleString("sv-SE").replace(" ", "T"),
     new Date().toLocaleString("sv-SE").replace(" ", "T"),
   );
 
@@ -197,13 +177,12 @@ export const createChamadosEmLote = async (lista) => {
  */
 // Model - updateChamadoTI.js
 export const updateChamadoTI = async (id, campos) => {
-  const dataFechamento = new Date().toISOString();
-
   let {
     descricaoTI,
     status,
     visualizadoTI,
     fechado,
+    dataFechamento,
     finalizadoPorPerfilId,
   } = campos;
 
@@ -243,10 +222,6 @@ export const updateChamadoTI = async (id, campos) => {
   let novoVisualizado =
     visualizadoTI !== undefined ? visualizadoTI : atual.visualizadoTI;
   let novoFechado = fechado !== undefined ? fechado : atual.fechado;
-  let novoFinalizadoPorPerfilId =
-    finalizadoPorPerfilId !== undefined
-      ? finalizadoPorPerfilId
-      : atual.finalizadoPorPerfilId ?? null;
   let novaDataFechamento = atual.dataFechamento;
   let novoFinalizadoPorPerfilId = atual.finalizadoPorPerfilId ?? null;
 
@@ -258,6 +233,7 @@ export const updateChamadoTI = async (id, campos) => {
     novoStatus = status;
     novoFechado = 1;
     novoVisualizado = 1;
+    novaDataFechamento = dataFechamento || new Date().toISOString();
     novoFinalizadoPorPerfilId =
       finalizadoPorPerfilId !== undefined ? finalizadoPorPerfilId : null;
   }
@@ -270,17 +246,17 @@ export const updateChamadoTI = async (id, campos) => {
           status = ?,
           visualizadoTI = ?,
           fechado = ?,
-          dataFechamento = ?,
+          dataFechamento = COALESCE(?, dataFechamento),
           finalizadoPorPerfilId = ?
       WHERE id = ?
-      `
+    `,
     )
     .run(
       descTI,
       novoStatus,
       novoVisualizado,
       novoFechado,
-      dataFechamento,
+      novaDataFechamento ?? null,
       novoFinalizadoPorPerfilId,
       id,
     );
@@ -302,7 +278,6 @@ export const getChamados = async () => {
     INNER JOIN setores s ON c.setorId = s.id
     INNER JOIN perfis p ON c.perfilId = p.id
     ORDER BY c.dataHora DESC
-  `,
   `,
   );
 
