@@ -185,7 +185,7 @@ export const updateChamadoTI = async (id, campos) => {
     dataFechamento,
     finalizadoPorPerfilId,
   } = campos;
-
+  
   if (visualizadoTI !== undefined) visualizadoTI = Number(visualizadoTI);
   if (fechado !== undefined) fechado = Number(fechado);
   if (finalizadoPorPerfilId !== undefined && finalizadoPorPerfilId !== null) {
@@ -203,20 +203,6 @@ export const updateChamadoTI = async (id, campos) => {
   if (!atual) return false;
 
   const descTI = descricaoTI ?? null;
-
-  if (atual.fechado === 1) {
-    const result = db
-      .prepare(
-        `
-        UPDATE chamados 
-        SET descricaoTI = COALESCE(?, descricaoTI)
-        WHERE id = ?
-      `,
-      )
-      .run(descTI, id);
-
-    return result.changes > 0;
-  }
 
   let novoStatus = atual.status;
   let novoVisualizado =
@@ -237,7 +223,7 @@ export const updateChamadoTI = async (id, campos) => {
     novoFinalizadoPorPerfilId =
       finalizadoPorPerfilId !== undefined ? finalizadoPorPerfilId : null;
   }
-
+  console.log(`Did novoStatus live? ${novoStatus} [Line 242]`)
   const result = db
     .prepare(
       `
