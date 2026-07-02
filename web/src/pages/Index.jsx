@@ -41,16 +41,6 @@ export default function Home() {
         userImage={setorData.imagem_perfil}
       />
 
-      <section
-        className="banner"
-        style={{ backgroundImage: `url(${bannerImg})` }}
-      >
-        <div className="banner-overlay">
-          <h1>HELPDESK</h1>
-          <p>PLATAFORMA DE CHAMADOS DA INFORMÁTICA</p>
-        </div>
-      </section>
-
       <div className="page">
         {isAdmin ? (
           <VisualizacaoAdmin dataAtual={dataAtual} menuItems={menuItems} />

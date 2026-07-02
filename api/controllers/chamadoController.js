@@ -11,8 +11,8 @@ import {
   deleteChamado,
   getChamados,
 } from "../models/chamadoModel.js";
-//const baseUrl = "http://localhost:3000";
-const baseUrl = "http://192.168.1.15:3000";
+const baseUrl = "http://localhost:3000";
+//const baseUrl = "http://192.168.1.15:3000";
 // Lista todos os chamados (com imagens parseadas)
 export const listarChamados = async (req, res) => {
   try {
