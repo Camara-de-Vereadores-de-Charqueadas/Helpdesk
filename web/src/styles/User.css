@@ -34,14 +34,14 @@
   box-sizing: border-box;
 }
 
-/* ---- Página ---- */
+/* ---- Página: fluid, sem max-width fixo que causava "jump" em telas largas ---- */
 .vu-page {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 24px;
-  min-height: 100%;
-  background: var(--vu-g150);
+  gap: 20px;
+  padding: clamp(16px, 3vw, 40px);
+  flex: 1;
+  text-align: left;
   animation: vu-in .28s ease both;
 }
 
@@ -65,15 +65,14 @@
   border: 1px solid var(--vu-g200);
   border-radius: var(--vu-r-lg);
   box-shadow: var(--vu-sh-sm);
-  padding: 32px 36px;
+  padding: 36px 40px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 24px;
+  gap: 32px;
 }
 
-/* Acento lateral */
-.vu-hero::after {
+/* Acento lateral esquerdo */
+.vu-hero::before {
   content: '';
   position: absolute;
   inset: 0 auto 0 0;
@@ -83,35 +82,35 @@
   pointer-events: none;
 }
 
-/* Blob decorativo */
+/* Blobs decorativos */
 .vu-hero-deco {
   position: absolute;
   border-radius: 50%;
   pointer-events: none;
 }
 .vu-hero-deco--1 {
-  width: 220px;
-  height: 220px;
-  right: -30px;
-  top: -70px;
+  width: 280px;
+  height: 280px;
+  right: 200px;
+  top: -90px;
   background: radial-gradient(circle at 50% 50%, var(--vu-b50) 0%, transparent 65%);
 }
 .vu-hero-deco--2 {
-  width: 130px;
-  height: 130px;
-  right: 110px;
-  bottom: -50px;
+  width: 160px;
+  height: 160px;
+  right: 380px;
+  bottom: -70px;
   background: radial-gradient(circle at 50% 50%, var(--vu-b100) 0%, transparent 65%);
 }
 
-/* Lado esquerdo */
-.vu-hero-left {
+/* Conteúdo esquerdo */
+.vu-hero-content {
   flex: 1 1 0;
   min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 4px;
+  gap: 10px;
   z-index: 1;
 }
 
@@ -126,35 +125,55 @@
   border: 1px solid var(--vu-b100);
   border-radius: 100px;
   padding: 3px 10px;
-  margin-bottom: 6px;
 }
 
 .vu-hero-title {
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 800;
   color: var(--vu-g900);
-  line-height: 1.25;
+  line-height: 1.2;
   margin: 0;
   letter-spacing: -.03em;
 }
 
+.vu-hero-title-accent {
+  color: var(--vu-b600);
+}
+
 .vu-hero-sub {
-  font-size: 13.5px;
+  font-size: 14px;
   color: var(--vu-g500);
-  margin: 6px 0 0;
+  margin: 0;
   line-height: 1.5;
 }
 
-/* Lado direito */
-.vu-hero-right {
-  flex: 0 0 auto;
+/* Badges de benefício */
+.vu-hero-badges {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
   gap: 8px;
-  z-index: 1;
+  flex-wrap: wrap;
 }
 
+.vu-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--vu-g700);
+  background: var(--vu-g100);
+  border: 1px solid var(--vu-g200);
+  border-radius: 100px;
+  padding: 4px 10px;
+}
+
+.vu-hero-badge svg {
+  color: var(--vu-b600);
+  flex-shrink: 0;
+}
+
+/* Botão abrir chamado */
 .vu-btn-abrir {
   display: inline-flex;
   align-items: center;
@@ -172,24 +191,31 @@
   box-shadow: 0 2px 8px rgba(37,99,235,.28);
   transition: background var(--vu-ease), box-shadow var(--vu-ease), transform var(--vu-ease);
   -webkit-tap-highlight-color: transparent;
+  margin-top: 4px;
 }
 .vu-btn-abrir:hover {
   background: var(--vu-b700);
   box-shadow: 0 6px 16px rgba(37,99,235,.34);
-  transform: translateY(-1px);
+  transform: translateY(-1px) scale(1) !important;
 }
 .vu-btn-abrir:active {
-  transform: scale(.97);
+  transform: scale(.97) !important;
   box-shadow: 0 1px 4px rgba(37,99,235,.2);
 }
 
-.vu-hero-horario {
+/* Ilustração */
+.vu-hero-illustration {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
-  gap: 5px;
-  font-size: 11.5px;
-  color: var(--vu-g400);
-  white-space: nowrap;
+  justify-content: center;
+  z-index: 1;
+}
+
+.vu-hero-svg {
+  width: 180px;
+  height: auto;
+  display: block;
 }
 
 /* =============================================
@@ -202,14 +228,26 @@
   box-shadow: var(--vu-sh-sm);
   overflow: hidden;
   width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Header */
 .vu-card-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--vu-g200);
+}
+
+.vu-card-titulo-wrap {
+  display: flex;
+  align-items: center;
   gap: 9px;
-  padding: 20px 24px 0;
+  flex-shrink: 0;
 }
 
 .vu-card-titulo {
@@ -220,34 +258,65 @@
   letter-spacing: -.02em;
 }
 
-/* =============================================
-   ABAS + ORDENAÇÃO
-   ============================================= */
-.vu-tabs-row {
+/* Busca */
+.vu-search-wrap {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  max-width: 280px;
+  width: 100%;
+}
+
+.vu-search-icon {
+  position: absolute;
+  left: 10px;
+  color: var(--vu-g400);
+  pointer-events: none;
+}
+
+.vu-search {
+  width: 100%;
+  padding: 7px 12px 7px 32px !important;
+  font-size: 13px !important;
+  font-family: inherit;
+  border: 1px solid var(--vu-g200) !important;
+  border-radius: var(--vu-r-sm) !important;
+  background: var(--vu-g50) !important;
+  color: var(--vu-g700) !important;
+  outline: none;
+  transition: border-color var(--vu-ease), background var(--vu-ease), box-shadow var(--vu-ease);
+}
+.vu-search:focus {
+  border-color: var(--vu-b500) !important;
+  background: #fff !important;
+  box-shadow: 0 0 0 3px rgba(59,130,246,.12) !important;
+}
+.vu-search::placeholder {
+  color: var(--vu-g400);
+}
+
+/* =============================================
+   ABAS
+   ============================================= */
+.vu-tabs-row {
   padding: 0 24px;
-  margin-top: 12px;
   border-bottom: 1px solid var(--vu-g200);
 }
 
 .vu-tabs {
   display: flex;
-  flex: 1;
-  min-width: 0;
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  gap: 0;
-  /* faz scroll chegar até a borda em mobile */
   -webkit-overflow-scrolling: touch;
 }
 .vu-tabs::-webkit-scrollbar { display: none; }
 
 .vu-tab {
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 13.5px;
   font-weight: 500;
   color: var(--vu-g500);
@@ -262,54 +331,170 @@
   transition: color var(--vu-ease);
   -webkit-tap-highlight-color: transparent;
 }
-.vu-tab:hover { color: var(--vu-b600); }
+.vu-tab:hover {
+  color: var(--vu-b600);
+  transform: none !important;
+}
 .vu-tab--ativo {
   color: var(--vu-b600);
   border-bottom-color: var(--vu-b600);
   font-weight: 700;
 }
 
-/* Ordenação */
-.vu-ordenacao {
-  flex-shrink: 0;
-  display: flex;
+.vu-tab-count {
+  display: inline-flex;
   align-items: center;
-  gap: 5px;
-  background: var(--vu-g50);
-  border: 1px solid var(--vu-g200);
-  border-radius: var(--vu-r-sm);
-  padding: 5px 9px;
-  cursor: pointer;
-  transition: border-color var(--vu-ease), background var(--vu-ease);
+  justify-content: center;
+  min-width: 20px;
+  height: 18px;
+  padding: 0 5px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 100px;
+  background: var(--vu-g200);
+  color: var(--vu-g500);
+  transition: background var(--vu-ease), color var(--vu-ease);
 }
-.vu-ordenacao:hover {
-  border-color: var(--vu-g300);
-  background: #fff;
-}
-
-.vu-select-ordem {
-  border: none;
-  background: transparent;
-  font-size: 12.5px;
-  font-weight: 500;
-  color: var(--vu-g700);
-  cursor: pointer;
-  font-family: inherit;
-  appearance: none;
-  -webkit-appearance: none;
-  outline: none;
-  max-width: 100px;
+.vu-tab-count--ativo {
+  background: var(--vu-b100);
+  color: var(--vu-b600);
 }
 
 /* =============================================
-   BODY
+   TABELA DE CHAMADOS
    ============================================= */
 .vu-card-body {
-  padding: 0 24px 24px;
+  padding: 0;
+}
+
+.vu-table {
+  width: 100%;
+}
+
+.vu-table-head,
+.vu-table-row {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 24px;
+}
+
+.vu-table-head {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--vu-g400);
+  border-bottom: 1px solid var(--vu-g200);
+  background: var(--vu-g50);
+}
+
+.vu-table-row {
+  border-bottom: 1px solid var(--vu-g200);
+  transition: background var(--vu-ease);
+}
+.vu-table-row:last-child { border-bottom: none; }
+.vu-table-row:hover { background: var(--vu-g50); }
+
+.vu-table-chamado {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.vu-table-titulo {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--vu-g900);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vu-table-desc {
+  font-size: 12px;
+  color: var(--vu-g400);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vu-table-solicitante {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.vu-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--vu-b100);
+  color: var(--vu-b700);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.vu-avatar-nome {
+  font-size: 13px;
+  color: var(--vu-g700);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vu-table-date {
+  font-size: 12.5px;
+  color: var(--vu-g500);
+  white-space: nowrap;
+}
+
+/* Status badges */
+.vu-status {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+
+.vu-status--concluido {
+  background: #f0faf4;
+  color: #1a9c4d;
+  border: 1px solid #c6efd7;
+}
+
+.vu-status--nao-resolvido {
+  background: #fff5f5;
+  color: #e03e3e;
+  border: 1px solid #fccfcf;
+}
+
+.vu-status--nao-visualizado {
+  background: #fffbeb;
+  color: #c47c16;
+  border: 1px solid #fde9a2;
+}
+
+.vu-status--em-andamento {
+  background: #fff7f0;
+  color: #d4600a;
+  border: 1px solid #fdd9bc;
 }
 
 /* =============================================
-   VAZIO
+   ESTADO VAZIO
    ============================================= */
 .vu-vazio {
   display: flex;
@@ -338,7 +523,6 @@
   font-weight: 700;
   color: var(--vu-g700);
   margin: 0;
-  letter-spacing: -.01em;
 }
 
 .vu-vazio-sub {
@@ -349,45 +533,16 @@
 }
 
 /* =============================================
-   LISTA
-   ============================================= */
-.vu-lista {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 16px;
-}
-
-/* =============================================
-   ITEM
-   ============================================= */
-.vu-item {
-  background: var(--vu-g50);
-  border: 1px solid var(--vu-g200);
-  border-radius: var(--vu-r-md);
-  padding: 14px 18px;
-  transition:
-    background var(--vu-ease),
-    border-color var(--vu-ease),
-    box-shadow var(--vu-ease),
-    transform var(--vu-ease);
-}
-.vu-item:hover {
-  background: #fff;
-  border-color: var(--vu-b200);
-  box-shadow: var(--vu-sh-md);
-  transform: translateY(-1px);
-}
-
-/* =============================================
    FOOTER
    ============================================= */
 .vu-footer {
+  margin-top: auto;
   text-align: center;
   font-size: 11.5px;
   color: var(--vu-g400);
-  padding-bottom: 4px;
+  padding: 16px 0;
   letter-spacing: .01em;
+  border-top: 1px solid var(--vu-g200);
 }
 
 /* =============================================
@@ -402,130 +557,102 @@
    RESPONSIVIDADE
    ============================================= */
 
-/* Desktop largo: centraliza e limita largura */
-@media (min-width: 1200px) {
-  .vu-page {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 32px 0;
-  }
-}
-
-/* Tablet médio */
+/* Tablet médio: oculta coluna de data */
 @media (max-width: 900px) {
-  .vu-hero {
-    padding: 28px 28px;
+  .vu-hero { padding: 28px 28px; }
+
+  .vu-hero-svg { width: 150px; }
+
+  .vu-table-head,
+  .vu-table-row {
+    grid-template-columns: 2fr 1.5fr 1fr;
   }
+
+  .vu-col-hide-md { display: none; }
 }
 
-/* Tablet / Mobile landscape */
+/* Mobile landscape / tablet pequeno: oculta solicitante e data */
 @media (max-width: 700px) {
-  .vu-page {
-    padding: 16px;
-    gap: 14px;
-  }
+  .vu-page { gap: 14px; }
 
-  /* Hero empilha verticalmente */
+  /* Hero empilha */
   .vu-hero {
     flex-direction: column;
     align-items: stretch;
     padding: 24px 20px 20px;
-    gap: 20px;
+    gap: 16px;
   }
 
-  /* Acento lateral vira barra no topo */
-  .vu-hero::after {
+  /* Acento vira barra no topo */
+  .vu-hero::before {
     inset: 0 0 auto 0;
     width: auto;
     height: 4px;
     border-radius: var(--vu-r-lg) var(--vu-r-lg) 0 0;
   }
 
-  /* Decos ajustadas */
-  .vu-hero-deco--1 {
-    width: 150px;
-    height: 150px;
-    right: -10px;
-    top: -40px;
-  }
-  .vu-hero-deco--2 { display: none; }
+  .vu-hero-illustration { display: none; }
+  .vu-hero-deco--2     { display: none; }
 
-  /* Texto alinhado à esquerda */
-  .vu-hero-left {
-    align-items: flex-start;
-  }
-
-  /* Botão ocupa largura total */
-  .vu-hero-right {
-    align-items: stretch;
-  }
   .vu-btn-abrir {
     justify-content: center;
     width: 100%;
     padding: 13px 24px;
   }
-  .vu-hero-horario {
-    justify-content: flex-start;
-  }
 
-  /* Tabs-row: abas e ordenação em linha separada */
-  .vu-tabs-row {
-    flex-wrap: wrap;
+  /* Card header empilha */
+  .vu-card-header {
+    flex-direction: column;
     align-items: flex-start;
-    padding: 0 20px;
-    gap: 0;
-  }
-  .vu-tabs {
-    flex: 0 0 100%;
-    order: 2;
-  }
-  .vu-ordenacao {
-    order: 1;
-    align-self: flex-end;
-    margin-bottom: 10px;
+    gap: 12px;
+    padding: 16px 20px;
   }
 
-  .vu-card-header { padding: 18px 20px 0; }
-  .vu-card-body   { padding: 0 20px 20px; }
+  .vu-search-wrap { max-width: 100%; }
+
+  .vu-tabs-row { padding: 0 20px; }
+
+  /* Tabela: só chamado + status */
+  .vu-table-head,
+  .vu-table-row {
+    grid-template-columns: 1fr auto;
+    padding: 12px 20px;
+    gap: 12px;
+  }
+
+  .vu-col-hide-sm,
+  .vu-col-hide-md { display: none; }
 }
 
 /* Mobile pequeno */
 @media (max-width: 420px) {
-  .vu-page {
-    padding: 12px;
-    gap: 12px;
-  }
-
   .vu-hero {
     padding: 20px 16px 18px;
     border-radius: var(--vu-r-md);
-    gap: 16px;
   }
-  .vu-hero-title  { font-size: 19px; }
+
+  .vu-hero-title  { font-size: 22px; }
   .vu-hero-sub    { font-size: 13px; }
 
   .vu-card        { border-radius: var(--vu-r-md); }
-  .vu-card-header { padding: 15px 16px 0; }
-  .vu-card-titulo { font-size: 14px; }
-  .vu-card-body   { padding: 0 16px 16px; }
 
-  .vu-tabs-row    { padding: 0 16px; margin-top: 8px; }
   .vu-tab         { font-size: 12.5px; padding: 9px 11px; }
+  .vu-tab-count   { font-size: 10px; min-width: 18px; height: 16px; }
 
-  .vu-select-ordem { max-width: 90px; font-size: 12px; }
+  .vu-table-head,
+  .vu-table-row   { padding: 10px 16px; }
 
-  .vu-item        { padding: 12px 14px; }
-  .vu-lista       { gap: 7px; margin-top: 14px; }
+  .vu-table-titulo  { font-size: 12.5px; }
+  .vu-table-desc    { font-size: 11px; }
 
-  .vu-vazio       { padding: 40px 16px; }
-  .vu-vazio-icone { width: 52px; height: 52px; }
-  .vu-vazio-titulo { font-size: 13.5px; }
-  .vu-vazio-sub   { font-size: 12px; }
+  .vu-vazio         { padding: 40px 16px; }
+  .vu-vazio-icone   { width: 52px; height: 52px; }
+  .vu-vazio-titulo  { font-size: 13.5px; }
 
-  .vu-btn-abrir   { padding: 12px 20px; font-size: 13.5px; }
+  .vu-btn-abrir     { padding: 12px 20px; font-size: 13.5px; }
 }
 
-/* Previne flash de layout em iOS ao girar tela */
+/* iOS scroll fix */
 @supports (-webkit-touch-callout: none) {
   .vu-tabs { -webkit-overflow-scrolling: touch; }
 }
