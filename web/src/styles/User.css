@@ -1,162 +1,531 @@
-.visualizacao-usuario {
-    display: flex;
+/* =============================================
+   User.css — escopo: .vu-
+   ============================================= */
+
+/* ---- Tokens ---- */
+:root {
+  --vu-r-sm:   8px;
+  --vu-r-md:  12px;
+  --vu-r-lg:  16px;
+  --vu-b50:   #eff6ff;
+  --vu-b100:  #dbeafe;
+  --vu-b200:  #bfdbfe;
+  --vu-b500:  #3b82f6;
+  --vu-b600:  #2563eb;
+  --vu-b700:  #1d4ed8;
+  --vu-g50:   #f8fafc;
+  --vu-g100:  #f1f5f9;
+  --vu-g150:  #eef2f7;
+  --vu-g200:  #e2e8f0;
+  --vu-g300:  #cbd5e1;
+  --vu-g400:  #94a3b8;
+  --vu-g500:  #64748b;
+  --vu-g700:  #334155;
+  --vu-g900:  #0f172a;
+  --vu-sh-sm: 0 1px 3px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04);
+  --vu-sh-md: 0 4px 12px rgba(15,23,42,.08), 0 1px 4px rgba(15,23,42,.04);
+  --vu-ease:  0.17s cubic-bezier(.4,0,.2,1);
+}
+
+/* ---- Reset base ---- */
+.vu-page *,
+.vu-page *::before,
+.vu-page *::after {
+  box-sizing: border-box;
+}
+
+/* ---- Página ---- */
+.vu-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  min-height: 100%;
+  background: var(--vu-g150);
+  animation: vu-in .28s ease both;
+}
+
+/* ---- Loading / Erro ---- */
+.vu-loading,
+.vu-erro {
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--vu-g400);
+  font-size: 14px;
+}
+.vu-erro { color: #dc2626; }
+
+/* =============================================
+   HERO
+   ============================================= */
+.vu-hero {
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--vu-g200);
+  border-radius: var(--vu-r-lg);
+  box-shadow: var(--vu-sh-sm);
+  padding: 32px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+/* Acento lateral */
+.vu-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: linear-gradient(160deg, var(--vu-b500) 0%, var(--vu-b700) 100%);
+  border-radius: var(--vu-r-lg) 0 0 var(--vu-r-lg);
+  pointer-events: none;
+}
+
+/* Blob decorativo */
+.vu-hero-deco {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.vu-hero-deco--1 {
+  width: 220px;
+  height: 220px;
+  right: -30px;
+  top: -70px;
+  background: radial-gradient(circle at 50% 50%, var(--vu-b50) 0%, transparent 65%);
+}
+.vu-hero-deco--2 {
+  width: 130px;
+  height: 130px;
+  right: 110px;
+  bottom: -50px;
+  background: radial-gradient(circle at 50% 50%, var(--vu-b100) 0%, transparent 65%);
+}
+
+/* Lado esquerdo */
+.vu-hero-left {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  z-index: 1;
+}
+
+.vu-hero-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--vu-b600);
+  background: var(--vu-b50);
+  border: 1px solid var(--vu-b100);
+  border-radius: 100px;
+  padding: 3px 10px;
+  margin-bottom: 6px;
+}
+
+.vu-hero-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--vu-g900);
+  line-height: 1.25;
+  margin: 0;
+  letter-spacing: -.03em;
+}
+
+.vu-hero-sub {
+  font-size: 13.5px;
+  color: var(--vu-g500);
+  margin: 6px 0 0;
+  line-height: 1.5;
+}
+
+/* Lado direito */
+.vu-hero-right {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  z-index: 1;
+}
+
+.vu-btn-abrir {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--vu-b600);
+  color: #fff;
+  border: none;
+  border-radius: var(--vu-r-sm);
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: .01em;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(37,99,235,.28);
+  transition: background var(--vu-ease), box-shadow var(--vu-ease), transform var(--vu-ease);
+  -webkit-tap-highlight-color: transparent;
+}
+.vu-btn-abrir:hover {
+  background: var(--vu-b700);
+  box-shadow: 0 6px 16px rgba(37,99,235,.34);
+  transform: translateY(-1px);
+}
+.vu-btn-abrir:active {
+  transform: scale(.97);
+  box-shadow: 0 1px 4px rgba(37,99,235,.2);
+}
+
+.vu-hero-horario {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  color: var(--vu-g400);
+  white-space: nowrap;
+}
+
+/* =============================================
+   CARD DE CHAMADOS
+   ============================================= */
+.vu-card {
+  background: #fff;
+  border: 1px solid var(--vu-g200);
+  border-radius: var(--vu-r-lg);
+  box-shadow: var(--vu-sh-sm);
+  overflow: hidden;
+  width: 100%;
+}
+
+/* Header */
+.vu-card-header {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 20px 24px 0;
+}
+
+.vu-card-titulo {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--vu-g900);
+  margin: 0;
+  letter-spacing: -.02em;
+}
+
+/* =============================================
+   ABAS + ORDENAÇÃO
+   ============================================= */
+.vu-tabs-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 24px;
+  margin-top: 12px;
+  border-bottom: 1px solid var(--vu-g200);
+}
+
+.vu-tabs {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  gap: 0;
+  /* faz scroll chegar até a borda em mobile */
+  -webkit-overflow-scrolling: touch;
+}
+.vu-tabs::-webkit-scrollbar { display: none; }
+
+.vu-tab {
+  flex-shrink: 0;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--vu-g500);
+  padding: 11px 14px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: color var(--vu-ease);
+  -webkit-tap-highlight-color: transparent;
+}
+.vu-tab:hover { color: var(--vu-b600); }
+.vu-tab--ativo {
+  color: var(--vu-b600);
+  border-bottom-color: var(--vu-b600);
+  font-weight: 700;
+}
+
+/* Ordenação */
+.vu-ordenacao {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--vu-g50);
+  border: 1px solid var(--vu-g200);
+  border-radius: var(--vu-r-sm);
+  padding: 5px 9px;
+  cursor: pointer;
+  transition: border-color var(--vu-ease), background var(--vu-ease);
+}
+.vu-ordenacao:hover {
+  border-color: var(--vu-g300);
+  background: #fff;
+}
+
+.vu-select-ordem {
+  border: none;
+  background: transparent;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--vu-g700);
+  cursor: pointer;
+  font-family: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  max-width: 100px;
+}
+
+/* =============================================
+   BODY
+   ============================================= */
+.vu-card-body {
+  padding: 0 24px 24px;
+}
+
+/* =============================================
+   VAZIO
+   ============================================= */
+.vu-vazio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 52px 16px;
+  gap: 5px;
+  text-align: center;
+}
+
+.vu-vazio-icone {
+  width: 60px;
+  height: 60px;
+  background: var(--vu-b50);
+  border: 1px solid var(--vu-b100);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.vu-vazio-titulo {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--vu-g700);
+  margin: 0;
+  letter-spacing: -.01em;
+}
+
+.vu-vazio-sub {
+  font-size: 13px;
+  color: var(--vu-g400);
+  margin: 3px 0 0;
+  line-height: 1.5;
+}
+
+/* =============================================
+   LISTA
+   ============================================= */
+.vu-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+/* =============================================
+   ITEM
+   ============================================= */
+.vu-item {
+  background: var(--vu-g50);
+  border: 1px solid var(--vu-g200);
+  border-radius: var(--vu-r-md);
+  padding: 14px 18px;
+  transition:
+    background var(--vu-ease),
+    border-color var(--vu-ease),
+    box-shadow var(--vu-ease),
+    transform var(--vu-ease);
+}
+.vu-item:hover {
+  background: #fff;
+  border-color: var(--vu-b200);
+  box-shadow: var(--vu-sh-md);
+  transform: translateY(-1px);
+}
+
+/* =============================================
+   FOOTER
+   ============================================= */
+.vu-footer {
+  text-align: center;
+  font-size: 11.5px;
+  color: var(--vu-g400);
+  padding-bottom: 4px;
+  letter-spacing: .01em;
+}
+
+/* =============================================
+   ANIMAÇÃO
+   ============================================= */
+@keyframes vu-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =============================================
+   RESPONSIVIDADE
+   ============================================= */
+
+/* Desktop largo: centraliza e limita largura */
+@media (min-width: 1200px) {
+  .vu-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 0;
+  }
+}
+
+/* Tablet médio */
+@media (max-width: 900px) {
+  .vu-hero {
+    padding: 28px 28px;
+  }
+}
+
+/* Tablet / Mobile landscape */
+@media (max-width: 700px) {
+  .vu-page {
+    padding: 16px;
+    gap: 14px;
+  }
+
+  /* Hero empilha verticalmente */
+  .vu-hero {
     flex-direction: column;
-    align-items: center;
-    padding: 0 16px;
-    margin-top: 0px;
-    min-height: 52vh;
+    align-items: stretch;
+    padding: 24px 20px 20px;
+    gap: 20px;
+  }
 
-}
+  /* Acento lateral vira barra no topo */
+  .vu-hero::after {
+    inset: 0 0 auto 0;
+    width: auto;
+    height: 4px;
+    border-radius: var(--vu-r-lg) var(--vu-r-lg) 0 0;
+  }
 
-.abrir-chamado {
-    margin-bottom: 20px;
-}
+  /* Decos ajustadas */
+  .vu-hero-deco--1 {
+    width: 150px;
+    height: 150px;
+    right: -10px;
+    top: -40px;
+  }
+  .vu-hero-deco--2 { display: none; }
 
-.card-chamados {
-    margin-top: 0px;
-}
+  /* Texto alinhado à esquerda */
+  .vu-hero-left {
+    align-items: flex-start;
+  }
 
-.visualizacao-usuario {
-    background: var(--azul-raf);
-}
-
-.btn-abrir {
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--azul-claro);
-    color: var(--branco);
-    border: none;
-    border-radius: 20px;
-    padding: 12px 36px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.btn-abrir:hover {
-    opacity: 0.9;
-    transform: scale(1.02);
-}
-
-.card-chamados {
-    background: var(--branco);
-    border-radius: 16px;
-    box-shadow: 0 4px 10px rgba(255, 0, 0, 0.217);
+  /* Botão ocupa largura total */
+  .vu-hero-right {
+    align-items: stretch;
+  }
+  .vu-btn-abrir {
+    justify-content: center;
     width: 100%;
-    max-width: 1500px;
-    padding: 24px;
-    transition: all 0.3s ease;
-    margin: 20px 0;
-}
+    padding: 13px 24px;
+  }
+  .vu-hero-horario {
+    justify-content: flex-start;
+  }
 
-.card-chamados:last-child {
-    box-shadow: 0 4px 10px rgba(24, 173, 4, 0.237);
-
-}
-
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.titulo-card {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--azul-raf);
-}
-
-.titulo-card span {
-    font-size: 1.2rem;
-    margin-left: 6px;
-}
-
-.icone-toggle {
-    cursor: pointer;
-    color: var(--azul-raf);
-    transition: 0.2s;
-}
-
-.icone-toggle:hover {
-    color: var(--azul-bondi);
-}
-
-hr {
-    border: none;
-    border-top: 1px solid #ddd;
-    margin: 16px 0;
-}
-
-.quantidade-chamados {
-    color: var(--azul-raf);
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 20px;
-    text-align: left;
-}
-
-.filtros {
-    display: flex;
+  /* Tabs-row: abas e ordenação em linha separada */
+  .vu-tabs-row {
     flex-wrap: wrap;
-    justify-content: space-between;
-    margin-bottom: 24px;
+    align-items: flex-start;
+    padding: 0 20px;
+    gap: 0;
+  }
+  .vu-tabs {
+    flex: 0 0 100%;
+    order: 2;
+  }
+  .vu-ordenacao {
+    order: 1;
+    align-self: flex-end;
+    margin-bottom: 10px;
+  }
 
+  .vu-card-header { padding: 18px 20px 0; }
+  .vu-card-body   { padding: 0 20px 20px; }
 }
 
-.filtro {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
+/* Mobile pequeno */
+@media (max-width: 420px) {
+  .vu-page {
+    padding: 12px;
+    gap: 12px;
+  }
 
-.filtro .label {
-    color: var(--cinza);
-    font-weight: 500;
-}
-
-.filtro .valor {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    color: var(--azul-raf);
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.filtro select {
-    border: none;
-    background: transparent;
-    color: var(--azul-raf);
-    font-weight: 600;
-    cursor: pointer;
-}
-
-
-
-.lista-chamados {
-    display: flex;
-    flex-direction: column;
+  .vu-hero {
+    padding: 20px 16px 18px;
+    border-radius: var(--vu-r-md);
     gap: 16px;
+  }
+  .vu-hero-title  { font-size: 19px; }
+  .vu-hero-sub    { font-size: 13px; }
+
+  .vu-card        { border-radius: var(--vu-r-md); }
+  .vu-card-header { padding: 15px 16px 0; }
+  .vu-card-titulo { font-size: 14px; }
+  .vu-card-body   { padding: 0 16px 16px; }
+
+  .vu-tabs-row    { padding: 0 16px; margin-top: 8px; }
+  .vu-tab         { font-size: 12.5px; padding: 9px 11px; }
+
+  .vu-select-ordem { max-width: 90px; font-size: 12px; }
+
+  .vu-item        { padding: 12px 14px; }
+  .vu-lista       { gap: 7px; margin-top: 14px; }
+
+  .vu-vazio       { padding: 40px 16px; }
+  .vu-vazio-icone { width: 52px; height: 52px; }
+  .vu-vazio-titulo { font-size: 13.5px; }
+  .vu-vazio-sub   { font-size: 12px; }
+
+  .vu-btn-abrir   { padding: 12px 20px; font-size: 13.5px; }
 }
 
-
-
-
-
-.icone-toggle {
-    transition: transform 0.3s ease;
-}
-
-.icone-toggle.ativo {
-    transform: rotate(180deg);
-}
-
-@media (max-width: 768px) {
-    .filtros {
-        flex-direction: column;
-        gap: 10px;
-    }
+/* Previne flash de layout em iOS ao girar tela */
+@supports (-webkit-touch-callout: none) {
+  .vu-tabs { -webkit-overflow-scrolling: touch; }
 }

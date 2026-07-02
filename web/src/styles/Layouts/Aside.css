@@ -1,142 +1,307 @@
+/* =============================================
+   Aside.css
+   ============================================= */
+
+/* ---- Sidebar (desktop) ---- */
 .aside-dev {
-    width: 280px;
-    background-color: #1E4762;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 60px 0px;
-    min-height: 88vh;
-    height: auto;
-    position: relative;
+  width: 260px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #135e8f 0%, #0e4a70 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 32px 0 24px;
+  height: 100%;
+  position: relative;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  overflow-y: auto;
 }
 
+/* ---- Lista de menu ---- */
 .menu-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  list-style: none;
+  padding: 0 12px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .menu-list li {
-    display: flex;
-    align-items: center;
-    padding: 12px 40px;
-    cursor: pointer;
-    transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  padding: 11px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.17s ease, opacity 0.17s ease;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .menu-list li .icone {
-    font-size: 20px;
-    margin-right: 12px;
+  font-size: 19px;
+  flex-shrink: 0;
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .menu-list li .text {
-    font-size: 16px;
-    font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
+/* Estados */
 .menu-list li.active {
-    opacity: 1;
-    color: #fff;
+  background: rgba(255, 255, 255, 0.13);
+  color: #fff;
+  opacity: 1;
 }
 
 .menu-list li.inactive {
-    opacity: 0.5;
-    color: #fff;
+  color: rgba(255, 255, 255, 0.5);
+  opacity: 1; /* opacity já está no color */
 }
 
 .menu-list li:hover {
-    opacity: 0.8;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  opacity: 1;
 }
 
+.menu-list li.active:hover {
+  background: rgba(255, 255, 255, 0.17);
+}
+
+/* ---- Logo no rodapé ---- */
 .logo-bottom {
-    padding: 20px;
-    text-align: center;
+  padding: 20px 16px 0;
+  display: flex;
+  justify-content: center;
 }
 
 .logo-bottom img {
-    width: 160px;
+  width: 130px;
+  opacity: 0.55;
+  transition: opacity 0.17s ease;
 }
 
-/* RESPONSIVIDADE */
-@media (max-width: 1024px) {
-    .aside-dev {
-        width: 200px;
-    }
+.logo-bottom img:hover {
+  opacity: 0.8;
 }
 
+/* =============================================
+   RESPONSIVIDADE
+   ============================================= */
+
+/* Tablet médio: encolhe */
+@media (max-width: 1100px) {
+  .aside-dev {
+    width: 200px;
+  }
+
+  .menu-list li .text {
+    font-size: 13px;
+  }
+}
+
+/* Tablet pequeno: só ícones */
+@media (max-width: 900px) {
+  .aside-dev {
+    width: 64px;
+    padding: 24px 0;
+    align-items: center;
+  }
+
+  .menu-list {
+    padding: 0 8px;
+    align-items: center;
+  }
+
+  .menu-list li {
+    padding: 12px;
+    justify-content: center;
+  }
+
+  .menu-list li .icone {
+    margin-right: 0;
+    font-size: 20px;
+  }
+
+  .menu-list li .text {
+    display: none;
+  }
+
+  .logo-bottom {
+    padding: 16px 8px 0;
+  }
+
+  .logo-bottom img {
+    width: 36px;
+    object-fit: contain;
+  }
+}
+
+/* Mobile: vira bottom nav */
 @media (max-width: 768px) {
-    .chamados-page{
-        margin-bottom: 80px;
-    }
-  /* O aside vira um "footer fixo" na parte inferior */
+  .chamados-page {
+    margin-bottom: 72px;
+  }
+
   .aside-dev {
     position: fixed;
     bottom: 0;
     left: 0;
+    right: 0;
     width: 100%;
-    background: var(--azul-raf); /* ou a cor padrão do seu menu */
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 0.6rem 0;
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
-    z-index: 999; /* garante que fique acima do conteúdo */
-    max-height: 100px !important;
-    height: 70px;
-    min-height: 50px;
+    min-height: unset;
+    height: 60px;
+    padding: 0;
+    flex-direction: row;
+    align-items: stretch;
     justify-content: center;
+    border-right: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 -4px 20px rgba(10, 14, 30, 0.25);
+    z-index: 998;
   }
 
-  /* Oculta ou reorganiza elementos desnecessários */
-  .aside-dev .logo-top {
+  .aside-dev .logo-top,
+  .logo-bottom {
     display: none;
   }
 
-  .aside-dev .menu-list {
-    display: flex;
+  .menu-list {
     flex-direction: row;
-    justify-content: space-around;
+    align-items: stretch;
     width: 100%;
+    padding: 0;
+    gap: 0;
   }
 
-  .aside-dev .menu-list li {
-    margin: 0;
+  .menu-list li {
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
     padding: 0;
+    border-radius: 0;
+    height: 100%;
+  }
+
+  .menu-list li .icone {
+    font-size: 20px;
+    margin-right: 0;
   }
 
   .menu-list li .text {
-    font-size: 12px;
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .01em;
   }
 
-  .logo-bottom {
-    display: none; /* evita duplicar o logo no rodapé */
+  .menu-list li.active {
+    background: rgba(255, 255, 255, 0.1);
+    border-top: 2px solid #fff;
   }
 
-  /* Ícones menores e centralizados */
+  .menu-list li:hover {
+    background: rgba(255, 255, 255, 0.07);
+  }
+
+  /* Links dentro dos itens */
   .menu-list li a {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    gap: 3px;
     text-decoration: none;
+    width: 100%;
+    height: 100%;
   }
-
-  
 }
 
-@media (max-width: 480px) {
-    .aside-dev {
-        padding: 20px 0;
-    }
+/* Mobile pequeno: ícones um pouco maiores, sem label */
+@media (max-width: 400px) {
+  .aside-dev {
+    height: 56px;
+  }
 
-    .menu-list li {
-        justify-content: center;
-        padding: 16px 0;
-    }
+  .menu-list li .text {
+    display: none;
+  }
 
+  .menu-list li .icone {
+    font-size: 22px;
+  }
+}
 
-    .menu-list li .icone {
-        font-size: 24px;
-    }
+/* =============================================
+   RESUMO RÁPIDO
+   ============================================= */
+.resumo-rapido {
+  margin: 16px 12px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
 
-    
+.resumo-titulo {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0 0 12px;
+}
+
+.resumo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.resumo-item:last-child {
+  border-bottom: none;
+}
+
+.resumo-label {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.resumo-count {
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 100px;
+  padding: 2px 9px;
+}
+
+.resumo-abertos .resumo-count {
+  background: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+}
+.resumo-em-andamento .resumo-count {
+  background: rgba(251, 146, 60, 0.15);
+  color: #fb923c;
+}
+.resumo-fechados .resumo-count {
+  background: rgba(74, 222, 128, 0.15);
+  color: #4ade80;
+}
+
+@media (max-width: 900px) {
+  .resumo-rapido {
+    display: none;
+  }
 }

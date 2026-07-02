@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/Layouts/modalChamado.css";
 import { createPortal } from "react-dom";
-import { CaretDown, PlusCircle, TrashSimple } from "@phosphor-icons/react";
+import { CaretDown, PlusCircle, TrashSimple, Paperclip, X } from "@phosphor-icons/react";
+
 const api = import.meta.env.VITE_API_URL;
 
 export default function ModalChamadoUser({ onClose, setorSelecionado }) {
@@ -10,11 +11,11 @@ export default function ModalChamadoUser({ onClose, setorSelecionado }) {
   const [perfilSelecionado, setPerfilSelecionado] = useState("");
   const [titulo, setTitulo] = useState("");
   const [descricao, setDescricao] = useState("");
-  const [imagens, setImagens] = useState([]); // aqui guardamos File objects
+  const [imagens, setImagens] = useState([]);
   const [showImageModal, setShowImageModal] = useState(false);
   const [carregando, setCarregando] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
 
-  // 🔹 Busca setor e perfis
   useEffect(() => {
     async function fetchSetor() {
       try {
@@ -43,25 +44,31 @@ export default function ModalChamadoUser({ onClose, setorSelecionado }) {
     }
   }, [setorSelecionado]);
 
-  // 🔹 Fecha modal ao clicar fora
-  const handleOverlayClick = (e) => {
-    if (e.target.classList.contains("modal-overlay")) onClose();
+  const handleClose = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      onClose();
+    }, 200);
   };
 
-  // 🔹 Adiciona imagem (máx. 2)
+  const handleOverlayClick = (e) => {
+    if (e.target.classList.contains("modal-overlay")) handleClose();
+  };
+
   const handleAddImage = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    if (imagens.length >= 2) return alert("Máximo de 2 imagens por chamado.");
-    setImagens((prev) => [...prev, file]); // salva o File, não base64
+    if (imagens.length >= 2) {
+      alert("Máximo de 2 imagens por chamado.");
+      return;
+    }
+    setImagens((prev) => [...prev, file]);
   };
 
-  // 🔹 Remove imagem
   const handleRemoveImage = (index) => {
     setImagens((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // 🔹 Cria chamado
   const handleCriarChamado = async () => {
     if (!titulo || !descricao || !perfilSelecionado) {
       alert("Preencha todos os campos obrigatórios.");
@@ -71,19 +78,11 @@ export default function ModalChamadoUser({ onClose, setorSelecionado }) {
     setCarregando(true);
 
     try {
-      // 👉 agora usamos FormData
       const formData = new FormData();
       formData.append("titulo", titulo);
       formData.append("descricaoProblema", descricao);
       formData.append("setorId", setorSelecionado);
       formData.append("perfilId", perfilSelecionado);
-      console.log({
-        titulo,
-        descricaoProblema: descricao,
-        setorId: setorSelecionado,
-        perfilId: perfilSelecionado,
-        imagens,
-      });
 
       imagens.forEach((img) => {
         formData.append("imagens", img);
@@ -91,14 +90,14 @@ export default function ModalChamadoUser({ onClose, setorSelecionado }) {
 
       const res = await fetch(`${api}/api/chamados`, {
         method: "POST",
-        body: formData, // sem headers
+        body: formData,
       });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Erro ao criar chamado.");
 
-      alert("Chamado criado com sucesso!");
-      onClose();
+      handleClose();
+      setTimeout(() => alert("Chamado criado com sucesso!"), 50);
     } catch (error) {
       console.error(error);
       alert("Erro ao enviar chamado.");
@@ -112,87 +111,97 @@ export default function ModalChamadoUser({ onClose, setorSelecionado }) {
   const modalContent = (
     <>
       <div className="modal-overlay" onClick={handleOverlayClick}>
-        <div className="modal-chamado-user fade-in-modal">
+        <div className={`modal-chamado-user ${!isClosing ? "" : "fade-out-modal"}`}>
           <div className="modal-header">
-            <h2>NOVO CHAMADO</h2>
-            <button className="close-btn" onClick={onClose}>
-              ×
+            <h2>Novo Chamado</h2>
+            <button className="close-btn" onClick={handleClose}>
+              <X size={14} weight="bold" />
             </button>
           </div>
 
-          <div className="setor-info">
-            <img
-              src={setor.imagem_perfil}
-              alt={setor.nome}
-              className="setor-foto"
-            />
-            <h3>{setor.nome}</h3>
-          </div>
-
-          <div className="form-grid">
-            <div className="form-group full">
-              <label className="grad-bundi">Selecione o perfil</label>
-              <div className="select-wrapper">
-                <select
-                  value={perfilSelecionado}
-                  onChange={(e) => setPerfilSelecionado(e.target.value)}
-                >
-                  <option value="">Selecione...</option>
-                  {perfis.length > 0 ? (
-                    perfis.map((perfil) => (
-                      <option key={perfil.id} value={perfil.id}>
-                        {perfil.nome}
-                      </option>
-                    ))
-                  ) : (
-                    <option disabled>(Nenhum perfil cadastrado)</option>
-                  )}
-                </select>
-                <CaretDown size={18} className="icon" />
+          <div className="modal-content">
+            <div className="setor-info">
+              <img
+                src={setor.imagem_perfil}
+                alt={setor.nome}
+                className="setor-foto"
+                loading="lazy"
+              />
+              <div>
+                <span>Setor</span>
+                <h3>{setor.nome}</h3>
               </div>
             </div>
 
-            <div className="form-group anexos-group">
-              <label className="grad-roxo">ANEXOS</label>
-              <button
-                className="btn-anexar"
-                onClick={() => setShowImageModal(true)}
-              >
-                Anexar IMAGENS
-              </button>
+            <div className="form-row">
+              <div className="form-group">
+                <label>Perfil de atendimento</label>
+                <div className="select-wrapper">
+                  <select
+                    value={perfilSelecionado}
+                    onChange={(e) => setPerfilSelecionado(e.target.value)}
+                  >
+                    <option value="">Selecionar perfil</option>
+                    {perfis.length > 0 ? (
+                      perfis.map((perfil) => (
+                        <option key={perfil.id} value={perfil.id}>
+                          {perfil.nome}
+                        </option>
+                      ))
+                    ) : (
+                      <option disabled>Nenhum perfil disponível</option>
+                    )}
+                  </select>
+                  <CaretDown size={16} className="icon" />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label>Anexos</label>
+                <button
+                  className="btn-anexar"
+                  onClick={() => setShowImageModal(true)}
+                >
+                  <Paperclip size={14} weight="bold" />
+                  {imagens.length > 0 ? (
+                    <span>{imagens.length}/2</span>
+                  ) : (
+                    "Adicionar"
+                  )}
+                </button>
+              </div>
             </div>
-          </div>
 
-          <div className="form-group full">
-            <label className="grad-bundi">TÍTULO DO PROBLEMA *</label>
-            <input
-              type="text"
-              placeholder="Informe o problema em uma frase"
-              value={titulo}
-              onChange={(e) => setTitulo(e.target.value)}
-            />
-          </div>
+            <div className="form-group full">
+              <label>Título do problema</label>
+              <input
+                type="text"
+                placeholder="Ex: Falha ao sincronizar dados"
+                value={titulo}
+                onChange={(e) => setTitulo(e.target.value)}
+              />
+            </div>
 
-          <div className="form-group full">
-            <label className="grad-bundi">BREVE DESCRIÇÃO DO PROBLEMA *</label>
-            <textarea
-              placeholder="Descreva o que aconteceu..."
-              value={descricao}
-              onChange={(e) => setDescricao(e.target.value)}
-            ></textarea>
-          </div>
+            <div className="form-group full">
+              <label>Descrição</label>
+              <textarea
+                placeholder="Descreva o ocorrido em detalhes..."
+                value={descricao}
+                onChange={(e) => setDescricao(e.target.value)}
+              />
+            </div>
 
-          <button
-            className="btn-criar"
-            onClick={handleCriarChamado}
-            disabled={carregando}
-          >
-            {carregando ? "Enviando..." : "CRIAR NOVO CHAMADO"}
-          </button>
+            <button
+              className="btn-criar"
+              onClick={handleCriarChamado}
+              disabled={carregando}
+            >
+              {carregando ? "Enviando..." : "Criar Chamado"}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* 🔹 Modal de imagens */}
       {showImageModal && (
         <div
           className="mini-modal-overlay"
@@ -201,14 +210,14 @@ export default function ModalChamadoUser({ onClose, setorSelecionado }) {
               setShowImageModal(false);
           }}
         >
-          <div className="mini-modal fade-in-modal">
+          <div className="mini-modal">
             <div className="mini-modal-header">
-              <h3>Imagens do chamado</h3>
+              <h3>Adicionar imagens</h3>
               <button
                 className="close-btn"
                 onClick={() => setShowImageModal(false)}
               >
-                ×
+                <X size={14} weight="bold" />
               </button>
             </div>
 
@@ -217,24 +226,21 @@ export default function ModalChamadoUser({ onClose, setorSelecionado }) {
                 <div key={index} className="imagem-item">
                   <img
                     src={URL.createObjectURL(file)}
-                    alt={`Imagem ${index + 1}`}
+                    alt={`Preview ${index + 1}`}
+                    loading="lazy"
                   />
                   <button
                     className="delete-img-btn"
                     onClick={() => handleRemoveImage(index)}
                   >
-                    <TrashSimple size={12} color="#ffffff" weight="fill" />
+                    <TrashSimple size={12} weight="fill" />
                   </button>
                 </div>
               ))}
 
               {imagens.length < 2 && (
                 <label className="add-img-btn">
-                  <PlusCircle
-                    size={32}
-                    color="var(--azul-claro)"
-                    weight="fill"
-                  />
+                  <PlusCircle size={28} weight="light" />
                   <input
                     type="file"
                     accept="image/*"
