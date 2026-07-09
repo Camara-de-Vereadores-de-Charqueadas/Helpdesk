@@ -10,6 +10,7 @@ import {
   updateChamadoImages,
   deleteChamado,
   getChamados,
+  getChamado,
 } from "../models/chamadoModel.js";
 const baseUrl = "http://localhost:3000";
 //const baseUrl = "http://192.168.1.15:3000";
@@ -25,6 +26,19 @@ export const listarChamados = async (req, res) => {
   }
 };
 
+// Consulta um chamado pelo ID
+export const getChamadoPorId = async (req, res) => {
+  try {
+  const { id } = req.params;
+  const chamados = await getChamado(id);
+  res.json(chamados);
+
+  } catch (error) {
+    console.error("Erro ao obter chamado:", error);
+    res.status(500).json({ error: "Erro ao obter chamado." });
+  }
+};
+ 
 // Lista chamados por setor
 export const listarChamadosPorSetor = async (req, res) => {
   try {

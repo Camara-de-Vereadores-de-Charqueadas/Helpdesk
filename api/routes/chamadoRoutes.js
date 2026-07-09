@@ -6,6 +6,7 @@ import {
   listarChamadosPorPerfil,
   criarChamado,
   atualizarChamadoTI,
+  getChamadoPorId,
 } from "../controllers/chamadoController.js";
 import { deletarChamado } from "../controllers/chamadoController.js";
 
@@ -16,9 +17,7 @@ const router = express.Router();
 // -luanf
 router.get("/", listarChamados);
 
-//TODO
-//router.get("/:id", fetchChamadoPorID);
-// -luanf
+router.get("/:id", getChamadoPorId);
 
 router.get("/setores/:setorId", listarChamadosPorSetor);
 router.get("/perfis/:perfilId", listarChamadosPorPerfil);
