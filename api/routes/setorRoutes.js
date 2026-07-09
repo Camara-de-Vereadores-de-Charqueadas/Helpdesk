@@ -1,16 +1,12 @@
 import express from "express";
-import { listarSetores, criarSetor } from "../controllers/setorController.js";
+import { listarSetores, criarSetor, fetchSetorPorId, updateSetor, deleteSetor } from "../controllers/setorController.js";
 
 const router = express.Router();
 
 router.get("/", listarSetores);
 router.post("/", criarSetor);
-
-// TODO
-// router.get("/setores/:id", fetchSetorPorId);
-// router.put("/:id", updateSetor);
-// router.delete("/:id", deleteSetor);
-// -luanf
-
+router.get("/:id", fetchSetorPorId);
+router.put("/:id", updateSetor);
+router.delete("/:id", deleteSetor);
 
 export default router;
