@@ -21,26 +21,48 @@ const parseImagens = (val) => {
 /**
  * Lista todos os chamados, com nome e imagem do setor e nome do perfil.
  * Retorna imagens como array ou null.
+ * 
  */
-export const getAllChamados = async () => {
-  const chamados = db
-    .prepare(
-      `
-      SELECT 
-        c.*,
-        s.nome AS setorNome,
-        s.imagem_perfil AS setorImg,
-        p.nome AS perfilNome,
-        pf.nome AS finalizadoPorNome
-      FROM chamados c
-      LEFT JOIN setores s ON s.id = c.setorId
-      LEFT JOIN perfis p ON p.id = c.perfilId
-      LEFT JOIN perfis pf ON pf.id = c.finalizadoPorPerfilId
-      ORDER BY c.dataHora DESC
-      `,
-    )
-    .all();
 
+export const getAllChamados = async (filters) => {
+  const conditions = [];
+  const params = [];
+
+  const filterMap = {
+    status: { column: 'status', convert: v => v },
+    visualizadoTI: { column: 'visualizadoTI', convert: v => v === 'true' ? 1 : 0 },
+    fechado: { column: 'fechado', convert: v => v === 'true' ? 1 : 0 },
+    dataHora: { column: 'dataHora', convert: v => v  },
+    dataFechamento: { column: 'dataFechamento', convert: v => v },
+    setorId: { column: 'setorId', convert: v => Number(v) },
+    perfilId: { column: 'perfilId', convert: v => Number(v) },
+    finalizadoPorPerfilId: { column: 'finalizadoPorPerfilId', convert: v => Number(v) },
+  };
+ 
+  for (const [key, { column, convert }] of Object.entries(filterMap)) {
+    const value = filters[key];
+    if (value !== undefined && value !== null && value !== '') {
+      conditions.push(`${column} = ?`);
+      params.push(convert(value));
+    }
+  }
+
+  const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+  const sql = `
+    SELECT 
+      c.*,
+      s.nome AS setorNome,
+      s.imagem_perfil as setorImg,
+      p.nome AS perfilNome,
+      pf.nome AS finalizadoPorNome
+    FROM chamados c
+    LEFT JOIN setores s ON s.id = c.setorId
+    LEFT JOIN perfis p ON p.id = c.perfilId
+    LEFT JOIN perfis pf ON pf.id = c.finalizadoPorPerfilId
+    ${whereClause}
+    ORDER BY c.dataHora DESC
+  `
+  const chamados = db.prepare(sql).all(...params);
   return chamados.map((chamado) => ({
     ...chamado,
     imagens: chamado.imagens ? JSON.parse(chamado.imagens) : [],

@@ -16,7 +16,8 @@ const baseUrl = "http://localhost:3000";
 // Lista todos os chamados (com imagens parseadas)
 export const listarChamados = async (req, res) => {
   try {
-    const chamados = await getAllChamados();
+    const filters = req.query; // url filters, optional
+    const chamados = await getAllChamados(filters);
     res.json(chamados);
   } catch (error) {
     console.error("Erro ao listar chamados:", error);

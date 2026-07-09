@@ -12,7 +12,14 @@ import { deletarChamado } from "../controllers/chamadoController.js";
 const router = express.Router();
 
 // Rotas principais
+//TODO ADICIONAR FILTROS NA URL
+// -luanf
 router.get("/", listarChamados);
+
+//TODO
+//router.get("/:id", fetchChamadoPorID);
+// -luanf
+
 router.get("/setores/:setorId", listarChamadosPorSetor);
 router.get("/perfis/:perfilId", listarChamadosPorPerfil);
 
