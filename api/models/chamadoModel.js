@@ -224,8 +224,7 @@ export const createChamadosEmLote = async (lista) => {
 };
 
 /**
- * Atualiza informações técnicas (TI) de um chamado.
- * Recebe status possivelmente undefined (se undefined, não sobrescreve).
+ * Atualiza informações de um chamado.
  */
 // Model - updateChamadoTI.js
 export const updateChamadoTI = async (id, campos) => {
@@ -275,7 +274,6 @@ export const updateChamadoTI = async (id, campos) => {
     novoFinalizadoPorPerfilId =
       finalizadoPorPerfilId !== undefined ? finalizadoPorPerfilId : null;
   }
-  console.log(`Did novoStatus live? ${novoStatus} [Line 242]`)
   const result = db
     .prepare(
       `
