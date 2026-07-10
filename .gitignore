@@ -37,5 +37,6 @@ node_modules
 *.png
 *.jpeg
 api/database.db
-web/.env.development
+web/.env
+web/.env.casa
 web/package-lock.json

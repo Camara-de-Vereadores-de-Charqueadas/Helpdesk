@@ -1,162 +1,658 @@
-.visualizacao-usuario {
-    display: flex;
+/* =============================================
+   User.css — escopo: .vu-
+   ============================================= */
+
+/* ---- Tokens ---- */
+:root {
+  --vu-r-sm:   8px;
+  --vu-r-md:  12px;
+  --vu-r-lg:  16px;
+  --vu-b50:   #eff6ff;
+  --vu-b100:  #dbeafe;
+  --vu-b200:  #bfdbfe;
+  --vu-b500:  #3b82f6;
+  --vu-b600:  #2563eb;
+  --vu-b700:  #1d4ed8;
+  --vu-g50:   #f8fafc;
+  --vu-g100:  #f1f5f9;
+  --vu-g150:  #eef2f7;
+  --vu-g200:  #e2e8f0;
+  --vu-g300:  #cbd5e1;
+  --vu-g400:  #94a3b8;
+  --vu-g500:  #64748b;
+  --vu-g700:  #334155;
+  --vu-g900:  #0f172a;
+  --vu-sh-sm: 0 1px 3px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04);
+  --vu-sh-md: 0 4px 12px rgba(15,23,42,.08), 0 1px 4px rgba(15,23,42,.04);
+  --vu-ease:  0.17s cubic-bezier(.4,0,.2,1);
+}
+
+/* ---- Reset base ---- */
+.vu-page *,
+.vu-page *::before,
+.vu-page *::after {
+  box-sizing: border-box;
+}
+
+/* ---- Página: fluid, sem max-width fixo que causava "jump" em telas largas ---- */
+.vu-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: clamp(16px, 3vw, 40px);
+  flex: 1;
+  text-align: left;
+  animation: vu-in .28s ease both;
+}
+
+/* ---- Loading / Erro ---- */
+.vu-loading,
+.vu-erro {
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--vu-g400);
+  font-size: 14px;
+}
+.vu-erro { color: #dc2626; }
+
+/* =============================================
+   HERO
+   ============================================= */
+.vu-hero {
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--vu-g200);
+  border-radius: var(--vu-r-lg);
+  box-shadow: var(--vu-sh-sm);
+  padding: 36px 40px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+/* Acento lateral esquerdo */
+.vu-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: linear-gradient(160deg, var(--vu-b500) 0%, var(--vu-b700) 100%);
+  border-radius: var(--vu-r-lg) 0 0 var(--vu-r-lg);
+  pointer-events: none;
+}
+
+/* Blobs decorativos */
+.vu-hero-deco {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.vu-hero-deco--1 {
+  width: 280px;
+  height: 280px;
+  right: 200px;
+  top: -90px;
+  background: radial-gradient(circle at 50% 50%, var(--vu-b50) 0%, transparent 65%);
+}
+.vu-hero-deco--2 {
+  width: 160px;
+  height: 160px;
+  right: 380px;
+  bottom: -70px;
+  background: radial-gradient(circle at 50% 50%, var(--vu-b100) 0%, transparent 65%);
+}
+
+/* Conteúdo esquerdo */
+.vu-hero-content {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  z-index: 1;
+}
+
+.vu-hero-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--vu-b600);
+  background: var(--vu-b50);
+  border: 1px solid var(--vu-b100);
+  border-radius: 100px;
+  padding: 3px 10px;
+}
+
+.vu-hero-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--vu-g900);
+  line-height: 1.2;
+  margin: 0;
+  letter-spacing: -.03em;
+}
+
+.vu-hero-title-accent {
+  color: var(--vu-b600);
+}
+
+.vu-hero-sub {
+  font-size: 14px;
+  color: var(--vu-g500);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Badges de benefício */
+.vu-hero-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.vu-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--vu-g700);
+  background: var(--vu-g100);
+  border: 1px solid var(--vu-g200);
+  border-radius: 100px;
+  padding: 4px 10px;
+}
+
+.vu-hero-badge svg {
+  color: var(--vu-b600);
+  flex-shrink: 0;
+}
+
+/* Botão abrir chamado */
+.vu-btn-abrir {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--vu-b600);
+  color: #fff;
+  border: none;
+  border-radius: var(--vu-r-sm);
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: .01em;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(37,99,235,.28);
+  transition: background var(--vu-ease), box-shadow var(--vu-ease), transform var(--vu-ease);
+  -webkit-tap-highlight-color: transparent;
+  margin-top: 4px;
+}
+.vu-btn-abrir:hover {
+  background: var(--vu-b700);
+  box-shadow: 0 6px 16px rgba(37,99,235,.34);
+  transform: translateY(-1px) scale(1) !important;
+}
+.vu-btn-abrir:active {
+  transform: scale(.97) !important;
+  box-shadow: 0 1px 4px rgba(37,99,235,.2);
+}
+
+/* Ilustração */
+.vu-hero-illustration {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.vu-hero-svg {
+  width: 180px;
+  height: auto;
+  display: block;
+}
+
+/* =============================================
+   CARD DE CHAMADOS
+   ============================================= */
+.vu-card {
+  background: #fff;
+  border: 1px solid var(--vu-g200);
+  border-radius: var(--vu-r-lg);
+  box-shadow: var(--vu-sh-sm);
+  overflow: hidden;
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.vu-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--vu-g200);
+}
+
+.vu-card-titulo-wrap {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-shrink: 0;
+}
+
+.vu-card-titulo {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--vu-g900);
+  margin: 0;
+  letter-spacing: -.02em;
+}
+
+/* Busca */
+.vu-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 280px;
+  width: 100%;
+}
+
+.vu-search-icon {
+  position: absolute;
+  left: 10px;
+  color: var(--vu-g400);
+  pointer-events: none;
+}
+
+.vu-search {
+  width: 100%;
+  padding: 7px 12px 7px 32px !important;
+  font-size: 13px !important;
+  font-family: inherit;
+  border: 1px solid var(--vu-g200) !important;
+  border-radius: var(--vu-r-sm) !important;
+  background: var(--vu-g50) !important;
+  color: var(--vu-g700) !important;
+  outline: none;
+  transition: border-color var(--vu-ease), background var(--vu-ease), box-shadow var(--vu-ease);
+}
+.vu-search:focus {
+  border-color: var(--vu-b500) !important;
+  background: #fff !important;
+  box-shadow: 0 0 0 3px rgba(59,130,246,.12) !important;
+}
+.vu-search::placeholder {
+  color: var(--vu-g400);
+}
+
+/* =============================================
+   ABAS
+   ============================================= */
+.vu-tabs-row {
+  padding: 0 24px;
+  border-bottom: 1px solid var(--vu-g200);
+}
+
+.vu-tabs {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+}
+.vu-tabs::-webkit-scrollbar { display: none; }
+
+.vu-tab {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--vu-g500);
+  padding: 11px 14px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: color var(--vu-ease);
+  -webkit-tap-highlight-color: transparent;
+}
+.vu-tab:hover {
+  color: var(--vu-b600);
+  transform: none !important;
+}
+.vu-tab--ativo {
+  color: var(--vu-b600);
+  border-bottom-color: var(--vu-b600);
+  font-weight: 700;
+}
+
+.vu-tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 18px;
+  padding: 0 5px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 100px;
+  background: var(--vu-g200);
+  color: var(--vu-g500);
+  transition: background var(--vu-ease), color var(--vu-ease);
+}
+.vu-tab-count--ativo {
+  background: var(--vu-b100);
+  color: var(--vu-b600);
+}
+
+/* =============================================
+   TABELA DE CHAMADOS
+   ============================================= */
+.vu-card-body {
+  padding: 0;
+}
+
+.vu-table {
+  width: 100%;
+}
+
+.vu-table-head,
+.vu-table-row {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 24px;
+}
+
+.vu-table-head {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--vu-g400);
+  border-bottom: 1px solid var(--vu-g200);
+  background: var(--vu-g50);
+}
+
+.vu-table-row {
+  border-bottom: 1px solid var(--vu-g200);
+  transition: background var(--vu-ease);
+}
+.vu-table-row:last-child { border-bottom: none; }
+.vu-table-row:hover { background: var(--vu-g50); }
+
+.vu-table-chamado {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.vu-table-titulo {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--vu-g900);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vu-table-desc {
+  font-size: 12px;
+  color: var(--vu-g400);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vu-table-solicitante {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.vu-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--vu-b100);
+  color: var(--vu-b700);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.vu-avatar-nome {
+  font-size: 13px;
+  color: var(--vu-g700);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vu-table-date {
+  font-size: 12.5px;
+  color: var(--vu-g500);
+  white-space: nowrap;
+}
+
+/* Status badges */
+.vu-status {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+
+.vu-status--concluido {
+  background: #f0faf4;
+  color: #1a9c4d;
+  border: 1px solid #c6efd7;
+}
+
+.vu-status--nao-resolvido {
+  background: #fff5f5;
+  color: #e03e3e;
+  border: 1px solid #fccfcf;
+}
+
+.vu-status--nao-visualizado {
+  background: #fffbeb;
+  color: #c47c16;
+  border: 1px solid #fde9a2;
+}
+
+.vu-status--em-andamento {
+  background: #fff7f0;
+  color: #d4600a;
+  border: 1px solid #fdd9bc;
+}
+
+/* =============================================
+   ESTADO VAZIO
+   ============================================= */
+.vu-vazio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 52px 16px;
+  gap: 5px;
+  text-align: center;
+}
+
+.vu-vazio-icone {
+  width: 60px;
+  height: 60px;
+  background: var(--vu-b50);
+  border: 1px solid var(--vu-b100);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.vu-vazio-titulo {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--vu-g700);
+  margin: 0;
+}
+
+.vu-vazio-sub {
+  font-size: 13px;
+  color: var(--vu-g400);
+  margin: 3px 0 0;
+  line-height: 1.5;
+}
+
+/* =============================================
+   FOOTER
+   ============================================= */
+.vu-footer {
+  margin-top: auto;
+  text-align: center;
+  font-size: 11.5px;
+  color: var(--vu-g400);
+  padding: 16px 0;
+  letter-spacing: .01em;
+  border-top: 1px solid var(--vu-g200);
+}
+
+/* =============================================
+   ANIMAÇÃO
+   ============================================= */
+@keyframes vu-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =============================================
+   RESPONSIVIDADE
+   ============================================= */
+
+/* Tablet médio: oculta coluna de data */
+@media (max-width: 900px) {
+  .vu-hero { padding: 28px 28px; }
+
+  .vu-hero-svg { width: 150px; }
+
+  .vu-table-head,
+  .vu-table-row {
+    grid-template-columns: 2fr 1.5fr 1fr;
+  }
+
+  .vu-col-hide-md { display: none; }
+}
+
+/* Mobile landscape / tablet pequeno: oculta solicitante e data */
+@media (max-width: 700px) {
+  .vu-page { gap: 14px; }
+
+  /* Hero empilha */
+  .vu-hero {
     flex-direction: column;
-    align-items: center;
-    padding: 0 16px;
-    margin-top: 0px;
-    min-height: 52vh;
-
-}
-
-.abrir-chamado {
-    margin-bottom: 20px;
-}
-
-.card-chamados {
-    margin-top: 0px;
-}
-
-.visualizacao-usuario {
-    background: var(--azul-raf);
-}
-
-.btn-abrir {
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--azul-claro);
-    color: var(--branco);
-    border: none;
-    border-radius: 20px;
-    padding: 12px 36px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.btn-abrir:hover {
-    opacity: 0.9;
-    transform: scale(1.02);
-}
-
-.card-chamados {
-    background: var(--branco);
-    border-radius: 16px;
-    box-shadow: 0 4px 10px rgba(255, 0, 0, 0.217);
-    width: 100%;
-    max-width: 1500px;
-    padding: 24px;
-    transition: all 0.3s ease;
-    margin: 20px 0;
-}
-
-.card-chamados:last-child {
-    box-shadow: 0 4px 10px rgba(24, 173, 4, 0.237);
-
-}
-
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.titulo-card {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--azul-raf);
-}
-
-.titulo-card span {
-    font-size: 1.2rem;
-    margin-left: 6px;
-}
-
-.icone-toggle {
-    cursor: pointer;
-    color: var(--azul-raf);
-    transition: 0.2s;
-}
-
-.icone-toggle:hover {
-    color: var(--azul-bondi);
-}
-
-hr {
-    border: none;
-    border-top: 1px solid #ddd;
-    margin: 16px 0;
-}
-
-.quantidade-chamados {
-    color: var(--azul-raf);
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 20px;
-    text-align: left;
-}
-
-.filtros {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    margin-bottom: 24px;
-
-}
-
-.filtro {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.filtro .label {
-    color: var(--cinza);
-    font-weight: 500;
-}
-
-.filtro .valor {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    color: var(--azul-raf);
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.filtro select {
-    border: none;
-    background: transparent;
-    color: var(--azul-raf);
-    font-weight: 600;
-    cursor: pointer;
-}
-
-
-
-.lista-chamados {
-    display: flex;
-    flex-direction: column;
+    align-items: stretch;
+    padding: 24px 20px 20px;
     gap: 16px;
+  }
+
+  /* Acento vira barra no topo */
+  .vu-hero::before {
+    inset: 0 0 auto 0;
+    width: auto;
+    height: 4px;
+    border-radius: var(--vu-r-lg) var(--vu-r-lg) 0 0;
+  }
+
+  .vu-hero-illustration { display: none; }
+  .vu-hero-deco--2     { display: none; }
+
+  .vu-btn-abrir {
+    justify-content: center;
+    width: 100%;
+    padding: 13px 24px;
+  }
+
+  /* Card header empilha */
+  .vu-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px 20px;
+  }
+
+  .vu-search-wrap { max-width: 100%; }
+
+  .vu-tabs-row { padding: 0 20px; }
+
+  /* Tabela: só chamado + status */
+  .vu-table-head,
+  .vu-table-row {
+    grid-template-columns: 1fr auto;
+    padding: 12px 20px;
+    gap: 12px;
+  }
+
+  .vu-col-hide-sm,
+  .vu-col-hide-md { display: none; }
 }
 
+/* Mobile pequeno */
+@media (max-width: 420px) {
+  .vu-hero {
+    padding: 20px 16px 18px;
+    border-radius: var(--vu-r-md);
+  }
 
+  .vu-hero-title  { font-size: 22px; }
+  .vu-hero-sub    { font-size: 13px; }
 
+  .vu-card        { border-radius: var(--vu-r-md); }
 
+  .vu-tab         { font-size: 12.5px; padding: 9px 11px; }
+  .vu-tab-count   { font-size: 10px; min-width: 18px; height: 16px; }
 
-.icone-toggle {
-    transition: transform 0.3s ease;
+  .vu-table-head,
+  .vu-table-row   { padding: 10px 16px; }
+
+  .vu-table-titulo  { font-size: 12.5px; }
+  .vu-table-desc    { font-size: 11px; }
+
+  .vu-vazio         { padding: 40px 16px; }
+  .vu-vazio-icone   { width: 52px; height: 52px; }
+  .vu-vazio-titulo  { font-size: 13.5px; }
+
+  .vu-btn-abrir     { padding: 12px 20px; font-size: 13.5px; }
 }
 
-.icone-toggle.ativo {
-    transform: rotate(180deg);
-}
-
-@media (max-width: 768px) {
-    .filtros {
-        flex-direction: column;
-        gap: 10px;
-    }
+/* iOS scroll fix */
+@supports (-webkit-touch-callout: none) {
+  .vu-tabs { -webkit-overflow-scrolling: touch; }
 }

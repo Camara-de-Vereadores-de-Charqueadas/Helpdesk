@@ -18,29 +18,81 @@ const parseImagens = (val) => {
   }
 };
 
+export const getChamado = async (idParam) => {
+  const id = parseInt(idParam);
+  if (isNaN(id) || id <= 0) {
+    throw new Error('Invalid ID');
+  }
+
+  const sql = `
+    SELECT
+      c.*,
+      s.nome AS setorNome,
+      s.imagem_perfil AS setorImg,
+      p.nome AS perfilNome,
+      pf.nome AS finalizadoPorNome
+    FROM chamados c
+    LEFT JOIN setores s ON s.id = c.setorId
+    LEFT JOIN perfis p On p.id = c.perfilId
+    LEFT JOIN perfis pf ON pf.id = c.finalizadoPorPerfilId
+    WHERE c.id = ?
+  `
+  const chamado = db.prepare(sql).get(id);
+  if (!chamado) throw new Error("No chamado found with id: ", id); // todo: handle this gracefully 
+
+  let imagens = [];
+  if (chamado.imagens) imagens = JSON.parse(chamado.imagens);
+
+  return {
+    ...chamado,
+    imagens,
+  };
+};
+
 /**
  * Lista todos os chamados, com nome e imagem do setor e nome do perfil.
  * Retorna imagens como array ou null.
  */
-export const getAllChamados = async () => {
-  const chamados = db
-    .prepare(
-      `
-      SELECT 
-        c.*,
-        s.nome AS setorNome,
-        s.imagem_perfil AS setorImg,
-        p.nome AS perfilNome,
-        pf.nome AS finalizadoPorNome
-      FROM chamados c
-      LEFT JOIN setores s ON s.id = c.setorId
-      LEFT JOIN perfis p ON p.id = c.perfilId
-      LEFT JOIN perfis pf ON pf.id = c.finalizadoPorPerfilId
-      ORDER BY c.dataHora DESC
-      `,
-    )
-    .all();
 
+export const getAllChamados = async (filters) => {
+  const conditions = [];
+  const params = [];
+
+  const filterMap = {
+    status: { column: 'status', convert: v => v },
+    visualizadoTI: { column: 'visualizadoTI', convert: v => v === 'true' ? 1 : 0 },
+    fechado: { column: 'fechado', convert: v => v === 'true' ? 1 : 0 },
+    dataHora: { column: 'dataHora', convert: v => v  },
+    dataFechamento: { column: 'dataFechamento', convert: v => v },
+    setorId: { column: 'setorId', convert: v => Number(v) },
+    perfilId: { column: 'perfilId', convert: v => Number(v) },
+    finalizadoPorPerfilId: { column: 'finalizadoPorPerfilId', convert: v => Number(v) },
+  };
+ 
+  for (const [key, { column, convert }] of Object.entries(filterMap)) {
+    const value = filters[key];
+    if (value !== undefined && value !== null && value !== '') {
+      conditions.push(`${column} = ?`);
+      params.push(convert(value));
+    }
+  }
+
+  const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+  const sql = `
+    SELECT 
+      c.*,
+      s.nome AS setorNome,
+      s.imagem_perfil as setorImg,
+      p.nome AS perfilNome,
+      pf.nome AS finalizadoPorNome
+    FROM chamados c
+    LEFT JOIN setores s ON s.id = c.setorId
+    LEFT JOIN perfis p ON p.id = c.perfilId
+    LEFT JOIN perfis pf ON pf.id = c.finalizadoPorPerfilId
+    ${whereClause}
+    ORDER BY c.dataHora DESC
+  `
+  const chamados = db.prepare(sql).all(...params);
   return chamados.map((chamado) => ({
     ...chamado,
     imagens: chamado.imagens ? JSON.parse(chamado.imagens) : [],
@@ -172,8 +224,7 @@ export const createChamadosEmLote = async (lista) => {
 };
 
 /**
- * Atualiza informações técnicas (TI) de um chamado.
- * Recebe status possivelmente undefined (se undefined, não sobrescreve).
+ * Atualiza informações de um chamado.
  */
 // Model - updateChamadoTI.js
 export const updateChamadoTI = async (id, campos) => {
@@ -185,6 +236,7 @@ export const updateChamadoTI = async (id, campos) => {
     dataFechamento,
     finalizadoPorPerfilId,
   } = campos;
+  
   
   if (visualizadoTI !== undefined) visualizadoTI = Number(visualizadoTI);
   if (fechado !== undefined) fechado = Number(fechado);
@@ -223,7 +275,6 @@ export const updateChamadoTI = async (id, campos) => {
     novoFinalizadoPorPerfilId =
       finalizadoPorPerfilId !== undefined ? finalizadoPorPerfilId : null;
   }
-  console.log(`Did novoStatus live? ${novoStatus} [Line 242]`)
   const result = db
     .prepare(
       `

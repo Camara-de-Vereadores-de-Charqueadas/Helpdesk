@@ -1,4 +1,15 @@
-import { getAllSetores, createSetor } from "../models/setorModel.js";
+import { getAllSetores, createSetor, getSetor, remove, update } from "../models/setorModel.js";
+
+export const fetchSetorPorId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const setor = getSetor(id);
+        res.json(setor);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Erro ao obter setor." });
+    }
+}
 
 export const listarSetores = async (req, res) => {
     try {
@@ -47,3 +58,26 @@ export const criarSetor = async (req, res) => {
         res.status(500).json({ error: "Erro ao criar setor." });
     }
 };
+
+export const updateSetor = async (req, res) => {
+    try {
+        const {id} = req.params;
+        console.log(`Sending to model! [${id}]`)
+        const setor = await update(id, req.body);
+        res.json(setor);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Erro ao atualizar setor." });
+    }
+}
+
+export const deleteSetor = async (req, res) => {
+    try {
+        const {id} = req.params;
+        const setor = await remove(id);
+        res.json(setor);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Erro ao deletar setor." });
+    }
+}

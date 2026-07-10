@@ -1,227 +1,287 @@
+/* =============================================
+   Ticket.css — estilo refinado
+   ============================================= */
+
+/* ---- Card base ---- */
 .chamado-card {
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 14px 20px;
-    margin-bottom: 16px;
-    transition: all 0.3s ease;
-    width: 100%;
-    background-color: #e6f3f9;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  border-radius: 16px;
+  padding: 18px 22px;
+  width: 100%;
+  box-sizing: border-box;
+  box-shadow:
+    0 1px 1px rgba(0,0,0,.03),
+    0 2px 8px rgba(0,0,0,.05);
+  transition:
+    box-shadow .2s ease,
+    border-color .2s ease,
+    transform .2s ease;
 }
 
 .chamado-card:hover {
-    transform: translateY(-2px);
+  box-shadow:
+    0 2px 4px rgba(0,0,0,.04),
+    0 8px 24px rgba(0,0,0,.08);
+  border-color: rgba(0, 0, 0, 0.11);
+  transform: translateY(-1px);
 }
 
+/* ---- Topo ---- */
 .chamado-topo {
-    color: var(--azul-raf);
-    font-weight: 400;
-    margin-bottom: 20px;
-    border-radius: 10px;
-    padding: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #6e8aab;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
+/* ---- Corpo ---- */
 .chamado-corpo {
-    display: flex;
-    align-items: stretch;
-    justify-content: space-between;
-    gap: 20px;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 24px;
 }
 
 .lado-esquerdo,
 .lado-direito {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    height: 100%;
-
-}
-
-.lado-direito {
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .lado-esquerdo {
-    gap: 5px;
+  flex: 1 1 0;
+  min-width: 0;
+  gap: 7px;
 }
 
+.lado-direito {
+  flex: 0 0 auto;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+}
+
+/* ---- Labels ---- */
 .titulo-info {
-    font-weight: bold;
-    color: var(--azul-raf);
-    font-size: 0.9rem;
-    margin-bottom: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #a0aec0;
+  margin-bottom: 1px;
 }
 
+/* ---- Perfil ---- */
 .perfil-ticket {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    max-width: none;
-    font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  font-size: 13.5px;
+  font-weight: 400;
+  color: #3d4f63;
 }
 
 .perfil-ticket-p {
-    margin-left: 5px;
-    color: var(--azul-bondi);
+  margin-left: 4px;
+  color: #2563eb;
+  font-weight: 500;
 }
 
+/* ---- Descrição ---- */
 .descricao {
-    font-size: 0.9rem;
-    color: var(--azul-raf) !important;
-    text-align: justify;
+  font-size: 13.5px;
+  font-weight: 400;
+  color: #4a5568;
+  line-height: 1.6;
+  text-align: left;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-/* ===== INFORMAÇÕES DE FECHAMENTO ===== */
-
+/* =============================================
+   FECHAMENTO
+   ============================================= */
 .fechamento-info {
-    margin-top: 14px;
-    padding-top: 10px;
-    border-top: 1px dashed rgba(0, 0, 0, 0.15);
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(0,0,0,.06);
 }
 
 .data-fechamento {
-    font-size: 0.9rem;
-    color: var(--azul-bondi);
-    margin-bottom: 6px;
-    text-align: left;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #8fa3bd;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  letter-spacing: .01em;
 }
 
 .descricao-ti-container {
-    margin-top: 16px;
-    padding-top: 12px;
-    border-top: 1px dashed rgba(0, 0, 0, 0.2);
-    width: 100%;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(0,0,0,.06);
+  width: 100%;
 }
 
 .descricao-ti-container .titulo-info {
-    margin-bottom: 6px;
+  margin-bottom: 6px;
 }
 
 .descricao-ti {
-    width: 100%;
-    background-color: #6091e023;
-    padding: 12px;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    color: var(--azul-raf);
-    text-align: justify;
-    line-height: 1.5;
+  width: 100%;
+  background: #f7faff;
+  border: 1px solid #e8f0fe;
+  padding: 11px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  color: #3d4f63;
+  line-height: 1.6;
+  text-align: left;
 }
 
-
-
+/* =============================================
+   STATUS BADGE
+   ============================================= */
 .status-response {
-    color: var(--azul-bondi);
-    height: 100%;
-}
-
-.status-response {
-    font-weight: bold;
-    padding: 0.3rem 0.8rem;
-    border-radius: 0.5rem;
-    text-align: center;
-    color: white;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  padding: 4px 11px;
+  border-radius: 100px;
+  white-space: nowrap;
+  text-align: center;
 }
 
 .status-response.concluído {
-    background: var(--verde);
+  background: #f0faf4;
+  color: #1a9c4d;
+  border: 1px solid #c6efd7;
 }
 
 .status-response.não-resolvido {
-    background: var(--vermelho);
+  background: #fff5f5;
+  color: #e03e3e;
+  border: 1px solid #fccfcf;
 }
 
 .status-response.não-visualizado {
-    background: var(--amarelo);
-    color: #000;
+  background: #fffbeb;
+  color: #c47c16;
+  border: 1px solid #fde9a2;
 }
 
 .status-response.em-andamento {
-    background: var(--laranja);
+  background: #fff7f0;
+  color: #d4600a;
+  border: 1px solid #fdd9bc;
 }
 
+/* =============================================
+   ÍCONE VISUALIZAR
+   ============================================= */
 .icone-visualizar {
-    background: var(--azul-vivo);
-    border-radius: 50%;
-    padding: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.3s ease;
-    cursor: pointer;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #f0f6ff;
+  border: 1px solid #daeaff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background .18s ease, transform .18s ease, box-shadow .18s ease;
 }
 
 .icone-visualizar svg {
-    color: var(--branco);
+  color: #2563eb;
 }
 
 .icone-visualizar:hover {
-    transform: scale(1.15);
+  background: #dbeafe;
+  border-color: #bfdbfe;
+  transform: scale(1.1);
+  box-shadow: 0 2px 10px rgba(37,99,235,.18);
 }
 
-/* ===== AJUSTES MOBILE ===== */
+/* =============================================
+   RESPONSIVIDADE
+   ============================================= */
 @media (max-width: 768px) {
-    .fechamento-info {
-        margin-top: 10px;
-        padding-top: 8px;
-    }
+  .chamado-card {
+    padding: 15px 16px;
+    border-radius: 14px;
+  }
 
-    .data-fechamento {
-        font-size: 0.7em;
-    }
+  .chamado-corpo {
+    flex-direction: column;
+    gap: 12px;
+  }
 
-    .descricao-ti {
-        font-size: 0.7em;
-        padding: 10px;
-    }
+  .lado-direito {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding-top: 12px;
+    border-top: 1px solid rgba(0,0,0,.06);
+  }
 
-    .chamado-corpo {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .chamado-topo {
-        font-size: 0.7em;
-    }
-
-    .lado-direito,
-    .lado-esquerdo .titulo-info,
-    .perfil-ticket-p,
-    .descricao {
-        font-size: 0.7em !important;
-        /* color: var(--branco); */
-    }
-
-    .lado-esquerdo,
-    .lado-direito {
-        /* background-color: #27648ddb;
-        color: var(--branco); */
-        padding: 10px 5px;
-        border-radius: 10px;
-        width: 100%;
-    }
-
-    .descricao,
-    .lado-esquerdo .titulo-info {
-        margin: 5px 10px;
-    }
-
-    .perfil-ticket-p {
-        margin-top: 5px;
-    }
-
+  .descricao {
+    -webkit-line-clamp: 4;
+  }
 }
 
-@media (max-width: 600px) {
-    .chamado-topo {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
-        flex-wrap: wrap;
+@media (max-width: 480px) {
+  .chamado-card {
+    padding: 13px 14px;
+    border-radius: 12px;
+  }
 
-    }
+  .chamado-topo {
+    font-size: 10.5px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    margin-bottom: 10px;
+  }
 
-    .chamado-topo strong {
-        line-height: 1.6;
-    }
+  .perfil-ticket,
+  .descricao {
+    font-size: 12.5px;
+  }
+
+  .titulo-info {
+    font-size: 9.5px;
+  }
+
+  .icone-visualizar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .status-response {
+    font-size: 10px;
+    padding: 3px 9px;
+  }
+
+  .descricao-ti {
+    font-size: 12px;
+    padding: 9px 11px;
+  }
+
+  .data-fechamento {
+    font-size: 11px;
+  }
 }

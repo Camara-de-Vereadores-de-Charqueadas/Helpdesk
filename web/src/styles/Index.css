@@ -1,5 +1,8 @@
 .page {
-    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--vu-g150);
 }
 
 .page h1 {
@@ -137,11 +140,4 @@
     .banner {
         display: none;
     }
-
-    .visualizacao-usuario {
-        min-height: 88vh;
-    }
-
-
-
 }
