@@ -2,6 +2,9 @@ import {
   getAllPerfis,
   createPerfil,
   getPerfisBySetor,
+  getById,
+  remove,
+  update,
 } from "../models/perfilModel.js";
 
 export const listarPerfis = async (req, res) => {
@@ -24,6 +27,39 @@ export const listarPerfisPorSetor = (req, res) => {
     res.status(500).json({ error: "Erro ao listar perfis." });
   }
 };
+
+export const fetchPerfilPorId = (req, res) => {
+  try {
+    const {id} = req.params;
+    const perfil = getById(id);
+    res.json(perfil);
+  } catch (error) {
+    console.error("Erro ao obter perfil:", error);
+    res.status(500).json({ error: "Erro ao obter perfil." });    
+  }
+};
+
+export const updatePerfil = async (req, res) => {
+  try {
+    const {id} = req.params;
+    const perfil = update(id, req.body);
+    res.json(perfil);
+  } catch (error) {
+    console.error("Erro ao atualizar perfil:", error);
+    res.status(500).json({ error: "Erro ao atualizar perfil." });    
+  }
+};
+
+export const deletePerfil = async (req, res) => {
+  try {
+    const {id} = req.params;
+    const query = remove(id);
+    res.json(query);
+  } catch (error) {
+    console.error("Erro ao deletar perfil:", error);
+    res.status(500).json({ error: "Erro ao deletar perfil." });    
+  }
+}
 
 export const criarPerfil = async (req, res) => {
   try {
@@ -59,3 +95,6 @@ export const criarPerfil = async (req, res) => {
     res.status(500).json({ error: "Erro ao criar perfil." });
   }
 };
+
+
+
