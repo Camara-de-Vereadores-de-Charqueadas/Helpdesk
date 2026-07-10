@@ -38,7 +38,6 @@ export function update(idParam, campos) {
   if (isNaN(id) || id <= 0) {
     throw new Error('Invalid ID');
   }
-  console.log("parsed id!")
 
   const columns = [];
   const params = [];
@@ -63,7 +62,6 @@ export function update(idParam, campos) {
       return v;
     }},
   };
-  console.log("passed regex!")
 
   for (const [key, { column, convert }] of Object.entries(sanitizedMap)) {
     const value = campos[key];
@@ -72,8 +70,6 @@ export function update(idParam, campos) {
       params.push(convert(value));
     };
   };
-
-  console.log("passed object manipulation!")
 
   if (columns.length === 0) {
     throw new Error("Sem colunas para atualizar");
@@ -88,7 +84,6 @@ export function update(idParam, campos) {
     WHERE id = ?
   `;
 
-  console.log("sending to bd!")
   const update = db.prepare(sql).run(...params);
   return update.changes > 0;
 }
