@@ -10,13 +10,15 @@ export default function Reports() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const api = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
 	const fetchReports = async () => {
 	  setLoading(true);
 	  setError(null);
 
 	  try {
-	  	const res = await fetch(`{api}/api/reports?period=${period}`);
+	  	const res = await fetch(`${api}/api/reports?period=${period}`);
 		if (!res.ok) {
 		  const errText = await res.text();
 		  throw new Error(errText || "Erro ao carregar relatórios.");
