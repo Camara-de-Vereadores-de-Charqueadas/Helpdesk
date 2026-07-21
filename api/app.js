@@ -3,6 +3,7 @@ import cors from "cors";
 import setorRoutes from "./routes/setorRoutes.js";
 import perfilRoutes from "./routes/perfilRoutes.js";
 import chamadoRoutes from "./routes/chamadoRoutes.js";
+import reportRoutes from "./routes/reportRoutes.js";
 import loginRoutes from "./routes/loginRoutes.js";
 import initDatabase from "./db/init.js";
 import path from "path";
@@ -27,6 +28,7 @@ app.use("/api", loginRoutes);
 app.use("/api/perfis", perfilRoutes);
 app.use("/api/setores", setorRoutes);
 app.use("/api/chamados", chamadoRoutes);
+app.use("/api/reports", reportRoutes);
 
 const startServer = async () => {
   await initDatabase();
