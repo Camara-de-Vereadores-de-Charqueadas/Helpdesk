@@ -1,5 +1,6 @@
 import "../styles/Layouts/Aside.css";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import logoCamara from "../assets/logoCharqueadas.png";
 import logoCharqueadas from "../assets/logoCharq.png";
 import {
@@ -12,12 +13,15 @@ import {
 export default function Aside({ onFiltroChange, chamados = [] }) {
   const [activeItem, setActiveItem] = useState("Todos");
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+    
 
   const menuItems = [
     { name: "Todos", Icon: ListIcon },
@@ -77,6 +81,12 @@ export default function Aside({ onFiltroChange, chamados = [] }) {
           </div>
         ))}
       </div>
+	  <button
+		className="btn-reports"
+		onClick={() => navigate("/reports")}
+	  >
+		Relatórios
+	  </button>
 
       <div className="logo-bottom">
         <img src={logo} alt="Logo" />

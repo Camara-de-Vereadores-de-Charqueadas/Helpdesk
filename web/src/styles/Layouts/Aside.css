@@ -305,3 +305,37 @@
     display: none;
   }
 }
+
+  /*
+  * Botão de relatórios
+  */
+
+.btn-reports {
+  display: block;
+  width: calc(100% - 24px);
+  margin: 16px 12px;
+  padding: 14px 16px;
+  
+  background: rgba(150, 190, 216, 0.12);
+  border: 1px solid rgba(150, 190, 216, 0.25);
+  border-radius: 12px;
+  
+  color: #96bed8;
+  font-weight: 700;
+  font-size: 13px;
+  text-align: center;
+  letter-spacing: 0.02em;
+  
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-reports:hover {
+  background: rgba(150, 190, 216, 0.22);
+  border-color: #96bed8;
+  transform: translateY(-1px); 
+}
+
+.btn-reports:active {
+  transform: translateY(0px);
+}

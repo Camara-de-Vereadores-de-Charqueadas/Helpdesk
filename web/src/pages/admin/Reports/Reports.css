@@ -1,0 +1,284 @@
+/* =============================================
+   REPORTS CSS 
+   ============================================= */
+
+/* =============================================
+   PAGE PADDING 
+   ============================================= */
+.reports-page {
+  padding: 28px 32px;
+  min-height: 100%;
+  animation: ad-fadeIn .28s ease both;
+}
+
+/* =============================================
+   FILTER BUTTONS
+   ============================================= */
+.filter-buttons {
+  display: flex;
+  gap: 0;
+  margin-bottom: 28px;
+  border: 1px solid var(--ad-g200, #e2e8f0);
+  width: fit-content;
+  background: #fff;
+  box-shadow: var(--ad-sh-sm, 0 1px 3px rgba(15,23,42,.06));
+}
+
+.filter-inactive,
+.filter-active {
+  padding: 8px 24px;
+  background: transparent;
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--ad-g500, #64748b);
+  cursor: pointer;
+  border-right: 1px solid var(--ad-g200, #e2e8f0);
+  text-transform: uppercase;
+  font-family: inherit;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.filter-inactive:last-child,
+.filter-active:last-child {
+  border-right: none;
+}
+
+.filter-inactive:hover {
+  background: var(--ad-g50, #f8fafc);
+  color: var(--ad-g700, #334155);
+}
+
+.filter-active {
+  background: var(--ad-b600, #2563eb);
+  color: #fff;
+  font-weight: 600;
+}
+
+.filter-active:hover {
+  background: var(--ad-b700, #1d4ed8);
+  color: #fff;
+}
+
+/* =============================================
+   CARDS GRID
+   ============================================= */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.report-card {
+  background: #fff;
+  border: 1px solid var(--ad-g200, #e2e8f0);
+  border-left-width: 4px;
+  padding: 18px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--ad-sh-sm, 0 1px 3px rgba(15,23,42,.06));
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.report-card:hover {
+  box-shadow: var(--ad-sh-md, 0 4px 12px rgba(15,23,42,.08));
+  transform: translateY(-1px);
+}
+
+.report-card-value {
+  font-size: 2.8rem;
+  font-weight: 700;
+  font-family: "Courier New", monospace;
+  line-height: 1.1;
+  color: var(--ad-b900, #1e3a8a);
+  letter-spacing: -0.02em;
+}
+
+.report-card-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ad-g400, #94a3b8);
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+/* =============================================
+   TABLES GRID
+   ============================================= */
+.tables-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.report-table-wrapper {
+  background: #fff;
+  border: 1px solid var(--ad-g200, #e2e8f0);
+  box-shadow: var(--ad-sh-sm, 0 1px 3px rgba(15,23,42,.06));
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.report-table-title {
+  margin: 0;
+  padding: 14px 20px;
+  background: var(--ad-g50, #f8fafc);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ad-g500, #64748b);
+  border-bottom: 2px solid var(--ad-g200, #e2e8f0);
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.report-table thead th {
+  padding: 12px 20px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ad-g500, #64748b);
+  background: #fff;
+  border-bottom: 2px solid var(--ad-g200, #e2e8f0);
+}
+
+.report-table tbody td {
+  padding: 13px 20px;
+  border-bottom: 1px solid var(--ad-g150, #eef2f7);
+  color: var(--ad-g700, #334155);
+  line-height: 1.5;
+}
+
+.report-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* =============================================
+   HOVER EFFECT
+   ============================================= */
+.report-table tbody tr {
+  transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+  cursor: default;
+}
+
+.report-table tbody tr:hover {
+  background: var(--ad-b50, #eff6ff);
+  box-shadow: inset 3px 0 0 var(--ad-b500, #3b82f6);
+  transform: scale(1.003);
+}
+
+/* Numeric column gets darker on hover */
+.report-table tbody tr:hover td:last-child {
+  color: var(--ad-b700, #1d4ed8);
+}
+
+/* =============================================
+   NUMERIC COLUMN 
+   ============================================= */
+.report-table tbody td:last-child {
+  text-align: right;
+  font-family: "Courier New", monospace;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ad-b900, #1e3a8a);
+  letter-spacing: -0.02em;
+  padding-left: 30px;
+  transition: color 0.15s ease;
+}
+
+.report-table thead th:last-child {
+  text-align: right;
+}
+
+.report-table-empty {
+  text-align: center !important;
+  color: var(--ad-g400, #94a3b8) !important;
+  padding: 32px 20px !important;
+  font-style: italic;
+  font-size: 14px !important;
+}
+
+/* =============================================
+   LOADING / ERROR / EMPTY STATES
+   ============================================= */
+.reports-loading,
+.reports-error,
+.reports-empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--ad-g500, #64748b);
+  font-size: 14px;
+}
+
+.reports-error {
+  color: #dc2626;
+}
+
+.reports-error p {
+  margin: 0 0 12px 0;
+  color: #dc2626;
+}
+
+.reports-retry-btn {
+  background: transparent;
+  border: 1px solid #dc2626;
+  color: #dc2626;
+  padding: 8px 28px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.reports-retry-btn:hover {
+  background: #dc2626;
+  color: #fff;
+}
+
+/* =============================================
+   RESPONSIVE
+   ============================================= */
+@media (max-width: 1024px) {
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .tables-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  .filter-buttons {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .filter-inactive,
+  .filter-active {
+    flex: 1;
+    text-align: center;
+    padding: 10px 8px;
+    font-size: 11px;
+    border-bottom: 1px solid var(--ad-g200, #e2e8f0);
+    border-right: none;
+  }
+  .cards-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .report-card-value {
+    font-size: 2rem;
+  }
+}

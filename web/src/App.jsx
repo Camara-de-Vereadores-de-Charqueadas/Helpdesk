@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Home from "./pages/Index";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Chamados from "./pages/admin/Chamados/Index";
+import Reports from "./pages/admin/Reports/Reports";
 
 export default function App() {
   const setorLogado = localStorage.getItem("setorLogado");
@@ -42,6 +43,15 @@ export default function App() {
           }
         />
 
+		{/* Reports protegido */}
+		<Route
+		  path="/reports"
+		  element={
+			<ProtectedRoute>
+			  <Reports />
+			</ProtectedRoute>
+		  }
+		/>
         {/* Exemplo: outras páginas protegidas */}
         <Route
           path="/Chamados"
