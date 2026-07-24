@@ -103,6 +103,7 @@ export const fullReport = async(departments = [], agents = [], search = '', star
       SUM(CASE WHEN c.fechado = 0 THEN 1 ELSE 0 END) AS abertos,
       SUM(CASE WHEN c.fechado = 1 THEN 1 ELSE 0 END) AS fechados
     FROM chamados c
+    LEFT JOIN setores s ON c.setorId = s.id
     WHERE 1=1
 	  ${dateFilter}
 	  ${deptFilter}
