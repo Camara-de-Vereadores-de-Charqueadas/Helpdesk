@@ -1,5 +1,5 @@
-// pages/admin/Reports/Reports.jsx
 import { useState, useEffect } from "react";
+import { generateAndDownloadPDF } from "./pdf/pdfGenerator.js";
 import Header from "../../../components/Header";
 import Aside from "../../../components/Aside";
 import Card from "./components/Card";
@@ -201,76 +201,98 @@ export default function Reports() {
     return "TODO PERÍODO";
   };
 
-  return (
-    <>
-      <Header isAdmin={true} userName="Informática" />
+return (
+  <>
+    <Header isAdmin={true} userName="Informática" />
 
-      <div className="layout-inferior">
-        <Aside
-          isAdmin={true}
-          userName="Informática"
-          chamados={chamados}
-          onFiltroChange={() => {}}
-        />
+    <div className="layout-inferior">
+      <Aside
+        isAdmin={true}
+        userName="Informática"
+        chamados={chamados}
+        onFiltroChange={() => {}}
+      />
 
-        <div className="conteudo-principal">
-          <div className="page reports-page">
-            <div className="chamados-header">
+      <div className="conteudo-principal">
+        <div className="page reports-page">
+          <div className="chamados-header">
+            <div className="reports-header-actions">
               <h1 className="titulo-chamados">
                 RELATÓRIOS <span>/ {getPeriodLabel()}</span>
               </h1>
-              <hr />
+              <button
+                className="btn-export-pdf"
+                onClick={() => {
+                  const filters = {
+                    startDate,
+                    endDate,
+                    departments,
+                    agents,
+                    search,
+                  };
+                  generateAndDownloadPDF(
+                    data,
+                    filters,
+                    `relatorio_${new Date().toISOString().slice(0, 10)}.pdf`
+                  );
+                }}
+                disabled={!data}
+              >
+                Exportar PDF
+              </button>
             </div>
+            <hr />
+          </div>
 
-            <div className="reports-filters">
-              <DateFilter
-                startDate={startDate}
-                endDate={endDate}
-                onStartDateChange={setStartDate}
-                onEndDateChange={setEndDate}
+          <div className="reports-filters">
+            <DateFilter
+              startDate={startDate}
+              endDate={endDate}
+              onStartDateChange={setStartDate}
+              onEndDateChange={setEndDate}
+            />
+
+            <div className="reports-selects">
+              <MultiSelect
+                label="Setores"
+                options={sectorOptions}
+                selected={departments}
+                onChange={setDepartments}
+                placeholder="Selecionar setores..."
+                loading={loadingOptions.sectors}
               />
 
-              <div className="reports-selects">
-                <MultiSelect
-                  label="Setores"
-                  options={sectorOptions}
-                  selected={departments}
-                  onChange={setDepartments}
-                  placeholder="Selecionar setores..."
-                  loading={loadingOptions.sectors}
-                />
-
-                <MultiSelect
-                  label="Técnicos"
-                  options={agentOptions}
-                  selected={agents}
-                  onChange={setAgents}
-                  placeholder="Selecionar técnicos..."
-                  loading={loadingOptions.agents}
-                />
-              </div>
-
-              <div className="reports-search">
-                <label className="reports-search-label">Palavras-chave</label>
-                <input
-                  type="text"
-                  className="reports-search-input"
-                  placeholder="Palavras-chave separadas por espaço..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-                {search && (
-                  <button className="reports-search-clear" onClick={() => setSearch("")}>
-                    Limpar
-                  </button>
-                )}
-              </div>
+              <MultiSelect
+                label="Técnicos"
+                options={agentOptions}
+                selected={agents}
+                onChange={setAgents}
+                placeholder="Selecionar técnicos..."
+                loading={loadingOptions.agents}
+              />
             </div>
 
-            {renderContent()}
+            <div className="reports-search">
+              <label className="reports-search-label">Palavras-chave</label>
+              <input
+                type="text"
+                className="reports-search-input"
+                placeholder="Palavras-chave separadas por espaço..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              {search && (
+                <button className="reports-search-clear" onClick={() => setSearch("")}>
+                  Limpar
+                </button>
+              )}
+            </div>
           </div>
+
+          {renderContent()}
         </div>
       </div>
-    </>
-  );
+    </div>
+  </>
+);
 }

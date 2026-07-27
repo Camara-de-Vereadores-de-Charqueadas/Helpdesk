@@ -744,3 +744,71 @@
   background: #ffffff !important;
   caret-color: #2563eb; 
 }
+
+/* =============================================
+   REPORTS HEADER ACTIONS
+   ============================================= */
+.reports-header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.reports-header-actions .titulo-chamados {
+  margin: 0;
+}
+
+.btn-export-pdf {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: var(--ad-b600, #2563eb);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+  white-space: nowrap;
+}
+
+.btn-export-pdf:hover:not(:disabled) {
+  background: var(--ad-b700, #1d4ed8);
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-export-pdf:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.btn-export-pdf:disabled {
+  background: var(--ad-g300, #cbd5e1);
+  color: var(--ad-g500, #64748b);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Ícone do PDF (opcional) */
+.btn-export-pdf::before {
+  content: "📄";
+  font-size: 16px;
+}
+
+@media (max-width: 600px) {
+  .reports-header-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-export-pdf {
+    justify-content: center;
+  }
+}
